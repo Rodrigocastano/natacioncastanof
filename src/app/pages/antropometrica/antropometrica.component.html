@@ -1,0 +1,304 @@
+    <p-toolbar styleClass="mb-6">
+        <ng-template #start>
+            <p-button label="Agregar nueva Antropométricas" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+        </ng-template>
+    </p-toolbar>
+
+    <p-toast />
+    <p-table [value]="antropometrica" 
+        dataKey="id" [tableStyle]="{ 'min-width': '60rem' }" [expandedRowKeys]="expandedRows" (onRowExpand)="abrirExpand($event)" 
+        (onRowCollapse)="cerrarCollapse($event)"[paginator]="true" [rows]="6" [rowsPerPageOptions]="[6, 12, 18]"
+        [showCurrentPageReport]="true" currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Usuarios">
+            
+        <ng-template #caption>
+            <div class="flex items-center justify-between">
+                <h5 class="m-0">Registro Antropométricas</h5>
+                <p-iconfield>
+                    <p-inputicon styleClass="pi pi-search" />
+                    <input pInputText type="text"   placeholder="Buscar..."  />
+                </p-iconfield>
+            </div>
+        </ng-template>
+
+        <ng-template #header>
+            <tr>
+                <th style="min-width: 4rem"></th>
+                <th style="min-width: 6rem">ID</th>
+                <th pSortableColumn="name" style="min-width:8rem">Cédula</th>
+                <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
+                <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
+                <th pSortableColumn="price" style="min-width: 8rem">Género</th>
+                <th pSortableColumn="price" style="min-width: 6rem">Edad</th>
+            </tr>
+        </ng-template>
+
+        <ng-template #body let-usuario let-expanded="expanded">
+            <tr>
+                <td>
+                    <p-button type="button" pRipple [pRowToggler]="usuario" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                </td>
+                <td>{{ usuario.id }}</td>
+                <td>{{ usuario.cedula }}</td>
+                <td>{{ usuario.nombre }}</td>
+                <td>{{ usuario.apellido }}</td>
+                <td>{{ usuario.genero }}</td>
+                <td>{{ usuario.edad }}</td>
+            </tr>
+        </ng-template>
+
+        <ng-template #expandedrow let-usuario>
+            <tr>
+                <td colspan="7">
+                    <div class="p-4">
+                        <p-table [value]="usuario.medidaAntropometricas" dataKey="id">
+                            <ng-template #header>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Apellido</th>
+                                    <th style="min-width:7rem">Pesó</th>
+                                    <th style="min-width:7rem">Talla</th>
+                                    <th>Envergadura</th>
+                                    <th>CircuferenciaBraquial</th>
+                                    <th>PliegueCutanio</th>
+                                    <th>PerímetroCintura</th>
+                                    <th>PerímetroCadera</th>
+                                    <th>DiámetroSagital</th>
+                                    <th style="min-width:9rem">Fecha</th>
+                                    <th style="min-width:9rem">Acciones</th>
+                                </tr>
+
+                            </ng-template>
+                            <ng-template #body let-elast>
+                                <tr>
+                                    <td>{{ elast.id }}</td>
+                                    <td>{{ elast.nombre }}</td>
+                                    <td>{{ elast.apellido }}</td>
+                                    <td>{{ elast.peso }} Kg</td> 
+                                    <td>{{ elast.talla }} cm</td>
+                                    <td>{{ elast.envergadura }} cm</td>
+                                    <td>{{ elast.circuferencia_braquial }} cm</td>
+                                    <td>{{ elast.pliegue_cutanio }} mm</td>
+                                    <td>{{ elast.perimetro_cintura }} cm</td>
+                                    <td>{{ elast.perimetro_cadera }} cm</td>
+                                    <td>{{ elast.diametro_sagital }} cm</td>
+                                    <td>{{ elast.fecha }}</td>
+                                    <td>
+                                        <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(elast)"/>
+                                        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(elast.id)" />
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '468px' }" header="Agregar Nueva Antropométricas" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">  
+        <ng-template #content>
+            <form [formGroup]="formSave" class="formulario">
+                <div class="flex flex-col gap-6">
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="id_usuario" class="block font-bold mb-3">Usuario</label>             
+                            <p-select 
+                                [options]="usuarios" formControlName="id_usuario" inputId="id_usuario" optionLabel="display" optionValue="id" placeholder="Seleccione un usuario" [filter]="true" filterBy="display" [showClear]="true" class="w-full text-5sm px-0 py-0.3">
+                            </p-select>
+                            <div class="mt-2">
+                                <p-message
+                                    *ngIf="formSave.get('id_usuario')?.invalid && (formSave.get('id_usuario')?.dirty || formSave.get('id_usuario')?.touched)" severity="error" variant="simple" size="small" >
+                                    Usuario es requerido
+                                </p-message>
+                            </div>
+                        </div>
+                            
+                        <div class="col-span-6">
+                            <label for="peso" class="block font-bold mb-1">Pesó</label>
+                            <p-inputnumber  formControlName="peso" id="peso" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-2" />             
+                            <p-message
+                                *ngIf="formSave.get('peso')?.errors?.['required'] && (formSave.get('peso')?.dirty || formSave.get('peso')?.touched)" severity="error" variant="simple" size="small" >
+                                Pesó es requerida
+                            </p-message>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="talla" class="block font-bold mb-1">Talla</label>
+                            <p-inputnumber formControlName="talla"  id="talla" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-1" />             
+                            <p-message
+                                *ngIf="formSave.get('talla')?.errors?.['required'] && (formSave.get('talla')?.dirty || formSave.get('talla')?.touched)" severity="error" variant="simple" size="small" >
+                                Talla es requerida
+                            </p-message>
+                        </div>
+        
+                        <div class="col-span-6">
+                            <label for="envergadura" class="block font-bold mb-1">Envergadura</label>
+                            <p-inputnumber formControlName="envergadura" id="envergadura" placeholder="Ingrese la medida"  class="w-full text-sm px-0 py-1" />             
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="circuferencia_braquial" class="block font-bold mb-1 ">Circuferencia Braquial</label>
+                            <p-inputnumber formControlName="circuferencia_braquial" id="circuferencia_braquial" placeholder="Ingrese la medida"  class="w-full text-sm px-0 py-1" />             
+                        </div>
+        
+                        <div class="col-span-6">
+                            <label for="pliegue_cutanio" class="block font-bold mb-1 ">Pliegue Cutanio</label>
+                            <p-inputnumber formControlName="pliegue_cutanio" id="pliegue_cutanio" placeholder="Ingrese la medida"  class="w-full text-sm px-0 py-1" />             
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="perimetro_cintura" class="block font-bold mb-1">Perímetro Cintura</label>
+                            <p-inputnumber formControlName="perimetro_cintura" id="perimetro_cintura" placeholder="Ingrese la medida"  class="w-full text-sm px-0 py-1" />             
+                        </div>
+        
+                        <div class="col-span-6">
+                            <label for="perimetro_cadera" class="block font-bold mb-1 ">Perímetro Cadera</label>
+                            <p-inputnumber formControlName="perimetro_cadera" id="perimetro_cadera" placeholder="Ingrese la medida"  class="w-full text-sm px-0 py-1" />             
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="diametro_sagital" class="block font-bold mb-1">Diámetro Sagital</label>
+                            <p-inputnumber formControlName="diametro_sagital" id="diametro_sagital" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-0" />             
+                        </div>
+        
+                        <div class="col-span-6">
+                        <label for="fecha" class="block font-bold mb-1">Fecha Inscripción</label>
+                        <p-datepicker 
+                            [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true"  class="w-96" 
+                            [showButtonBar]="true" [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'">
+                        </p-datepicker>
+                        <p-message 
+                            *ngIf="formSave.get('fecha')?.invalid && (formSave.get('fecha')?.dirty || formSave.get('fecha')?.touched)"  severity="error"  variant="simple" size="small">
+                            Fecha es requerido
+                        </p-message>
+                        </div>
+                    </div>
+        
+                </div>
+            </form>
+        </ng-template>
+
+        <ng-template #footer>
+            <form [formGroup]="formSave" class="formulario">
+                <p-button label="Cancel" icon="pi pi-times" text (click)="cancelSave()"  />
+                <p-button label="Save" icon="pi pi-check" (click)="store()" />
+            </form>
+        </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="visibleDelete" header="Confirmación"[style]="{ width: '350px' }" [modal]="true">
+        <div class="flex items-center justify-center">
+            <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
+            <span>¿Estás seguro que deseas eliminar este registro?</span>
+        </div>
+        <ng-template #footer>
+            <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDelete = false" text severity="secondary" (click)="cancelMessageToast()" />
+            <p-button label="Eliminar" icon="pi pi-check" (click)="delete()" severity="danger" outlined />
+        </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '468px' }" header="Actualización de Antropométricas" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+    
+        <ng-template #content>
+            <form [formGroup]="formUpdate" class="formulario">
+                <div class="flex flex-col gap-6">
+    
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="id_usuario" class="block font-bold mb-3">Usuario</label>   
+                            <p-select 
+                                [options]="usuarios" formControlName="id_usuario" optionLabel="display" optionValue="id" [readonly]="true" [style]="{'background-color': '#e0e0e0'}" class="w-full md:w-70 ">
+                            </p-select>
+                        </div>
+                            
+                        <div class="col-span-6">
+                            <label for="peso" class="block font-bold mb-1">Pesó</label>
+                            <p-inputnumber  formControlName="peso" id="peso" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-2" />             
+                            <p-message
+                                *ngIf="formUpdate.get('peso')?.errors?.['required'] && (formUpdate.get('peso')?.dirty || formUpdate.get('peso')?.touched)" severity="error" variant="simple" size="small" >
+                                Pesó es requerido
+                            </p-message>
+                        </div>
+                    </div>
+    
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="talla" class="block font-bold mb-1">Talla</label>
+                            <p-inputnumber formControlName="talla"  id="talla" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-1" />             
+                            <p-message
+                                *ngIf="formUpdate.get('talla')?.errors?.['required'] && (formUpdate.get('talla')?.dirty || formUpdate.get('talla')?.touched)" severity="error" variant="simple" size="small" >
+                                Talla es requerida
+                            </p-message>
+                        </div>
+        
+                        <div class="col-span-6">
+                            <label for="envergadura" class="block font-bold mb-1">Envergadura</label>
+                            <p-inputnumber formControlName="envergadura" id="envergadura" placeholder="Ingrese la medida"  class="w-full text-sm px-0 py-1" />             
+                        </div>
+                    </div>
+    
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="circuferencia_braquial" class="block font-bold mb-1 ">Circuferencia Braquial</label>
+                            <p-inputnumber formControlName="circuferencia_braquial" id="circuferencia_braquial" placeholder="Ingrese la medida"  class="w-full text-sm px-0 py-1" />             
+                        </div>
+        
+                        <div class="col-span-6">
+                            <label for="pliegue_cutanio" class="block font-bold mb-1 ">Pliegue Cutanio</label>
+                            <p-inputnumber formControlName="pliegue_cutanio" id="pliegue_cutanio" placeholder="Ingrese la medida"  class="w-full text-sm px-0 py-1" />             
+                        </div>
+                    </div>
+    
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="perimetro_cintura" class="block font-bold mb-1">Perímetro Cintura</label>
+                            <p-inputnumber formControlName="perimetro_cintura" id="perimetro_cintura" placeholder="Ingrese la medida"  class="w-full text-sm px-0 py-1" />             
+                        </div>
+        
+                        <div class="col-span-6">
+                            <label for="perimetro_cadera" class="block font-bold mb-1 ">Perímetro Cadera</label>
+                            <p-inputnumber formControlName="perimetro_cadera" id="perimetro_cadera" placeholder="Ingrese la medida"  class="w-full text-sm px-0 py-1" />             
+                        </div>
+                    </div>
+    
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="diametro_sagital" class="block font-bold mb-1">Diámetro Sagita</label>
+                            <p-inputnumber formControlName="diametro_sagital" id="diametro_sagital" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-0" />             
+                        </div>
+        
+                        <div class="col-span-6">
+                        <label for="fecha" class="block font-bold mb-1">Fecha Inscripción</label>
+                        <p-datepicker 
+                            [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
+                            [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
+                        </p-datepicker>
+                        <p-message 
+                            *ngIf="formUpdate.get('fecha')?.invalid && (formUpdate.get('fecha')?.dirty || formUpdate.get('fecha')?.touched)"  severity="error"  variant="simple" size="small">
+                            Fecha Nacimiento es requerido
+                        </p-message>
+                        </div>
+                    </div>
+           
+                </div>
+            </form>
+        </ng-template>
+    
+        <ng-template #footer>
+            <form [formGroup]="formUpdate" class="formulario">
+                <p-button label="Cancel" icon="pi pi-times" text (click)="canceUpdate()"  />
+                <p-button label="Save" icon="pi pi-check" (click)="update()" />
+            </form>
+        </ng-template>
+    </p-dialog>
+    

@@ -1,0 +1,335 @@
+    <p-toolbar styleClass="mb-6">
+        <ng-template #start>
+            <p-button label="Agregar nuevo usuario" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+        </ng-template>
+
+        <ng-template #end>
+            <p-button label="Descargar Pdf" icon="pi pi-upload" severity="secondary" (click)="exportPdf()" />
+        </ng-template>
+    </p-toolbar>
+
+    <p-toast />
+    <p-table
+        #dt [value]="usuario" [rows]="6" [paginator]="true"
+        [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+        [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Usuarios"
+        [showCurrentPageReport]="true" [rowsPerPageOptions]="[6, 12, 18]">
+        <ng-template #caption>
+            <div class="flex items-center justify-between">
+                <h5 class="m-0">Registro de Usuarios</h5>
+                <p-iconfield>
+                    <p-inputicon styleClass="pi pi-search" />
+                    <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
+                </p-iconfield>
+            </div>
+        </ng-template>
+
+        <ng-template #header>
+            <tr>
+                <th style="min-width: 6rem">Code</th>
+                <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
+                <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
+                <th pSortableColumn="price" style="min-width: 10rem">Cédula</th>
+                <th pSortableColumn="price" style="min-width: 10rem">Teléfono</th>
+                <th pSortableColumn="price" style="min-width: 8rem">Dirección</th>
+                <th pSortableColumn="price" style="min-width: 8rem">Ciudad</th>
+                <th pSortableColumn="price" style="min-width: 8rem">Género</th>
+                <th pSortableColumn="price" style="min-width: 6rem">Edad</th>
+                <th pSortableColumn="price" style="min-width: 7rem">Grupo</th>
+                <th pSortableColumn="price" style="min-width: 12rem">FechaNacimiento</th>
+                <th pSortableColumn="price" style="min-width: 12rem">FechaInscripción</th>
+                <th pSortableColumn="inventoryStatus" style="min-width: 10rem">Acciones</th> 
+            </tr>
+        </ng-template>
+
+        <ng-template #body let-usuario>
+            <tr>
+                <td>{{ usuario.id }}</td>
+                <td>{{ usuario.nombre }}</td>
+                <td>{{ usuario.apellido }}</td>
+                <td>{{ usuario.cedula }}</td>
+                <td>{{ usuario.telefono }}</td>
+                <td>{{ usuario.direccion }}</td>
+                <td>{{ usuario.ciudad }}</td>
+                <td>{{ usuario.genero }}</td>
+                <td>{{ usuario.edad }}</td>
+                <td>{{ getNombreGrupo(usuario.id_grupo) }}</td>
+                <td>{{ usuario.fechaNacimiento }}</td>
+                <td>{{ usuario.fechaInscripcion }}</td>
+                <td>
+                    <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(usuario.id)"/>
+                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(usuario.id)" />
+                </td>
+            </tr>
+        </ng-template>  
+    </p-table>
+
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar Usuario" [modal]="true">
+        
+        <ng-template #content>
+            <form [formGroup]="formSaveUsuario" class="formulario">
+                <div class="flex flex-col gap-6">
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="nombre" class="block font-bold mb-3">Nombre</label>
+                            <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese la nombre" required fluid />
+                            <p-message 
+                                *ngIf="formSaveUsuario.get('nombre')?.invalid && (formSaveUsuario.get('nombre')?.dirty || formSaveUsuario.get('nombre')?.touched)" severity="error" variant="simple"size="small">
+                                Nombre es requerido
+                            </p-message>
+                        </div>
+                        <div class="col-span-6">
+                            <label for="apellido" class="block font-bold mb-3">Apellido</label>
+                            <input type="text" formControlName="apellido" pInputText id="apellido" placeholder="Ingrese la apellido"  required  fluid />
+                            <p-message 
+                                *ngIf="formSaveUsuario.get('apellido')?.invalid && (formSaveUsuario.get('apellido')?.dirty || formSaveUsuario.get('apellido')?.touched)" severity="error" variant="simple"size="small">
+                                Apellido es requerido
+                            </p-message>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="cedula" class="block font-bold mb-1">Cédula</label>
+                            <input type="text" pInputText formControlName="cedula" id="cedula" placeholder="Ingrese número de cédula" class="w-full text-sm px-0 py-2"/>
+                            <p-message 
+                                *ngIf="formSaveUsuario.get('cedula')?.errors?.['required'] && (formSaveUsuario.get('cedula')?.dirty || formSaveUsuario.get('cedula')?.touched)" severity="error" variant="simple" size="small">
+                                Cédula es requerida
+                            </p-message>
+                            <p-message 
+                                *ngIf="formSaveUsuario.get('cedula')?.errors?.['pattern'] && (formSaveUsuario.get('cedula')?.dirty || formSaveUsuario.get('cedula')?.touched)" severity="error" variant="simple" size="small">
+                                Cédula valido 10 números
+                            </p-message>
+                        </div>
+
+                        <div class="col-span-6">
+                            <label for="telefono" class="block font-bold mb-1">Teléfono</label>
+                            <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Ingrese número de teléfono" class="w-full text-sm px-0 py-2" />             
+                            <p-message
+                                *ngIf="formSaveUsuario.get('telefono')?.errors?.['required'] && (formSaveUsuario.get('telefono')?.dirty || formSaveUsuario.get('telefono')?.touched)" severity="error" variant="simple" size="small" >
+                                Teléfono valido 10 número
+                            </p-message>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="ciudad" class="block font-bold mb-3">Ciudad</label>
+                            <input type="text" formControlName="ciudad" pInputText id="ciudad" placeholder="Ingrese la ciudad" fluid />
+                        </div>
+
+                        <div class="col-span-6">
+                            <label for="genero" class="block font-bold mb-3">Género</label>
+                            <input type="text" formControlName="genero" pInputText id="genero" placeholder="Ingrese el género"  required fluid />
+                            <p-message 
+                                *ngIf="formSaveUsuario.get('genero')?.invalid && (formSaveUsuario.get('genero')?.dirty || formSaveUsuario.get('genero')?.touched)" severity="error" variant="simple"size="small">
+                                Género es requerido
+                            </p-message>
+                        </div>
+                    </div>
+
+                    <div class="col-span-12">
+                        <label for="direccion" class="block font-bold mb-3">Dirección</label>
+                        <input type="text" formControlName="direccion" pInputText id="direccion" placeholder="Ingrese la dirección" fluid />
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <div class="block font-bold mb-3">Fecha Inscripción</div>
+                            <p-datepicker [maxDate]="maxDate" formControlName="fechaInscripcion" inputId="fechaInscripcion" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
+                            <p-message 
+                                *ngIf="formSaveUsuario.get('fechaInscripcion')?.invalid && (formSaveUsuario.get('fechaInscripcion')?.dirty || formSaveUsuario.get('fechaInscripcion')?.touched)" severity="error" variant="simple"size="small">
+                                Fecha inscripción es requerida
+                            </p-message>  
+                        </div>
+                        <div class="col-span-6">
+                            <div class="col-span-6">
+                                <label for="id_grupo" class="block font-bold mb-3">Grupo</label>
+                                <p-select [options]="grupo" formControlName="id_grupo"  inputId="id_grupo"  optionLabel="nombre" optionValue="id" placeholder="Selecciones grupo" fluid />
+                                <p-message 
+                                    *ngIf="formSaveUsuario.get('id_grupo')?.invalid && (formSaveUsuario.get('id_grupo')?.dirty || formSaveUsuario.get('id_grupo')?.touched)" severity="error" variant="simple"size="small">
+                                    Grupo es requerido
+                                </p-message>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <div class="block font-bold mb-3">FechaNacimiento</div>
+                            <p-datepicker [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
+                            <p-message 
+                                *ngIf="formSaveUsuario.get('fechaNacimiento')?.invalid && (formSaveUsuario.get('fechaNacimiento')?.dirty || formSaveUsuario.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">
+                                Fecha Nacimiento es requerido
+                            </p-message>
+                        </div>
+                        <div class="col-span-6">
+                            <label for="edad" class="block font-bold mb-1">Edad</label>
+                            <p-inputnumber  formControlName="edad" id="edad" placeholder="Ingrese la edad" required fluid class="w-full text-sm px-0 py-2" />
+                            <p-message 
+                                *ngIf="formSaveUsuario.get('edad')?.errors?.['required'] && (formSaveUsuario.get('edad')?.dirty || formSaveUsuario.get('edad')?.touched)" severity="error" variant="simple" size="small">
+                                Edad es requerido
+                            </p-message>
+                            <p-message 
+                                *ngIf="formSaveUsuario.get('edad')?.errors?.['pattern'] && (formSaveUsuario.get('edad')?.dirty || formSaveUsuario.get('edad')?.touched)" severity="error" variant="simple" size="small">
+                                Edad solo acepta número.
+                            </p-message>
+                        </div>
+
+                    </div>
+
+                </div>
+            </form>
+        </ng-template>
+
+        <ng-template #footer>
+            <form [formGroup]="formSaveUsuario" class="formulario">
+                <p-button label="Cancel" icon="pi pi-times" text (click)="cancelSave()" />
+                <p-button label="Save" icon="pi pi-check" (click)="store()"/>
+            </form>
+        </ng-template>
+    
+    </p-dialog>
+
+    <p-dialog [(visible)]="visibleDelete" header="Confirmación" [style]="{ width: '350px' }" [modal]="true">
+        <div class="flex items-center justify-center">
+            <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
+            <span>¿Estás seguro que deseas eliminar este Usuario?</span>
+        </div>
+        <ng-template #footer>
+            <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDelete = false" text severity="secondary" (click)="cancelMessageToast()" />
+            <p-button label="Eliminar" icon="pi pi-check" (click)="delete()" severity="danger" outlined />
+        </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar Usuario" [modal]="true">
+        <ng-template #content>
+            <form [formGroup]="formUpdateUsuario" class="formulario">
+                <div class="flex flex-col gap-6">
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="nombre" class="block font-bold mb-3">Nombre</label>
+                            <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese la nombre"  required fluid />    
+                            <p-message 
+                                *ngIf="formUpdateUsuario.get('nombre')?.invalid && (formUpdateUsuario.get('nombre')?.dirty || formUpdateUsuario.get('nombre')?.touched)" severity="error" variant="simple"size="small">
+                                Nombre es requerido
+                            </p-message>
+                        </div>
+
+                        <div class="col-span-6">
+                            <label for="apellido" class="block font-bold mb-3">Apellido</label>
+                            <input type="text" formControlName="apellido" pInputText id="apellido" placeholder="Ingrese la apellido"  required fluid />
+                            <p-message 
+                                *ngIf="formUpdateUsuario.get('apellido')?.invalid && (formUpdateUsuario.get('apellido')?.dirty || formUpdateUsuario.get('apellido')?.touched)" severity="error" variant="simple"size="small">
+                                Apellido es requerido
+                            </p-message>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="cedula" class="block font-bold mb-3">Cédula</label>
+                            <input type="text" formControlName="cedula" pInputText id="cedula" placeholder="Ingrese número de cédula"   required fluid />
+                            <p-message 
+                                *ngIf="formUpdateUsuario.get('cedula')?.errors?.['required'] && (formUpdateUsuario.get('cedula')?.dirty || formUpdateUsuario.get('cedula')?.touched)" severity="error" variant="simple" size="small">
+                                Cédula es requerida
+                            </p-message>
+                            <p-message 
+                                *ngIf="formUpdateUsuario.get('cedula')?.errors?.['pattern'] && (formUpdateUsuario.get('cedula')?.dirty || formUpdateUsuario.get('cedula')?.touched)" severity="error" variant="simple" size="small">
+                                Cédula válido solo 10 números
+                            </p-message>
+                        </div>
+
+                        <div class="col-span-6">
+                            <label for="telefono" class="block font-bold mb-1">Teléfono</label>
+                            <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Ingrese número de teléfono" class="w-full text-sm px-0 py-2" /> 
+                            <p-message
+                                *ngIf="formUpdateUsuario.get('telefono')?.errors?.['required'] && (formUpdateUsuario.get('telefono')?.dirty || formUpdateUsuario.get('telefono')?.touched)" severity="error" variant="simple" size="small" >
+                                Teléfono válido solo 10 número
+                            </p-message>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="ciudad" class="block font-bold mb-3">Ciudad</label>
+                            <input type="text" formControlName="ciudad" pInputText id="ciudad" placeholder="Ingrese la ciudad" fluid />
+                        </div>
+
+                        <div class="col-span-6">
+                            <label for="genero" class="block font-bold mb-3">Género</label>
+                            <input type="text" formControlName="genero" pInputText id="genero" placeholder="Ingrese el género"  required fluid />
+                            <p-message 
+                                *ngIf="formUpdateUsuario.get('genero')?.invalid && (formUpdateUsuario.get('genero')?.dirty || formUpdateUsuario.get('genero')?.touched)" severity="error" variant="simple"size="small">
+                                Genero es requerido
+                            </p-message>
+                        </div>
+                    </div>
+
+                    <div class="col-span-12">
+                        <label for="direccion" class="block font-bold mb-3">Direccion</label>
+                        <input type="text" formControlName="direccion" pInputText id="direccion" placeholder="Ingrese la direccion" fluid />
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <div class="block font-bold mb-3">Fecha Inscripción</div>
+                            <p-datepicker [maxDate]="maxDate" formControlName="fechaInscripcion" inputId="fechaInscripcion" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>  
+                            <p-message 
+                                *ngIf="formUpdateUsuario.get('fechaInscripcion')?.invalid && (formUpdateUsuario.get('fechaInscripcion')?.dirty || formUpdateUsuario.get('fechaInscripcion')?.touched)" severity="error" variant="simple"size="small">
+                                Fecha inscripción es requerida
+                            </p-message>
+                        </div>
+                        <div class="col-span-6">
+                            <div class="col-span-6">
+                                <label for="id_grupo" class="block font-bold mb-3">Grupo</label>
+                                <p-select [options]="grupo" formControlName="id_grupo"  inputId="id_grupo"  optionLabel="nombre" optionValue="id" placeholder="Selecciones grupo" fluid />
+                                <p-message 
+                                    *ngIf="formUpdateUsuario.get('id_grupo')?.invalid && (formUpdateUsuario.get('id_grupo')?.dirty || formUpdateUsuario.get('id_grupo')?.touched)" severity="error" variant="simple"size="small">
+                                    Grupo es requerido
+                                </p-message>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <div class="block font-bold mb-3">FechaNacimiento</div>
+                            <p-datepicker [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
+                            <p-message 
+                                *ngIf="formUpdateUsuario.get('fechaNacimiento')?.invalid && (formUpdateUsuario.get('fechaNacimiento')?.dirty || formUpdateUsuario.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">
+                                Fecha Nacimiento es requerida
+                            </p-message>
+                        </div>
+                        <div class="col-span-6">
+                            <label for="edad" class="block font-bold mb-3">Edad</label>
+                            <input type="text" formControlName="edad" pInputText id="edad" placeholder="Ingrese la edad" required fluid />
+                            <p-message 
+                                *ngIf="formUpdateUsuario.get('edad')?.errors?.['required'] && (formUpdateUsuario.get('edad')?.dirty || formUpdateUsuario.get('edad')?.touched)" severity="error" variant="simple" size="small">
+                                Edad es requerido
+                            </p-message>
+                            <p-message 
+                                *ngIf="formUpdateUsuario.get('edad')?.errors?.['pattern'] && (formUpdateUsuario.get('edad')?.dirty || formUpdateUsuario.get('edad')?.touched)" severity="error" variant="simple" size="small">
+                                Edad solo acepta número.
+                            </p-message>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </ng-template>
+
+        <ng-template #footer>
+            <form [formGroup]="formUpdateUsuario" class="formulario">
+            <p-button label="Cancel" icon="pi pi-times" text (click)="cancelUpdate()" />
+            <p-button label="Save" icon="pi pi-check" (click)="update()" />
+        </form>
+        </ng-template>
+    </p-dialog>
+
+
+
+       

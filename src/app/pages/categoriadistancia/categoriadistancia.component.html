@@ -1,0 +1,137 @@
+    <p-toolbar styleClass="mb-6">
+        <ng-template #start>
+            <p-button label="Agregar nuevo Categodia distancia" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+        </ng-template>
+
+        <ng-template #end>
+            <p-button label="Descargar Pdf" icon="pi pi-upload" severity="secondary" (click)="exportPdf()" />
+        </ng-template>
+    </p-toolbar>
+
+    <p-toast />
+    <p-table [value]="categoriaDistancia"            
+            [rows]="6" #dt [paginator]="true" [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+            [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true" dataKey="id" [showCurrentPageReport]="true" 
+            currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Categoria" [rowsPerPageOptions]="[6, 12, 18]">
+        <ng-template #caption>
+            <div class="flex items-center justify-between">
+                <h5 class="m-0">Registró de Categoria Distancía</h5>
+                <p-iconfield>
+                    <p-inputicon styleClass="pi pi-search" />
+                    <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
+                </p-iconfield>
+            </div>
+        </ng-template>
+
+        <ng-template #header>
+            <tr>
+                <th style="min-width: 6rem">ID</th>
+                <th pSortableColumn="price" style="min-width: 7rem">Tipo Nado</th>
+                <th pSortableColumn="name" style="min-width:8rem">Distancia</th>
+                <th pSortableColumn="inventoryStatus" style="min-width: 10rem">Acciones</th>
+            
+            
+            </tr>
+        </ng-template>
+
+        <ng-template #body let-usuario>
+            <tr>
+                <td>{{ usuario.id }}</td>
+                <td>{{ getNombreTipo(usuario.id_tipo_nado) }}</td>
+                <td>{{ usuario.distancia }} mt</td>
+                
+                <td>
+                    <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(usuario.id)"/>
+                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(usuario.id)" />
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar Categoría Distancia" [modal]="true">
+        
+        <ng-template #content>
+            <form [formGroup]="formSave" class="formulario">
+                <div class="flex flex-col gap-6">
+                    <div class="col-span-6">
+                        <label for="distancia" class="block font-bold mb-1 ">Distancia</label>
+                        <p-inputnumber formControlName="distancia" id="distancia" placeholder="Ingrese la Distancia" class="w-full text-sm px-0 py-1" />             
+                    </div>
+
+                    <div class="col-span-6">
+                        <label for="id_tipo_nado" class="block font-bold mb-3">Tipo Nado</label>             
+                        <p-select
+                            formControlName="id_tipo_nado" inputId="id_tipo_nado" optionLabel="displayTipo" optionValue="id" placeholder="Seleccione un usuario"
+                            [options]="tipoNado" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70" [appendTo]="'body'">
+                        </p-select>
+                        <div class="mt-2">
+                            <p-message
+                                *ngIf="formSave.get('id_tipo_nado')?.invalid && (formSave.get('id_tipo_nado')?.dirty || formSave.get('id_tipo_nado')?.touched)" severity="error" variant="simple" size="small" >
+                                Tipo Nado es requerido
+                            </p-message>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </ng-template>
+
+        <ng-template #footer>
+            <form [formGroup]="formSave" class="formulario">
+                <p-button label="Cancel" icon="pi pi-times" text (click)="cancelSave()" />
+                <p-button label="Save" icon="pi pi-check" (click)="store()"/>
+            </form>
+        </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="visibleDelete" header="Confirmación"  [style]="{ width: '350px' }" [modal]="true">
+        <div class="flex items-center justify-center">
+            <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
+            <span>¿Estás seguro que deseas eliminar este registró?</span>
+        </div>
+        <ng-template #footer>
+            <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDelete = false" text severity="secondary" (click)="cancelMessageToast()" />
+            <p-button label="Eliminar" icon="pi pi-check" (click)="delete()" severity="danger" outlined />
+        </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '400px' }" header="Agregar Categoria distancias" [modal]="true">
+        <ng-template #content>
+            <form [formGroup]="formUpdate" class="formulario">
+                <div class="flex flex-col gap-6">
+                    <div class="col-span-6">
+                        <label for="distancia" class="block font-bold mb-1 ">Distancia</label>
+                        <p-inputnumber formControlName="distancia" id="distancia" placeholder="Ingrese la Distancia" class="w-full text-sm px-0 py-1" />             
+                    </div>
+
+                    <div class="col-span-6">
+                        <label for="id_tipo_nado" class="block font-bold mb-3">Tipo Nado</label>             
+                        <p-select
+                            formControlName="id_tipo_nado" inputId="id_tipo_nado" optionLabel="displayTipo" optionValue="id" placeholder="Seleccione un usuario"
+                            [options]="tipoNado" [filter]="true"filterBy="displayTipo" [showClear]="true" class="w-full md:w-70" [appendTo]="'body'">
+                        </p-select>
+                        <div class="mt-2">
+                            <p-message
+                                *ngIf="formUpdate.get('id_tipo_nado')?.invalid && (formUpdate.get('id_tipo_nado')?.dirty || formUpdate.get('id_tipo_nado')?.touched)" severity="error" variant="simple" size="small" >
+                                Tipo nado es requerido
+                            </p-message>
+                        </div>
+                    </div>
+
+
+
+                
+            
+    
+
+                </div>
+        </form>
+        </ng-template>
+
+        <ng-template #footer>
+            <form [formGroup]="formSave" class="formulario">
+            <p-button label="Cancel" icon="pi pi-times" text (click)="cancelUpdate()" />
+            <p-button label="Save" icon="pi pi-check" (click)="update()"/>
+        </form>
+        </ng-template>
+
+    </p-dialog>
