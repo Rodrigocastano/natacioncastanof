@@ -41,7 +41,7 @@ export class AppMenu {
                     { label: 'Tiempo Nadador', icon: 'pi pi-history', routerLink: ['/pages/tiempoNadador'] },
                 ]
             },
-          
+           
         ];
     }
 }

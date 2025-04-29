@@ -1,0 +1,29 @@
+<div class="flex items-center justify-between w-full px-6">
+    <!-- IZQUIERDA: Nombre -->
+    <div class="flex items-center gap-4">
+        <a class="flex items-center" href="#">
+            <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal whitespace-nowrap">
+                NATACIÓN CASTAÑO
+            </span>
+        </a>
+    </div>
+
+    <!-- CENTRO: Menú -->
+    <div class="flex-1 flex justify-center">
+        <ul class="list-none p-0 m-0 flex items-center gap-8">
+            <li>
+                <a (click)="router.navigate(['/landing'], { fragment: 'pricing' })"
+                   pRipple
+                   class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                    <span>Información</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- DERECHA: Botones -->
+    <div class="flex items-center gap-2">
+        <button pButton pRipple label="Iniciar sesión" routerLink="/login" [rounded]="true"></button>
+    </div>
+</div>
+ 
