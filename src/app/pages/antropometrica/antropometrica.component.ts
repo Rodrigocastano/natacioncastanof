@@ -21,6 +21,7 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-antropometrica',
@@ -44,7 +45,8 @@ import { DatePickerModule } from 'primeng/datepicker';
     DatePickerModule,
     SelectModule,
     DialogModule,
-    DropdownModule
+    DropdownModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './antropometrica.component.html',
@@ -70,6 +72,7 @@ export class AntropometricaComponent implements OnInit{
 
     submitted: boolean = false;
     maxDate: Date = new Date();
+    loading: boolean = true;
 
     constructor(
           private fb: FormBuilder,
@@ -113,8 +116,7 @@ export class AntropometricaComponent implements OnInit{
       this.antropometricaService.getAllTodoAntropometrica().subscribe(
         data => {
           this.antropometrica = data.data
-          console.log(data.data);
-          
+          this.loading = false;
         }
       );
     }

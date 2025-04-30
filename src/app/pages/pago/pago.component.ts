@@ -25,6 +25,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { EstadoPago } from '../interfaces/estadoPago';
 import { TipoPago } from '../interfaces/tipoPagos';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-pago',
@@ -46,7 +47,8 @@ import { DatePickerModule } from 'primeng/datepicker';
     DatePickerModule,
     SelectModule,
     DialogModule,
-    DropdownModule
+    DropdownModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './pago.component.html',
@@ -73,7 +75,8 @@ export class PagoComponent implements OnInit{
 
       submitted: boolean = false;
       maxDate: Date = new Date();
-  
+      loading: boolean = true;
+
       constructor(
         private fb: FormBuilder,
         private pagoService: PagoService,
@@ -108,7 +111,7 @@ export class PagoComponent implements OnInit{
         this.pagoService.getAllTodoPago().subscribe(
           data => {
             this.pago = data.data
-            console.log(data.data);
+            this.loading = false;
             
           }
         );

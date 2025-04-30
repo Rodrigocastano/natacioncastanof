@@ -21,6 +21,7 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-elasticida',
@@ -40,7 +41,8 @@ import { DatePickerModule } from 'primeng/datepicker';
     DatePickerModule,
     SelectModule,
     DialogModule,
-    DropdownModule
+    DropdownModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './elasticida.component.html'
@@ -66,7 +68,8 @@ export class ElasticidaComponent implements OnInit{
 
     submitted: boolean = false;
     maxDate: Date = new Date();
-    
+    loading: boolean = true;
+
     constructor(
         private fb: FormBuilder,
         private elasticidaService: ElasticidaService,
@@ -95,8 +98,7 @@ export class ElasticidaComponent implements OnInit{
       this.elasticidaService.getAllTodoElasticida().subscribe(
         data => {
           this.elasticida = data.data
-          console.log(data.data);
-          
+           this.loading = false; 
         }
       );
     }
@@ -108,7 +110,6 @@ export class ElasticidaComponent implements OnInit{
             ...usuario,
             display: `${usuario.nombre} ${usuario.apellido} - ${usuario.cedula}`
           }));
-          console.log(this.usuarios);
         }
       );
     }

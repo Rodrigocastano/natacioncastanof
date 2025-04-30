@@ -23,6 +23,7 @@ import { SelectModule } from 'primeng/select';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-representantenadador',
@@ -42,7 +43,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     CalendarModule,
     SelectModule,
     DialogModule,
-    DropdownModule
+    DropdownModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './representantenadador.component.html',
@@ -68,7 +70,8 @@ export class RepresentantenadadorComponent implements OnInit{
   msgs: ToastMessageOptions[] | null = [];
 
   submitted: boolean = false;
-  
+  loading: boolean = true;
+
   constructor(
       private fb: FormBuilder,
       private representantenadadorService: RepresentantenadadorService,
@@ -98,6 +101,7 @@ export class RepresentantenadadorComponent implements OnInit{
       this.representantenadadorService.getAllRepresentanteNadador().subscribe({
         next: data => {
           this.representanteNadador = data;
+          this.loading = false;
         },
         error: error => {
           if (error.status === 404) {

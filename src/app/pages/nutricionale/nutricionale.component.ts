@@ -21,6 +21,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { NutricionaleService } from '../service/nutricionale.service';
 import { Nutricionales } from '../interfaces/nutricionales';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 @Component({
   selector: 'app-nutricionale',
   imports: 
@@ -40,7 +41,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     DatePickerModule,
     SelectModule,
     DialogModule,
-    DropdownModule
+    DropdownModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './nutricionale.component.html',
@@ -66,6 +68,7 @@ export class NutricionaleComponent implements OnInit{
 
   submitted: boolean = false;
   maxDate: Date = new Date();
+  loading: boolean = true;
   
   constructor(
       private fb: FormBuilder,
@@ -97,8 +100,7 @@ export class NutricionaleComponent implements OnInit{
       this.nutricionaleService.getAllTodoNutricionale().subscribe(
         data => {
           this.nutricionale = data.data
-          console.log(data.data);
-          
+          this.loading = false;
         }
       );
     }

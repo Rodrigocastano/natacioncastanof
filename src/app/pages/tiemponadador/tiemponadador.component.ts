@@ -25,6 +25,7 @@ import { UsuarioService } from '../service/usuario.service';
 import { Usuario } from '../interfaces/usuario';
 import { TiemponadadorService } from '../service/tiemponadador.service';
 import { TiempoNadador } from '../interfaces/tiemponadador';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 @Component({
@@ -48,7 +49,8 @@ import { TiempoNadador } from '../interfaces/tiemponadador';
     DatePickerModule,
     SelectModule,
     DialogModule,
-    DropdownModule
+    DropdownModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './tiemponadador.component.html',
@@ -75,6 +77,7 @@ export class TiemponadadorComponent implements OnInit{
 
       submitted: boolean = false;
       maxDate: Date = new Date();
+      loading: boolean = true;
 
       constructor(
         private fb: FormBuilder,
@@ -108,8 +111,7 @@ export class TiemponadadorComponent implements OnInit{
         this.tiemponadadorService.getAllTodoTiemposNado().subscribe(
           data => {
             this.tiempoNadador = data.data
-            console.log(data.data);
-            
+            this.loading = false;
           }
         );
       }

@@ -23,6 +23,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TextareaModule } from 'primeng/textarea';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-medico',
@@ -44,7 +45,8 @@ import { TextareaModule } from 'primeng/textarea';
     DatePickerModule,
     SelectModule,
     DialogModule,
-    DropdownModule
+    DropdownModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './medico.component.html',
@@ -70,6 +72,7 @@ export class MedicoComponent implements OnInit{
 
   submitted: boolean = false;
   maxDate: Date = new Date();
+  loading: boolean = true;
   
   constructor(
       private fb: FormBuilder,
@@ -101,7 +104,7 @@ export class MedicoComponent implements OnInit{
       this.medicoService.getAllTodoMedico().subscribe(
         data => {
           this.medico = data.data
-          console.log(data.data);
+          this.loading = false;
           
         }
       );

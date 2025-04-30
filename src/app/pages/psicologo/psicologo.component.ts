@@ -23,6 +23,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TextareaModule } from 'primeng/textarea';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-psicologo',
@@ -44,7 +45,8 @@ import { DatePickerModule } from 'primeng/datepicker';
     DatePickerModule,
     SelectModule,
     DialogModule,
-    DropdownModule
+    DropdownModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './psicologo.component.html',
@@ -70,7 +72,8 @@ export class PsicologoComponent implements OnInit{
 
   submitted: boolean = false;
   maxDate: Date = new Date();
-  
+  loading: boolean = true;
+
   constructor(
       private fb: FormBuilder,
       private psicologoService: PsicologoService,
@@ -101,7 +104,7 @@ export class PsicologoComponent implements OnInit{
       this.psicologoService.getAllTodoPsicologos().subscribe(
         data => {
           this.psicologo = data.data
-          console.log(data.data);
+          this.loading = false;
           
         }
       );

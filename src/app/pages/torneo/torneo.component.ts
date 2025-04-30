@@ -20,6 +20,7 @@ import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-torneo',
@@ -39,7 +40,8 @@ import { DatePickerModule } from 'primeng/datepicker';
         SelectModule,
         DialogModule,
         DropdownModule,
-        DatePickerModule
+        DatePickerModule,
+        ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './torneo.component.html',
@@ -51,18 +53,16 @@ export class TorneoComponent implements OnInit  {
   torneo: Torneo[] = [];
   idTorneo: number = 0;
   visibleDelete: boolean = false;
-
   formUpdate!: FormGroup;
   torn: any
   idForUpdate: number = 0;
   visibleUpdate: boolean = false;
-  
   filtro: string = '';
   buscadorFiltrados: Torneo[] = [];
-  
   submitted: boolean = false;
 
   maxDate: Date = new Date();
+  loading: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -91,7 +91,7 @@ export class TorneoComponent implements OnInit  {
       data => {
         this.torneo = data
         this.buscadorFiltrados = [...data];
-        console.log(this.torneo)
+        this.loading = false;
       }
     );
   }

@@ -21,6 +21,7 @@ import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-usuario',
@@ -40,7 +41,8 @@ import { DatePickerModule } from 'primeng/datepicker';
     SelectModule,
     DialogModule,
     DropdownModule,
-    DatePickerModule
+    DatePickerModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './usuario.component.html',
@@ -64,6 +66,7 @@ export class UsuarioComponent implements OnInit  {
   
   submitted: boolean = false;
   maxDate: Date = new Date();
+  loading: boolean = true;
   
     constructor(
       private fb: FormBuilder,
@@ -109,6 +112,7 @@ export class UsuarioComponent implements OnInit  {
         data => {
           this.usuario = data
           this.buscadorFiltrados = [...data];
+          this.loading = false;
           console.log(this.usuario)
         }
       );
@@ -117,7 +121,7 @@ export class UsuarioComponent implements OnInit  {
     getGrupo() {
       this.usuarioService.getAllGrupo().subscribe(data => {
         this.grupo = data
-        console.log(this.grupo)
+        
       });
     }
 

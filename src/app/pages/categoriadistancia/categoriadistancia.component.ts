@@ -21,6 +21,7 @@ import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CategoriaDistancia } from '../interfaces/categoriadistancia';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-categoriadistancia',
@@ -40,7 +41,8 @@ import { CategoriaDistancia } from '../interfaces/categoriadistancia';
         DatePickerModule,
         SelectModule,
         DialogModule,
-        DropdownModule
+        DropdownModule,
+        ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './categoriadistancia.component.html',
@@ -63,7 +65,8 @@ export class CategoriadistanciaComponent implements OnInit  {
     tipoNado: TipoNado[] = [];
     
     submitted: boolean = false;
-    
+    loading: boolean = true;
+
     constructor(
       private fb: FormBuilder,
       private categoriadistanciaService: CategoriadistanciaService,
@@ -91,7 +94,7 @@ export class CategoriadistanciaComponent implements OnInit  {
         data => {
           this.categoriaDistancia = data
           this.buscadorFiltrados = [...data];
-          console.log(this.categoriaDistancia)
+          this.loading = false;
         }
       );
     }

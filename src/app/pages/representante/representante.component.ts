@@ -20,6 +20,7 @@ import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-representante',
@@ -39,7 +40,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     CalendarModule,
     SelectModule,
     DialogModule,
-    DropdownModule
+    DropdownModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './representante.component.html',
@@ -61,6 +63,7 @@ export class RepresentanteComponent implements OnInit  {
   buscadorFiltrados: Representante[] = [];
   
   submitted: boolean = false;
+  loading: boolean = true;
  
   constructor(
     private fb: FormBuilder,
@@ -91,7 +94,7 @@ export class RepresentanteComponent implements OnInit  {
       data => {
         this.representante = data
         this.buscadorFiltrados = [...data];
-        console.log(this.representante)
+        this.loading = false;
       }
     );
   }

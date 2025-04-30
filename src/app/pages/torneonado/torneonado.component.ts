@@ -28,6 +28,7 @@ import { TorneoNado } from '../interfaces/torneonado';
 import { TorneoService } from '../service/torneo.service';
 import { Torneo } from '../interfaces/torneo';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-torneonado',
@@ -49,7 +50,8 @@ import { DatePickerModule } from 'primeng/datepicker';
     DatePickerModule,
     SelectModule,
     DialogModule,
-    DropdownModule
+    DropdownModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './torneonado.component.html',
@@ -78,6 +80,7 @@ export class TorneonadoComponent implements OnInit{
 
       submitted: boolean = false;
       maxDate: Date = new Date();
+      loading: boolean = true;
   
       constructor(
         private fb: FormBuilder,
@@ -118,7 +121,7 @@ export class TorneonadoComponent implements OnInit{
         this.TorneonadoService.getAllTodoTorneoNado().subscribe(
           data => {
             this.torneoNado = data.data
-            console.log(data.data);
+            this.loading = false;
             
           }
         );

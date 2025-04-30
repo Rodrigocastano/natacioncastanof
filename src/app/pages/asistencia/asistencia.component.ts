@@ -23,6 +23,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TextareaModule } from 'primeng/textarea';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-asistencia',
@@ -44,7 +45,8 @@ import { DatePickerModule } from 'primeng/datepicker';
     DatePickerModule,
     SelectModule,
     DialogModule,
-    DropdownModule
+    DropdownModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './asistencia.component.html',
@@ -70,6 +72,7 @@ export class AsistenciaComponent implements OnInit{
 
   submitted: boolean = false;
   maxDate: Date = new Date();
+  loading: boolean = true;
   
   constructor(
       private fb: FormBuilder,
@@ -99,7 +102,7 @@ export class AsistenciaComponent implements OnInit{
       this.asistenciaService.getAllTodoAsistencias().subscribe(
         data => {
           this.asistencia = data.data
-          console.log(data.data);
+          this.loading = false;
         }
       );
     }

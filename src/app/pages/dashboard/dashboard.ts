@@ -3,16 +3,19 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { DashboardService } from '../service/dashboard.service';
 import { Dashboards } from '../interfaces/dashboards';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 
 @Component({
     selector: 'app-dashboard',
-    imports: [CommonModule],
+    imports: [CommonModule, ProgressSpinnerModule],
     templateUrl: '/dashboard.html'
 
 })
 export class Dashboard implements OnInit {
+
+    loading: boolean = true;
 
     completo: any[] = [];
     pendiente: any[] = [];
@@ -50,6 +53,7 @@ export class Dashboard implements OnInit {
         this.getAbonado();
         this.getCompleto();
         this.getPendiente();
+        
 
       }
 
@@ -57,6 +61,7 @@ export class Dashboard implements OnInit {
         this.dashboardService.getAllCompleto().subscribe(data => {
           this.completo = data.data;
           this.agrupadosCompleto = this.agruparPagosPorUsuario(this.completo);
+          this.loading = false;
         });
       }
       
@@ -64,6 +69,7 @@ export class Dashboard implements OnInit {
         this.dashboardService.getAllAbonado().subscribe(data => {
           this.abonado = data.data;
           this.agrupadosAbonado = this.agruparPagosPorUsuario(this.abonado);
+          this.loading = false;
         });
       }
       
@@ -71,6 +77,7 @@ export class Dashboard implements OnInit {
         this.dashboardService.getAllPendiente().subscribe(data => {
           this.pendiente = data.data;
           this.agrupadosPendiente = this.agruparPagosPorUsuario(this.pendiente);
+          this.loading = false;
         });
       }
       

@@ -21,6 +21,7 @@ import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-entrenador',
@@ -40,7 +41,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     DatePickerModule,
     SelectModule,
     DialogModule,
-    DropdownModule
+    DropdownModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './entrenador.component.html',
@@ -65,7 +67,7 @@ export class EntrenadorComponent implements OnInit  {
     submitted: boolean = false;
     mostrarPassword: boolean = false;
     maxDate: Date = new Date();
-  
+    loading: boolean = true;
 
     constructor(
       private fb: FormBuilder,
@@ -117,7 +119,8 @@ export class EntrenadorComponent implements OnInit  {
       data => {
         this.entrenador = data
         this.buscadorFiltrados = [...data];
-        console.log(this.entrenador)
+        this.loading = false;
+       
       }
     );
   }
