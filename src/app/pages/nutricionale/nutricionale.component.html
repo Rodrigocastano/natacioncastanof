@@ -24,6 +24,7 @@
             <tr>
                 <th style="min-width: 4rem"></th>
                 <th style="min-width: 6rem">ID</th>
+                <th pSortableColumn="name" style="min-width:8rem">Cédula</th>
                 <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
                 <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
                 <th pSortableColumn="price" style="min-width: 8rem">Género</th>
@@ -37,6 +38,7 @@
                     <p-button type="button" pRipple [pRowToggler]="usuario" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
                 </td>
                 <td>{{ usuario.id }}</td>
+                <td>{{ usuario.cedula }}</td>
                 <td>{{ usuario.nombre }}</td>
                 <td>{{ usuario.apellido }}</td>
                 <td>{{ usuario.genero }}</td>
@@ -54,7 +56,6 @@
                                     <th>ID</th>
                                     <th>Nombre</th>
                                     <th>Apellido</th>
-                                    <th>Cédula</th>
                                     <th>ProteínaConsumida</th>
                                     <th>CaloríaConsumida</th>
                                     <th>Fecha</th>
@@ -67,7 +68,6 @@
                                     <td>{{ elast.id }}</td>
                                     <td>{{ elast.nombre }}</td>
                                     <td>{{ elast.apellido }}</td>
-                                    <td>{{ elast.cedula }}</td>
                                     <td>{{ elast.proteina_consumida }} Kg</td>
                                     <td>{{ elast.caloria_consumida }} Kg</td>
                                     <td>{{ elast.fecha }}</td>

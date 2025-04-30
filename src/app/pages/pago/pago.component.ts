@@ -121,7 +121,6 @@ export class PagoComponent implements OnInit{
               ...usuario,
               display: `${usuario.nombre} ${usuario.apellido} - ${usuario.cedula}`
             }));
-            console.log(this.usuarios);
           }
         );
       }
@@ -133,7 +132,6 @@ export class PagoComponent implements OnInit{
               ...tipoPago,
               displayEstado: `${tipoPago.tipos}`
             }));
-            console.log(this.tipoPago);
           }
         );
       }
@@ -145,7 +143,6 @@ export class PagoComponent implements OnInit{
               ...estadoPago,
               displayTipo: `${estadoPago.pagos}`
             }));
-            console.log(this.estadoPago);
           }
         );
       }
