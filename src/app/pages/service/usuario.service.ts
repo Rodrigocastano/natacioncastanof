@@ -4,8 +4,6 @@ import { Observable } from 'rxjs';
 import { Usuario } from '../interfaces/usuario'; 
 import { Grupo } from '../interfaces/grupo'; 
 import { environment } from '../../../environments/environments';
-import { Router } from '@angular/router';
-
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +13,11 @@ export class UsuarioService {
 
   private apisUrl = environment.apisUrls; 
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient) {}
+  
+  getAllPerfiles(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(`${this.apisUrl}/indexperfile`);
+  }
 
   getAllUsuarios(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${this.apisUrl}/indexUsuario`);

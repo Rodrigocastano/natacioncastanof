@@ -1,5 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { DashboardService } from '../service/dashboard.service';
+import { Dashboards } from '../interfaces/dashboards';
 
 
 
@@ -8,14 +11,91 @@ import { Component } from '@angular/core';
     imports: [CommonModule],
     templateUrl: '/dashboard.html'
 
- /*    template: `
-        <div class="grid grid-cols-12 gap-8">
-            <app-stats-widget class="contents" />
-            <div class="col-span-12 xl:col-span-6">
-            </div>
-            <div class="col-span-12 xl:col-span-6">
-            </div>
-        </div>
-    ` */
 })
-export class Dashboard {}
+export class Dashboard implements OnInit {
+
+    completo: any[] = [];
+    pendiente: any[] = [];
+    abonado: any[] = [];
+
+    visibleCompleto = 5;
+    visiblePendiente = 5;
+    visibleAbonado = 5;
+  
+    verMas(tipo: string) {
+      if (tipo === 'completo') this.visibleCompleto += 5;
+      if (tipo === 'pendiente') this.visiblePendiente += 5;
+      if (tipo === 'abonado') this.visibleAbonado += 5;
+    }
+
+    verMenos(tipo: string) {
+        if (tipo === 'completo' && this.visibleCompleto > 5) this.visibleCompleto -= 5;
+        if (tipo === 'pendiente' && this.visiblePendiente > 5) this.visiblePendiente -= 5;
+        if (tipo === 'abonado' && this.visibleAbonado > 5) this.visibleAbonado -= 5;
+    }
+
+    agrupadosCompleto: any[] = [];
+    agrupadosAbonado: any[] = [];
+    agrupadosPendiente: any[] = [];
+
+  
+
+    constructor(
+        private fb: FormBuilder,
+        private dashboardService: DashboardService,
+      ){}
+
+
+      ngOnInit(): void {
+        this.getAbonado();
+        this.getCompleto();
+        this.getPendiente();
+
+      }
+
+      getCompleto() {
+        this.dashboardService.getAllCompleto().subscribe(data => {
+          this.completo = data.data;
+          this.agrupadosCompleto = this.agruparPagosPorUsuario(this.completo);
+        });
+      }
+      
+      getAbonado() {
+        this.dashboardService.getAllAbonado().subscribe(data => {
+          this.abonado = data.data;
+          this.agrupadosAbonado = this.agruparPagosPorUsuario(this.abonado);
+        });
+      }
+      
+      getPendiente() {
+        this.dashboardService.getAllPendiente().subscribe(data => {
+          this.pendiente = data.data;
+          this.agrupadosPendiente = this.agruparPagosPorUsuario(this.pendiente);
+        });
+      }
+      
+
+
+      agruparPagosPorUsuario(pagos: any[]): any[] {
+        const mapa = new Map<string, any[]>();
+      
+        pagos.forEach(pago => {
+          const clave = `${pago.nombre}_${pago.apellido}`; // o usa pago.usuario_id si tienes
+          if (!mapa.has(clave)) {
+            mapa.set(clave, []);
+          }
+          mapa.get(clave)!.push(pago);
+        });
+      
+        return Array.from(mapa.entries()).map(([clave, pagos]) => ({
+          usuario: clave,
+          pagos,
+          mostrarTodos: false
+        }));
+      }
+      
+      
+
+
+}
+
