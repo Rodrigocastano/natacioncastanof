@@ -69,6 +69,9 @@ export class NutricionaleComponent implements OnInit{
   submitted: boolean = false;
   maxDate: Date = new Date();
   loading: boolean = true;
+
+  terminoBusqueda: string = '';
+  buscarOriginal: Nutricionales[] = [];
   
   constructor(
       private fb: FormBuilder,
@@ -100,6 +103,7 @@ export class NutricionaleComponent implements OnInit{
       this.nutricionaleService.getAllTodoNutricionale().subscribe(
         data => {
           this.nutricionale = data.data
+          this.buscarOriginal = data.data; 
           this.loading = false;
         }
       );
@@ -115,6 +119,17 @@ export class NutricionaleComponent implements OnInit{
           console.log(this.usuarios);
         }
       );
+    }
+
+    filtrarBusqueda() {
+      const termino = this.terminoBusqueda.trim().toLowerCase();
+      this.nutricionale = this.buscarOriginal.filter(usuario => {
+        return (
+          usuario.nombre?.toLowerCase().includes(termino) ||
+          usuario.apellido?.toLowerCase().includes(termino) ||
+          usuario.cedula?.toLowerCase().includes(termino)
+        );
+      });
     }
 
     abrirExpand(event: TableRowExpandEvent) {

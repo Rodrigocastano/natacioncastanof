@@ -79,6 +79,9 @@ export class TiemponadadorComponent implements OnInit{
       maxDate: Date = new Date();
       loading: boolean = true;
 
+      terminoBusqueda: string = '';
+      buscarOriginal: TiempoNadador[] = [];
+
       constructor(
         private fb: FormBuilder,
         private tiemponadadorService: TiemponadadorService,
@@ -111,6 +114,7 @@ export class TiemponadadorComponent implements OnInit{
         this.tiemponadadorService.getAllTodoTiemposNado().subscribe(
           data => {
             this.tiempoNadador = data.data
+            this.buscarOriginal = data.data; 
             this.loading = false;
           }
         );
@@ -151,6 +155,16 @@ export class TiemponadadorComponent implements OnInit{
         );
       }
       
+      filtrarBusqueda() {
+        const termino = this.terminoBusqueda.trim().toLowerCase();
+        this.tiempoNadador = this.buscarOriginal.filter(usuario => {
+          return (
+            usuario.nombre?.toLowerCase().includes(termino) ||
+            usuario.apellido?.toLowerCase().includes(termino) ||
+            usuario.cedula?.toLowerCase().includes(termino)
+          );
+        });
+      }
 
       abrirExpand(event: TableRowExpandEvent) {
         this.messageService.add({ 

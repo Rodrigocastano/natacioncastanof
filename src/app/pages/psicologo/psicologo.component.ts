@@ -74,6 +74,9 @@ export class PsicologoComponent implements OnInit{
   maxDate: Date = new Date();
   loading: boolean = true;
 
+  terminoBusqueda: string = '';
+  buscarOriginal: Psicologo[] = [];
+
   constructor(
       private fb: FormBuilder,
       private psicologoService: PsicologoService,
@@ -104,6 +107,7 @@ export class PsicologoComponent implements OnInit{
       this.psicologoService.getAllTodoPsicologos().subscribe(
         data => {
           this.psicologo = data.data
+          this.buscarOriginal = data.data;
           this.loading = false;
           
         }
@@ -120,6 +124,17 @@ export class PsicologoComponent implements OnInit{
           console.log(this.usuarios);
         }
       );
+    }
+
+    filtrarBusqueda() {
+      const termino = this.terminoBusqueda.trim().toLowerCase();
+      this.psicologo = this.buscarOriginal.filter(usuario => {
+        return (
+          usuario.nombre?.toLowerCase().includes(termino) ||
+          usuario.apellido?.toLowerCase().includes(termino) ||
+          usuario.cedula?.toLowerCase().includes(termino)
+        );
+      });
     }
 
     abrirExpand(event: TableRowExpandEvent) {

@@ -8,4 +8,5 @@ export interface Pago {
     estado?: boolean;
     nombre?: string;
     apellido?: string
+    cedula?: string
 }

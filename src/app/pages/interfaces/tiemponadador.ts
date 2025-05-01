@@ -4,4 +4,7 @@ export interface TiempoNadador {
     id_categoria: number;
     fecha: string;
     tiempo: string; 
+    nombre?: string;
+    apellido?: string
+    cedula?: string
   }

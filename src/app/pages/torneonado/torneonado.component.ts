@@ -81,6 +81,9 @@ export class TorneonadoComponent implements OnInit{
       submitted: boolean = false;
       maxDate: Date = new Date();
       loading: boolean = true;
+
+       terminoBusqueda: string = '';
+      buscarOriginal: TorneoNado[] = [];
   
       constructor(
         private fb: FormBuilder,
@@ -121,6 +124,7 @@ export class TorneonadoComponent implements OnInit{
         this.TorneonadoService.getAllTodoTorneoNado().subscribe(
           data => {
             this.torneoNado = data.data
+            this.buscarOriginal = data.data; 
             this.loading = false;
             
           }
@@ -183,6 +187,17 @@ export class TorneonadoComponent implements OnInit{
             console.log(this.categoriaDistancia);
           }
         );
+      }
+
+      filtrarBusqueda() {
+        const termino = this.terminoBusqueda.trim().toLowerCase();
+        this.torneoNado = this.buscarOriginal.filter(usuario => {
+          return (
+            usuario.nombre?.toLowerCase().includes(termino) ||
+            usuario.apellido?.toLowerCase().includes(termino) ||
+            usuario.cedula?.toLowerCase().includes(termino)
+          );
+        });
       }
 
       abrirExpand(event: TableRowExpandEvent) {

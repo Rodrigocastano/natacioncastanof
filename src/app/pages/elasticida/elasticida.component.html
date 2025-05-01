@@ -20,13 +20,16 @@
         
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registró de Elasticida</h5>
-                    <p-iconfield>
-                        <p-inputicon styleClass="pi pi-search" />
-                        <input pInputText type="text"   placeholder="Buscar..."  />
-                    </p-iconfield>
+                  <h5 class="m-0">Registro de Elasticidad</h5>
+                  <p-iconfield>
+                    <p-inputicon styleClass="pi pi-search"></p-inputicon>
+                    <input pInputText type="text" placeholder="Buscar..."
+                           [(ngModel)]="terminoBusqueda"
+                           (input)="filtrarBusqueda()" />
+                  </p-iconfield>
                 </div>
-            </ng-template>
+              </ng-template>
+              
 
             <ng-template #header>
                 <tr>

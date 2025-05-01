@@ -17,7 +17,7 @@ import { Usuario } from '../../pages/interfaces/usuario';
             <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
                 <i class="pi pi-bars"></i>
             </button>
-            <a class="layout-topbar-logo" routerLink="/">
+            <a class="layout-topbar-logo">
                 <span >CASTAÑO</span>
             </a>
         </div>

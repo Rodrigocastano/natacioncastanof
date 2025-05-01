@@ -7,4 +7,5 @@ export interface Psicologo {
     estado?: boolean;
     nombre?: string;
     apellido?: string
+    cedula?: string
 }

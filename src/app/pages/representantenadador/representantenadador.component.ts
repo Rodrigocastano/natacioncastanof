@@ -72,6 +72,9 @@ export class RepresentantenadadorComponent implements OnInit{
   submitted: boolean = false;
   loading: boolean = true;
 
+  terminoBusqueda: string = '';
+  buscarOriginal: RepresentanteNadador[] = [];
+
   constructor(
       private fb: FormBuilder,
       private representantenadadorService: RepresentantenadadorService,
@@ -101,6 +104,7 @@ export class RepresentantenadadorComponent implements OnInit{
       this.representantenadadorService.getAllRepresentanteNadador().subscribe({
         next: data => {
           this.representanteNadador = data;
+          this.buscarOriginal = data; 
           this.loading = false;
         },
         error: error => {
@@ -137,6 +141,17 @@ export class RepresentantenadadorComponent implements OnInit{
           console.log(this.representante);
         }
       );
+    }
+
+    filtrarBusqueda() {
+      const termino = this.terminoBusqueda.trim().toLowerCase();
+      this.representanteNadador = this.buscarOriginal.filter(usuario => {
+        return (
+          usuario.nombre?.toLowerCase().includes(termino) ||
+          usuario.apellido?.toLowerCase().includes(termino) ||
+          usuario.cedula?.toLowerCase().includes(termino)
+        );
+      });
     }
 
     abrirExpand(event: TableRowExpandEvent) {

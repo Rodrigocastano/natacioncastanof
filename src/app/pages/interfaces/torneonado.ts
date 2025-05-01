@@ -6,4 +6,7 @@ export interface TorneoNado {
     id_categoria: number;
     fecha: string;
     tiempo: string; 
+    nombre?: string;
+    apellido?: string
+    cedula?: string
   }

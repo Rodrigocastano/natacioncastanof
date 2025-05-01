@@ -77,6 +77,9 @@ export class PagoComponent implements OnInit{
       maxDate: Date = new Date();
       loading: boolean = true;
 
+      terminoBusqueda: string = '';
+      buscarOriginal: Pago[] = [];
+
       constructor(
         private fb: FormBuilder,
         private pagoService: PagoService,
@@ -111,8 +114,8 @@ export class PagoComponent implements OnInit{
         this.pagoService.getAllTodoPago().subscribe(
           data => {
             this.pago = data.data
+            this.buscarOriginal = data.data; 
             this.loading = false;
-            
           }
         );
       }
@@ -148,6 +151,17 @@ export class PagoComponent implements OnInit{
             }));
           }
         );
+      }
+
+      filtrarBusqueda() {
+        const termino = this.terminoBusqueda.trim().toLowerCase();
+        this.pago = this.buscarOriginal.filter(usuario => {
+          return (
+            usuario.nombre?.toLowerCase().includes(termino) ||
+            usuario.apellido?.toLowerCase().includes(termino) ||
+            usuario.cedula?.toLowerCase().includes(termino)
+          );
+        });
       }
 
       abrirExpand(event: TableRowExpandEvent) {

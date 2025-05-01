@@ -6,4 +6,5 @@ export interface Asistencia {
     estado?: boolean;
     nombre?: string;
     apellido?: string
+    cedula?: string
 }

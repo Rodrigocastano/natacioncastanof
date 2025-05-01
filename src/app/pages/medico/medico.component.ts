@@ -73,6 +73,9 @@ export class MedicoComponent implements OnInit{
   submitted: boolean = false;
   maxDate: Date = new Date();
   loading: boolean = true;
+
+  terminoBusqueda: string = '';
+  buscarOriginal: Medico[] = [];
   
   constructor(
       private fb: FormBuilder,
@@ -104,8 +107,8 @@ export class MedicoComponent implements OnInit{
       this.medicoService.getAllTodoMedico().subscribe(
         data => {
           this.medico = data.data
+          this.buscarOriginal = data.data; 
           this.loading = false;
-          
         }
       );
     }
@@ -120,6 +123,17 @@ export class MedicoComponent implements OnInit{
           console.log(this.usuarios);
         }
       );
+    }
+
+    filtrarBusqueda() {
+      const termino = this.terminoBusqueda.trim().toLowerCase();
+      this.medico = this.buscarOriginal.filter(usuario => {
+        return (
+          usuario.nombre?.toLowerCase().includes(termino) ||
+          usuario.apellido?.toLowerCase().includes(termino) ||
+          usuario.cedula?.toLowerCase().includes(termino)
+        );
+      });
     }
 
     abrirExpand(event: TableRowExpandEvent) {

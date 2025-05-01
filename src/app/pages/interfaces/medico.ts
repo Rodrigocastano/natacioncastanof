@@ -7,4 +7,5 @@ export interface Medico {
     estado?: boolean;
     nombre?: string;
     apellido?: string
+    cedula?: string
 }

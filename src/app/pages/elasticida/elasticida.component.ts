@@ -70,6 +70,11 @@ export class ElasticidaComponent implements OnInit{
     maxDate: Date = new Date();
     loading: boolean = true;
 
+    terminoBusqueda: string = '';
+    buscarOriginal: Elasticida[] = [];
+
+
+
     constructor(
         private fb: FormBuilder,
         private elasticidaService: ElasticidaService,
@@ -98,7 +103,8 @@ export class ElasticidaComponent implements OnInit{
       this.elasticidaService.getAllTodoElasticida().subscribe(
         data => {
           this.elasticida = data.data
-           this.loading = false; 
+          this.buscarOriginal = data.data; 
+          this.loading = false; 
         }
       );
     }
@@ -112,6 +118,17 @@ export class ElasticidaComponent implements OnInit{
           }));
         }
       );
+    }
+
+    filtrarBusqueda() {
+      const termino = this.terminoBusqueda.trim().toLowerCase();
+      this.elasticida = this.buscarOriginal.filter(usuario => {
+        return (
+          usuario.nombre?.toLowerCase().includes(termino) ||
+          usuario.apellido?.toLowerCase().includes(termino) ||
+          usuario.cedula?.toLowerCase().includes(termino)
+        );
+      });
     }
 
     abrirExpand(event: TableRowExpandEvent) {

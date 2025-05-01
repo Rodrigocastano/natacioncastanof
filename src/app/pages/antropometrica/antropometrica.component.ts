@@ -74,6 +74,9 @@ export class AntropometricaComponent implements OnInit{
     maxDate: Date = new Date();
     loading: boolean = true;
 
+    terminoBusqueda: string = '';
+    buscarOriginal: Antropometrica[] = [];
+
     constructor(
           private fb: FormBuilder,
           private antropometricaService: AntropometricaService,
@@ -116,6 +119,7 @@ export class AntropometricaComponent implements OnInit{
       this.antropometricaService.getAllTodoAntropometrica().subscribe(
         data => {
           this.antropometrica = data.data
+          this.buscarOriginal = data.data; 
           this.loading = false;
         }
       );
@@ -131,6 +135,17 @@ export class AntropometricaComponent implements OnInit{
           console.log(this.usuarios);
         }
       );
+    }
+
+    filtrarBusqueda() {
+      const termino = this.terminoBusqueda.trim().toLowerCase();
+      this.antropometrica = this.buscarOriginal.filter(usuario => {
+        return (
+          usuario.nombre?.toLowerCase().includes(termino) ||
+          usuario.apellido?.toLowerCase().includes(termino) ||
+          usuario.cedula?.toLowerCase().includes(termino)
+        );
+      });
     }
 
     abrirExpand(event: TableRowExpandEvent) {

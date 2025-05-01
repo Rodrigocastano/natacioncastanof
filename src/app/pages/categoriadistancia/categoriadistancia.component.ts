@@ -60,12 +60,14 @@ export class CategoriadistanciaComponent implements OnInit  {
     idForUpdate: number = 0;
     visibleUpdate: boolean = false;
     
-    filtro: string = '';
-    buscadorFiltrados: CategoriaDistancia[] = [];
+
     tipoNado: TipoNado[] = [];
     
     submitted: boolean = false;
     loading: boolean = true;
+
+    terminoBusqueda: string = '';
+    buscarOriginal: CategoriaDistancia[] = [];
 
     constructor(
       private fb: FormBuilder,
@@ -90,21 +92,16 @@ export class CategoriadistanciaComponent implements OnInit  {
     }
 
     getCategoriaDistancia() {
-      this.categoriadistanciaService.getAllCategoriasDistancia().subscribe(
-        data => {
-          this.categoriaDistancia = data
-          this.buscadorFiltrados = [...data];
-          this.loading = false;
-        }
-      );
-    }
-
-    getTipoNados() {
-      this.categoriadistanciaService.getAllTipoNado().subscribe(data => {
-        this.tipoNado = data
-        console.log(this.categoriadis)
+      this.categoriadistanciaService.getAllCategoriasDistancia().subscribe(data => {
+        this.categoriaDistancia = data.map(item => ({
+          ...item,
+          tipos: this.getNombreTipo(item.id_tipo_nado)
+        }));
+        this.buscarOriginal = [...this.categoriaDistancia];
+        this.loading = false;
       });
     }
+    
 
     getTipoNado() {
       this.categoriadistanciaService.getAllTipoNado().subscribe(
@@ -118,6 +115,13 @@ export class CategoriadistanciaComponent implements OnInit  {
       );
     }
 
+    filtrarBusqueda() {
+      const termino = this.terminoBusqueda.trim().toLowerCase();
+      this.categoriaDistancia = this.buscarOriginal.filter(usuario =>
+        this.getNombreTipo(usuario.id_tipo_nado).toLowerCase().includes(termino)
+      );
+    }
+    
     store() {
       this.submitted = true;
   
@@ -181,17 +185,7 @@ export class CategoriadistanciaComponent implements OnInit  {
         return grupoEncontrado ? grupoEncontrado.tipos : 'Sin grupo';
       }
     
-      buscador() {
-      const termino = this.filtro.toLowerCase().trim();
-    
-      if (termino === '') {
-      this.categoriaDistancia = [...this.buscadorFiltrados];
-      } else {
-      this.categoriaDistancia = this.buscadorFiltrados.filter(user =>
-        user.id_tipo_nado?.toLowerCase().includes(termino) 
-      );
-      }
-      }
+      
 
       update() {
         if (this.formUpdate.invalid) {

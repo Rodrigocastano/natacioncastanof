@@ -73,6 +73,9 @@ export class AsistenciaComponent implements OnInit{
   submitted: boolean = false;
   maxDate: Date = new Date();
   loading: boolean = true;
+
+  terminoBusqueda: string = '';
+  buscarOriginal: Asistencia[] = [];
   
   constructor(
       private fb: FormBuilder,
@@ -102,6 +105,7 @@ export class AsistenciaComponent implements OnInit{
       this.asistenciaService.getAllTodoAsistencias().subscribe(
         data => {
           this.asistencia = data.data
+          this.buscarOriginal = data.data; 
           this.loading = false;
         }
       );
@@ -117,6 +121,17 @@ export class AsistenciaComponent implements OnInit{
           console.log(this.usuarios);
         }
       );
+    }
+
+    filtrarBusqueda() {
+      const termino = this.terminoBusqueda.trim().toLowerCase();
+      this.asistencia = this.buscarOriginal.filter(usuario => {
+        return (
+          usuario.nombre?.toLowerCase().includes(termino) ||
+          usuario.apellido?.toLowerCase().includes(termino) ||
+          usuario.cedula?.toLowerCase().includes(termino)
+        );
+      });
     }
 
     abrirExpand(event: TableRowExpandEvent) {
