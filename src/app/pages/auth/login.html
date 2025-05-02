@@ -26,8 +26,8 @@
 
                 <form (ngSubmit)="login()">
                 <div>
-                    <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
-                    <input pInputText id="email1" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8" [(ngModel)]="email"  name="email" type="email"  required/>
+                    <label for="email" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
+                    <input pInputText id="email" name="email" autocomplete="email" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8" [(ngModel)]="email"  name="email" type="email"  required/>
                     
 
                     <label for="password" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>

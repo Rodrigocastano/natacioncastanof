@@ -43,6 +43,7 @@ import { Usuario } from '../../pages/interfaces/usuario';
 <p-dialog 
     [(visible)]="showUserDialog"
     [modal]="true"
+    [blockScroll]="true"
     [dismissableMask]="false"
     [draggable]="false"
     [resizable]="false"
@@ -59,35 +60,33 @@ import { Usuario } from '../../pages/interfaces/usuario';
         padding: '1rem'
     }"
 >
-    <div *ngFor="let u of usuario" style="display: flex; flex-direction: column; gap: 1.5rem;">
-        <div style="padding: 1rem; background-color: #f9fafb; border-radius: 0.75rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <div style="margin-bottom: 1rem;">
-                <strong style="color: #333; font-size: 1rem;">Nombre:</strong> 
-                <span style="background-color: #e0f7fa; color: #00796b; font-weight: 500;">
-                    {{ u.nombre }}
-                </span>
-            </div>
-            <div style="margin-bottom: 1rem;">
-                <strong style="color: #333; font-size: 1rem;">Apellido:</strong> 
-                <span style="background-color: #e0f7fa; color: #00796b; font-weight: 500;">
-                    {{ u.apellido }}
-                </span>
-            </div>
-            <div style="margin-bottom: 1rem;">
-                <strong style="color: #333; font-size: 1rem;">Cédula:</strong> 
-                <span style="background-color: #e0f7fa; color: #00796b; font-weight: 500;">
-                    {{ u.cedula }}
-                </span>
-            </div>
-            <div>
-                <strong style="color: #333; font-size: 1rem;">Rol:</strong> 
-                <span style="background-color: #e0f7fa; color: #00796b; font-weight: 500;">
-                    {{ getRolNombre(u.id_rol) }}
-                </span>
-            </div>
+    <div *ngFor="let u of usuario" style="display: flex; flex-direction: column; gap: 1rem;">
+        <!-- Fila: Nombre -->
+        <div style="display: flex; justify-content: space-between;">
+            <strong style="color: #333;">Nombre:</strong>
+            <span style="color: #00796b;">{{ u.nombre }}</span>
+        </div>
+
+        <!-- Fila: Apellido -->
+        <div style="display: flex; justify-content: space-between;">
+            <strong style="color: #333;">Apellido:</strong>
+            <span style="color: #00796b;">{{ u.apellido }}</span>
+        </div>
+
+        <!-- Fila: Cédula -->
+        <div style="display: flex; justify-content: space-between;">
+            <strong style="color: #333;">Cédula:</strong>
+            <span style="color: #00796b;">{{ u.cedula }}</span>
+        </div>
+
+        <!-- Fila: Rol -->
+        <div style="display: flex; justify-content: space-between;">
+            <strong style="color: #333;">Rol:</strong>
+            <span style="color: #00796b;">{{ getRolNombre(u.id_rol) }}</span>
         </div>
     </div>
 </p-dialog>
+
 
 
 
