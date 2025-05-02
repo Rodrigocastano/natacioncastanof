@@ -2,10 +2,6 @@
         <ng-template #start>
             <p-button label="Agregar nuevo Categodia distancia" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
         </ng-template>
-
-        <ng-template #end>
-            <p-button label="Descargar Pdf" icon="pi pi-upload" severity="secondary" (click)="exportPdf()" />
-        </ng-template>
     </p-toolbar>
 
     <p-toast />
@@ -73,7 +69,7 @@
                     <div class="col-span-6">
                         <label for="id_tipo_nado" class="block font-bold mb-3">Tipo Nado</label>             
                         <p-select
-                            formControlName="id_tipo_nado" inputId="id_tipo_nado" optionLabel="displayTipo" optionValue="id" placeholder="Seleccione un usuario"
+                            formControlName="id_tipo_nado" inputId="id_tipo_nado" optionLabel="displayTipo" optionValue="id" placeholder="Seleccione Tipo Nado"
                             [options]="tipoNado" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70" [appendTo]="'body'">
                         </p-select>
                         <div class="mt-2">
@@ -118,7 +114,7 @@
                     <div class="col-span-6">
                         <label for="id_tipo_nado" class="block font-bold mb-3">Tipo Nado</label>             
                         <p-select
-                            formControlName="id_tipo_nado" inputId="id_tipo_nado" optionLabel="displayTipo" optionValue="id" placeholder="Seleccione un usuario"
+                            formControlName="id_tipo_nado" inputId="id_tipo_nado" optionLabel="displayTipo" optionValue="id" placeholder="Seleccione Tipo Nado"
                             [options]="tipoNado" [filter]="true"filterBy="displayTipo" [showClear]="true" class="w-full md:w-70" [appendTo]="'body'">
                         </p-select>
                         <div class="mt-2">

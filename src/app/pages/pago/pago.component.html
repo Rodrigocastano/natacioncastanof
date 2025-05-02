@@ -20,7 +20,7 @@
 
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registro de registró de pago</h5>
+                    <h5 class="m-0">Registró de pago</h5>
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search"></p-inputicon>
                         <input pInputText type="text" placeholder="Buscar..."
@@ -120,12 +120,12 @@
                         <label for="id_tipo_pago" class="block font-bold mb-3">Tipo Pago</label>             
                         <p-select
                             [options]="tipoPago" formControlName="id_tipo_pago" inputId="id_tipo_pago" optionLabel="displayEstado" optionValue="id"
-                            placeholder="Seleccione un usuario" [filter]="true" filterBy="displayEstado" [showClear]="true" class="w-full md:w-70">
+                            placeholder="Seleccione el Tipo Pago" [filter]="true" filterBy="displayEstado" [showClear]="true" class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message
                                 *ngIf="formSave.get('id_tipo_pago')?.invalid && (formSave.get('id_tipo_pago')?.dirty || formSave.get('id_tipo_pago')?.touched)" severity="error" variant="simple" size="small" >
-                                Usuario es requerido
+                                Tipo Pago es requerido
                             </p-message>
                         </div>
                     </div>
@@ -134,12 +134,12 @@
                         <label for="id_estado_pago" class="block font-bold mb-3">Estado Pago</label>             
                         <p-select
                             [options]="estadoPago" formControlName="id_estado_pago" inputId="id_estado_pago" optionLabel="displayTipo" optionValue="id"
-                            placeholder="Seleccione un usuario" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
+                            placeholder="Seleccione el Estado Pago" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message
                                 *ngIf="formSave.get('id_estado_pago')?.invalid && (formSave.get('id_estado_pago')?.dirty || formSave.get('id_estado_pago')?.touched)" severity="error" variant="simple" size="small" >
-                                Usuario es requerido
+                                Estado Pago es requerido
                             </p-message>
                         </div>
                     </div>
@@ -192,7 +192,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar control médico" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar registró de pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
         
         <ng-template #content>
             <form [formGroup]="formUpdate" class="formulario">
@@ -208,12 +208,12 @@
                         <label for="id_tipo_pago" class="block font-bold mb-3">Tipo Pago</label>             
                         <p-select
                             [options]="tipoPago" formControlName="id_tipo_pago" inputId="id_tipo_pago" optionLabel="displayEstado" optionValue="id"
-                            placeholder="Seleccione un usuario" [filter]="true" filterBy="displayEstado" [showClear]="true" class="w-full md:w-70">
+                            placeholder="Seleccione el Tipo Pago" [filter]="true" filterBy="displayEstado" [showClear]="true" class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message
                                 *ngIf="formUpdate.get('id_tipo_pago')?.invalid && (formUpdate.get('id_tipo_pago')?.dirty || formUpdate.get('id_tipo_pago')?.touched)" severity="error" variant="simple" size="small" >
-                                Usuario es requerido
+                                Tipo Pago es requerido
                             </p-message>
                         </div>
                     </div>
@@ -222,12 +222,12 @@
                         <label for="id_estado_pago" class="block font-bold mb-3">Estado Pago</label>             
                         <p-select
                             [options]="estadoPago" formControlName="id_estado_pago" inputId="id_estado_pago" optionLabel="displayTipo" optionValue="id" 
-                            placeholder="Seleccione un usuario" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
+                            placeholder="Seleccione el Estado Pago" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message
                                 *ngIf="formUpdate.get('id_estado_pago')?.invalid && (formUpdate.get('id_estado_pago')?.dirty || formUpdate.get('id_estado_pago')?.touched)" severity="error" variant="simple" size="small" >
-                                Usuario es requerido
+                                Estado Pago es requerido
                             </p-message>
                         </div>
                     </div>

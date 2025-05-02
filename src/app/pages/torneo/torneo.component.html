@@ -2,10 +2,6 @@
         <ng-template #start>
             <p-button label="Agregar nuevo torneo" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
         </ng-template>
-
-        <ng-template #end>
-            <p-button label="Descargar Pdf" icon="pi pi-upload" severity="secondary" (click)="exportPdf()" />
-        </ng-template>
     </p-toolbar>
 
     <p-toast />
@@ -35,7 +31,7 @@
 
             <ng-template #header>
                 <tr>
-                    <th style="min-width: 6rem">Code</th>
+                    <th style="min-width: 6rem">ID</th>
                     <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
                     <th pSortableColumn="price" style="min-width: 12rem">FechaInscripción</th>
                     <th pSortableColumn="inventoryStatus" style="min-width: 10rem">Acciones</th>          

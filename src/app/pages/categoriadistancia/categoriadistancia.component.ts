@@ -252,28 +252,6 @@ export class CategoriadistanciaComponent implements OnInit  {
         this.idCategoriaDistancia = id;
         this.visibleDelete = true
       }  
-        
-      exportPdf() {
-        const doc = new jsPDF('p', 'pt', 'a4');
-        const tableData = this.categoriaDistancia.map((item: any) => [
-          item.id,
-          item.nombre,
-          item.apellido,
-          item.cedula,
-          item.telefono,
-          item.ciudad,
-          item.edad,
-          item.genero,
-          item.fechaNacimiento
-        ]);
-        autoTable(doc, {
-          head: [['ID', 'Nombre', 'Apellido', 'Cédula', 'Teléfono', 'Ciudad', 'Edad', 'Género', 'Nacimiento']],
-          body: tableData,
-          startY: 30
-        });
-      
-        doc.save('Usuarios.pdf');
-      }
                     
 }
       

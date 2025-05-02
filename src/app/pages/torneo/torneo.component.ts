@@ -230,21 +230,6 @@ errorMessageToast() {
         this.idTorneo = id;
         this.visibleDelete = true
       }  
-        
-      exportPdf() {
-        const doc = new jsPDF('p', 'pt', 'a4');
-        const tableData = this.torneo.map((item: any) => [
-          item.id,
-          item.nombre,
-          item.fecha
-        ]);
-        autoTable(doc, {
-          head: [['ID', 'Nombre', 'Fecha de inscripción']],
-          body: tableData,
-          startY: 30
-        });
-      
-        doc.save('Torneo.pdf');
-      }
+
           
     }

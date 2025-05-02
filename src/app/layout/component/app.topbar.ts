@@ -18,7 +18,7 @@ import { Usuario } from '../../pages/interfaces/usuario';
                 <i class="pi pi-bars"></i>
             </button>
             <a class="layout-topbar-logo">
-                <span >CASTAÑO</span>
+                <span style="white-space: nowrap;">NATACIÓN CASTAÑO</span>
             </a>
         </div>
 
