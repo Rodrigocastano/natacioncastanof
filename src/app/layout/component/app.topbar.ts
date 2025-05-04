@@ -6,14 +6,16 @@ import { DialogModule } from 'primeng/dialog';
 import { LayoutService } from '../service/layout.service';
 import { LoginService } from '../../pages/service/login.service';
 import { ButtonModule } from 'primeng/button';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
+
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, DialogModule, ButtonModule, ConfirmDialogModule, ],
-    providers: [ConfirmationService],
+    imports: [RouterModule, CommonModule, StyleClassModule, DialogModule, ButtonModule,ToastModule, ConfirmPopupModule ],
+    providers: [ConfirmationService, MessageService],
     template: ` 
     <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
@@ -42,8 +44,8 @@ import { ConfirmationService } from 'primeng/api';
                 </div>
             </div>
 
-
-            <p-confirmDialog></p-confirmDialog>
+            <p-confirmpopup />
+            <p-toast />
             <p-dialog 
                 [(visible)]="dialogPerfilVisible" [modal]="true" [dismissableMask]="false" [draggable]="false" [resizable]="false" [baseZIndex]="10000" header="Perfil de Usuario" closable="true"
                 [style]="{ width: '320px', position: 'fixed', top: '4rem', right: '1rem', margin: '0', borderRadius: '1rem', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', padding: '1rem' }"
@@ -72,7 +74,7 @@ import { ConfirmationService } from 'primeng/api';
 
                     <div style="text-align: center; margin-top: 1rem;">
                     <button 
-                        pButton label="Cerrar sesión" icon="pi pi-sign-out" class="p-button-danger" (click)="confirmarCerrarSesion()">
+                        pButton label="Cerrar sesión" icon="pi pi-sign-out" class="p-button-danger" (click)="confirmarCerrarSesion($event)">
                     </button>
                     </div>
                 </div>
@@ -89,6 +91,7 @@ export class AppTopbar implements OnInit  {
         private loginService: LoginService, 
         private router: Router,
         private confirmationService: ConfirmationService,
+        private messageService: MessageService
     ) {}
 
     ngOnInit(): void {}
@@ -112,23 +115,35 @@ export class AppTopbar implements OnInit  {
         this.router.navigate(['/landing']); // o a donde quieras redirigir
     }
 
-    confirmarCerrarSesion() {
+    confirmarCerrarSesion(event: Event) {
         this.confirmationService.confirm({
+          target: event.target as EventTarget,
           message: '¿Estás seguro de que deseas cerrar sesión?',
-          header: 'Confirmar',
           icon: 'pi pi-exclamation-triangle',
-          acceptLabel: 'Sí',
-          rejectLabel: 'No',
-          acceptButtonStyleClass: 'p-button-danger',
+          header: 'Confirmación',
+          rejectButtonProps: {
+            label: 'No',
+            severity: 'secondary',
+            outlined: true
+          },
+          acceptButtonProps: {
+            label: 'Sí',
+            severity: 'danger'
+          },
           accept: () => {
-            this.cerrarSesion(); // Aquí se ejecuta el cierre real
+            this.cerrarSesion(); // Acción de cierre de sesión real
           },
           reject: () => {
-            // Opcional: puedes mostrar un mensaje de cancelación si lo deseas
-            console.log('Cierre cancelado');
+            this.messageService.add({
+              severity: 'info',
+              summary: 'Cancelado',
+              detail: 'No se cerró la sesión',
+              life: 3000
+            });
           }
         });
       }
+      
 
 
       getRolNombre(idRol: number): string {
