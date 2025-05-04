@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { RippleModule } from 'primeng/ripple';
 import { StyleClassModule } from 'primeng/styleclass';
 import { ButtonModule } from 'primeng/button';
@@ -14,4 +14,17 @@ import { PricingWidget } from './components/informacion';
     imports: [RouterModule, TopbarWidget, PricingWidget, RippleModule, StyleClassModule, ButtonModule, DividerModule],
     templateUrl: '/landing.html'
 })
-export class Landing {}
+export class Landing {
+
+      constructor(
+  
+        private router: Router, 
+       ){
+          if(!!localStorage.getItem('token') )
+          {
+            router.navigate(['/dashboard']);
+          }
+    
+      }
+    
+}

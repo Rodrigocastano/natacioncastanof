@@ -127,13 +127,12 @@ export class UsuarioComponent implements OnInit  {
 
     store() {
       this.submitted = true;
-
       if (this.formSaveUsuario.invalid) {
         this.errorMessageToast();
         this.formSaveUsuario.markAllAsTouched();
         return;
       }
-
+    
       if (this.formSaveUsuario.valid) {
         const newUsuario: any = {
           nombre: this.formSaveUsuario.value.nombre,
@@ -149,19 +148,26 @@ export class UsuarioComponent implements OnInit  {
           id_grupo: this.formSaveUsuario.value.id_grupo,
           id_rol: 3
         };
-
+    
         this.usuarioService.createUsuario(newUsuario).subscribe({
           next: () => {
+           
             this.saveMessageToast();
             this.getUsuarios();
             this.visibleSave = false;
           },
           error: (err) => {
-            console.error('Error al guardar la usuario:', err);
+            console.error('Error recibido:', err); 
+            if (err.status === 409) { 
+              this.errorCedulaMessageToast(); 
+            } else {
+              this.errorMessageToast(); 
+            }
           }
         });
       }
     }
+    
 
     cancelSave() {
       this.visibleSave = false;
@@ -178,6 +184,14 @@ export class UsuarioComponent implements OnInit  {
       return date.toISOString().split('T')[0];
     };
 
+    errorCedulaMessageToast() {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Cédula duplicada',
+        detail: 'Ya existe un usuario registrado con esta cédula.'
+      });
+    }
+
     saveMessageToast() {
       this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Guardado correctamente' });
     }
@@ -191,7 +205,7 @@ export class UsuarioComponent implements OnInit  {
     }
       
     errorMessageToast() {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al guardar la datos.' });
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al guardar el usuario.' });
     }
 
     getNombreGrupo(id: number): string {
@@ -213,12 +227,14 @@ export class UsuarioComponent implements OnInit  {
     }
   
     update() {
+      this.submitted = true;
+    
       if (this.formUpdateUsuario.invalid) {
         this.errorMessageToast(); 
         this.formUpdateUsuario.markAllAsTouched();
         return;
       }
-
+    
       if (this.formUpdateUsuario.valid) {
         const updateUsuario: Usuario = {
           id: this.idForUpdate,
@@ -235,7 +251,7 @@ export class UsuarioComponent implements OnInit  {
           id_grupo: this.formUpdateUsuario.value.id_grupo,
           id_rol: 3
         };
-
+    
         this.usuarioService.updateUsuario(this.idForUpdate, updateUsuario).subscribe({
           next: (res) => {
             this.saveMessageToast(); 
@@ -244,12 +260,21 @@ export class UsuarioComponent implements OnInit  {
             this.idForUpdate = 0;
           },
           error: (err) => {
-            this.errorMessageToast(); 
+            if (err.status === 409 && err.error.message === 'Cédula duplicada') {
+              this.errorCedulaMessageToast();
+            } 
+
+            else {
+              this.errorMessageToast();
+            }
             console.error('Error actualizando usuario:', err);
           }
         });
       }
     }
+
+
+    
     
     edit(id: number) {
     

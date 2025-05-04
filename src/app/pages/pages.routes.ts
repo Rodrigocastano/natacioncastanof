@@ -9,7 +9,6 @@ import { PsicologoComponent } from './psicologo/psicologo.component';
 import { MedicoComponent } from './medico/medico.component';
 import { AsistenciaComponent } from './asistencia/asistencia.component';
 import { PagoComponent } from './pago/pago.component';
-import { RepresentanteService } from './service/representante.service';
 import { RepresentanteComponent } from './representante/representante.component';
 import { RepresentantenadadorComponent } from './representantenadador/representantenadador.component';
 import { TorneoComponent } from './torneo/torneo.component';
@@ -33,6 +32,5 @@ export default [
     { path: 'categoriaDistancia', component: CategoriadistanciaComponent },
     { path: 'torneoNado', component: TorneonadoComponent },
     { path: 'tiempoNadador', component: TiemponadadorComponent },
-    
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

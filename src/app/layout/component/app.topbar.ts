@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
 import { DialogModule } from 'primeng/dialog';
 import { LayoutService } from '../service/layout.service';
 import { UsuarioService } from '../../../app/pages/service/usuario.service';
 import { Usuario } from '../../pages/interfaces/usuario';
+import { LoginService } from '../../pages/service/login.service';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, DialogModule],
+    imports: [RouterModule, CommonModule, StyleClassModule, DialogModule, ButtonModule ],
     template: ` <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
             <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
@@ -85,6 +87,11 @@ import { Usuario } from '../../pages/interfaces/usuario';
             <span style="color: #00796b;">{{ getRolNombre(u.id_rol) }}</span>
         </div>
     </div>
+
+        <div class="p-d-flex p-jc-center">
+        <button pButton label="Cerrar sesión" icon="pi pi-sign-out" class="p-button-danger" (click)="logout()"></button>
+    </div>
+
 </p-dialog>
 
 
@@ -106,7 +113,10 @@ export class AppTopbar implements OnInit  {
 
     items!: MenuItem[];
 
-    constructor(public layoutService: LayoutService, private usuarioService: UsuarioService) {}
+    constructor(public layoutService: LayoutService, 
+        private usuarioService: UsuarioService,
+        private loginService: LoginService, private router: Router
+    ) {}
 
     ngOnInit(): void {
         this.getPerfiles();
@@ -134,4 +144,10 @@ export class AppTopbar implements OnInit  {
             return 'Desconocido';
         }
       }
+
+          // Método para cerrar sesión
+    logout(): void {
+        this.loginService.logout();  // Llama al servicio para cerrar sesión
+        this.router.navigate(['/landing']);  // Redirige a la página de inicio o donde prefieras
+    }
 }

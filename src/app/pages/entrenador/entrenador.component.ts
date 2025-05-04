@@ -142,7 +142,7 @@ export class EntrenadorComponent implements OnInit  {
     }
   
     if (this.formSave.valid) {
-      const newUsuario: any = {
+      const newEntrenador: any = {
         nombre: this.formSave.value.nombre,
         apellido: this.formSave.value.apellido,
         cedula: this.formSave.value.cedula,
@@ -159,17 +159,45 @@ export class EntrenadorComponent implements OnInit  {
         id_rol: 2
       };
   
-      this.entrenadorService.createEntrenadore(newUsuario).subscribe({
+      this.entrenadorService.createEntrenadore(newEntrenador).subscribe({
         next: () => {
           this.saveMessageToast();
           this.getentrenador();
           this.visibleSave = false;
         },
         error: (err) => {
-            this.errorMessageCorreo();
+          if (err.status === 409 && err.error.message === 'Cédula duplicada') {
+            this.errorCedulaMessageToast();
+          } 
+          else if (err.status === 422 && err.error.message.includes('email')) {
+            this.errorCorreoMessageToast();
+          } 
+          else {
+            this.errorMessageToast();
+          }
         }
       });
     }
+  }
+  
+
+  
+  // Método para mostrar el mensaje de error específico por cédula duplicada
+  errorCedulaMessageToast() {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Cédula duplicada',
+      detail: 'Ya existe un entrenador registrado con esta cédula.'
+    });
+  }
+  
+  // Método para mostrar el mensaje de error específico por correo duplicado
+  errorCorreoMessageToast() {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Correo duplicado',
+      detail: 'Ya existe un entrenador registrado con este correo.'
+    });
   }
   
     cancelSave() {
@@ -202,10 +230,6 @@ export class EntrenadorComponent implements OnInit  {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al guardar la datos.' });
     }
 
-     errorMessageCorreo() {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ya existe ese correo en otra cuenta.' });
-    }
-
       getNombreGrupo(id: number): string {
         const grupoEncontrado = this.grupo.find(g => g.id === id);
         return grupoEncontrado ? grupoEncontrado.nombre : 'Sin grupo';
@@ -231,41 +255,44 @@ export class EntrenadorComponent implements OnInit  {
           this.formUpdate.markAllAsTouched();
           return;
         }
-    
-        if (this.formUpdate.valid) {
-          const updateUsuario: Entrenador = {
-            id: this.idForUpdate,
-            nombre: this.formUpdate.value.nombre,
-            apellido: this.formUpdate.value.apellido,
-            cedula: this.formUpdate.value.cedula,
-            ciudad: this.formUpdate.value.ciudad,
-            email: this.formUpdate.value.email,
-            password: this.formUpdate.value.password,
-            telefono: this.formUpdate.value.telefono,
-            direccion: this.formUpdate.value.direccion,
-            genero: this.formUpdate.value.genero,
-            edad: this.formUpdate.value.edad,
-            fechaNacimiento: this.formatDate(this.formUpdate.value.fechaNacimiento),
-            fechaInscripcion: this.formatDate(this.formUpdate.value.fechaInscripcion),
-            id_grupo: this.formUpdate.value.id_grupo,
-            id_rol: 2
-          };
-    
-          this.entrenadorService.updateEntrenadore(this.idForUpdate, updateUsuario).subscribe({
-            next: (res) => {
-              this.saveMessageToast(); 
-              this.getentrenador();
-              this.visibleUpdate = false;
-              this.idForUpdate = 0;
-            },
-            error: (err) => {
-              this.errorMessageToast(); 
-              console.error('Error actualizando usuario:', err);
+      
+        const updateUsuario: Entrenador = {
+          id: this.idForUpdate,
+          nombre: this.formUpdate.value.nombre,
+          apellido: this.formUpdate.value.apellido,
+          cedula: this.formUpdate.value.cedula,
+          ciudad: this.formUpdate.value.ciudad,
+          email: this.formUpdate.value.email,
+          password: this.formUpdate.value.password,
+          telefono: this.formUpdate.value.telefono,
+          direccion: this.formUpdate.value.direccion,
+          genero: this.formUpdate.value.genero,
+          edad: this.formUpdate.value.edad,
+          fechaNacimiento: this.formatDate(this.formUpdate.value.fechaNacimiento),
+          fechaInscripcion: this.formatDate(this.formUpdate.value.fechaInscripcion),
+          id_grupo: this.formUpdate.value.id_grupo,
+          id_rol: 2
+        };
+        console.log('Datos enviados al backend:', updateUsuario);
+      
+        this.entrenadorService.updateEntrenadore(this.idForUpdate, updateUsuario).subscribe({
+          next: (res) => {
+            this.saveMessageToast(); 
+            this.getentrenador();
+            this.visibleUpdate = false;
+            this.idForUpdate = 0;
+          },
+          error: (err) => {
+            if (err.status === 409 && err.error?.message === 'Cédula duplicada') {
+              this.errorCedulaMessageToast();
+            } else {
+              this.errorMessageToast();
             }
-          });
-        }
+            console.error('Error actualizando entrenador:', err);
+          }
+        });
       }
-        
+
       edit(id: number) {
       
         this.idForUpdate = id;
