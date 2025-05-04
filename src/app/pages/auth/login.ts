@@ -46,28 +46,32 @@ export class Login {
   }
 
 
-  login(): void {
-    this.loginService.login(this.email, this.password).subscribe({
-      next: (response) => {
-        const token = response.token;
-        if (token) {
-          localStorage.setItem('token', token);
-  
-          this.saveMessageToast();
-  
-          this.router.navigate(['/dashboard']);
+login(): void {
+  this.loginService.login(this.email, this.password).subscribe({
+    next: (response) => {
+      const token = response.token;
+      const user = response.user;
 
-        } else {
-          console.error('Token no válido:', token);
-          this.errorMessageToast(); 
-        }
-      },
-      error: (err) => {
-        console.error('Login failed', err);
+      if (token && user) {
+        localStorage.setItem('token', token);
+
+        // Guardamos los datos del usuario en localStorage
+        localStorage.setItem('user', JSON.stringify(user));
+
+        this.saveMessageToast();
+        this.router.navigate(['/dashboard']);
+      } else {
+        console.error('Token o usuario no válidos:', response);
         this.errorMessageToast();
-      },
-    });
-  }
+      }
+    },
+    error: (err) => {
+      console.error('Login failed', err);
+      this.errorMessageToast();
+    },
+  });
+}
+
   
 
 }

@@ -25,6 +25,15 @@ export class LoginService {
     )
   }
 
+  getPerfilUsuario(): Observable<any> {
+    return this.httpClient.get(`${environment.apiUrl}/perfil`, {
+      headers: {
+        Authorization: `Bearer ${this.getToken()}`
+      }
+    });
+  }
+
+
   private setToken(token:string):void{
     localStorage.setItem(this.tokenKey, token);
   }
