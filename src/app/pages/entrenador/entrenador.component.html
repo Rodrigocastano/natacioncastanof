@@ -185,7 +185,7 @@
                         <div class="col-span-6">
                             <div class="col-span-6">
                                 <label for="id_grupo" class="block font-bold mb-3">Grupo</label>
-                                <p-select [options]="grupo" formControlName="id_grupo"  inputId="id_grupo"  optionLabel="nombre" optionValue="id" placeholder="Selecciones el grupo" fluid />
+                                <p-select [options]="grupo" formControlName="id_grupo"  inputId="id_grupo"  optionLabel="nombre" optionValue="id" placeholder="Selecciones el grupo" [appendTo]="'body'" fluid />
                                 <p-message 
                                     *ngIf="formSave.get('id_grupo')?.invalid && (formSave.get('id_grupo')?.dirty || formSave.get('id_grupo')?.touched)" severity="error" variant="simple"size="small">
                                     Grupo es requerido
@@ -341,7 +341,7 @@
                         <div class="col-span-6">
                             <div class="col-span-6">
                                 <label for="id_grupo" class="block font-bold mb-3">Grupo</label>
-                                <p-select [options]="grupo" formControlName="id_grupo"  inputId="id_grupo"  optionLabel="nombre" optionValue="id" placeholder="selecciones grupo" fluid />
+                                <p-select [options]="grupo" [appendTo]="'body'" formControlName="id_grupo"  inputId="id_grupo"  optionLabel="nombre" optionValue="id" placeholder="selecciones grupo" fluid />
                                 <p-message 
                                 *ngIf="formUpdate.get('id_grupo')?.invalid && (formUpdate.get('id_grupo')?.dirty || formUpdate.get('id_grupo')?.touched)" severity="error" variant="simple"size="small">
                                 Grupo es requerido

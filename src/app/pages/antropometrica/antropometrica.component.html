@@ -116,7 +116,7 @@
                         <div class="col-span-6">
                             <label for="id_usuario" class="block font-bold mb-3">Usuario</label>             
                             <p-select 
-                                [options]="usuarios" formControlName="id_usuario" inputId="id_usuario" optionLabel="display" optionValue="id" placeholder="Seleccione un usuario" [filter]="true" filterBy="display" [showClear]="true" class="w-full text-5sm px-0 py-0.3">
+                                [options]="usuarios" [appendTo]="'body'" formControlName="id_usuario" inputId="id_usuario" optionLabel="display" optionValue="id" placeholder="Seleccione un usuario" [filter]="true" filterBy="display" [showClear]="true" class="w-full text-5sm px-0 py-0.3">
                             </p-select>
                             <div class="mt-2">
                                 <p-message
