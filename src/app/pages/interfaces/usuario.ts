@@ -1,7 +1,3 @@
-export interface Grupo { 
-    nombre: string;
-}
-
 export interface Usuario {
     id: number;
     id_grupo: any;

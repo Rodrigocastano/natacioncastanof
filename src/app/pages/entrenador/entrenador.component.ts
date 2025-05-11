@@ -22,6 +22,8 @@ import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { formatDate } from '@angular/common';
+import { GrupoService } from '../service/grupo.service';
 
 @Component({
   selector: 'app-entrenador',
@@ -67,11 +69,13 @@ export class EntrenadorComponent implements OnInit  {
     submitted: boolean = false;
     mostrarPassword: boolean = false;
     maxDate: Date = new Date();
+    fechaActual: Date = new Date();
     loading: boolean = true;
 
     constructor(
       private fb: FormBuilder,
       private entrenadorService: EntrenadorService,
+      private grupoService :GrupoService,
       private messageService: MessageService
     ) {
       this.formSave = this.fb.group({
@@ -86,8 +90,8 @@ export class EntrenadorComponent implements OnInit  {
         direccion: ['', []],
         genero: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         edad: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-        fechaNacimiento: ['', [Validators.required]],
-        fechaInscripcion: ['', [Validators.required]]
+        fechaNacimiento: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
+        fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
         
       });
       this.formUpdate = fb.group({
@@ -102,8 +106,8 @@ export class EntrenadorComponent implements OnInit  {
         direccion: ['', []],
         genero: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         edad: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-        fechaNacimiento: ['', [Validators.required]],
-        fechaInscripcion: ['', [Validators.required]]
+        fechaNacimiento: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
+        fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
       });
     }
 
@@ -126,11 +130,16 @@ export class EntrenadorComponent implements OnInit  {
   }
 
   getGrupo() {
-    this.entrenadorService.getAllGrupo().subscribe(data => {
+    this.grupoService.getAllGrupo().subscribe(data => {
       this.grupo = data
       console.log(this.grupo)
     });
   }
+
+  formatDate = (date: Date): string => {
+    const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+    return adjustedDate.toISOString().split('T')[0];
+  };
 
   store() {
     this.submitted = true;
@@ -210,9 +219,6 @@ export class EntrenadorComponent implements OnInit  {
       this.visibleSave = true;
     }
     
-    formatDate = (date: Date): string => {
-      return date.toISOString().split('T')[0];
-    };
   
     saveMessageToast() {
       this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Guardado correctamente' });
@@ -297,7 +303,13 @@ export class EntrenadorComponent implements OnInit  {
       
         this.idForUpdate = id;
         this.user = this.entrenador.find(e => e.id == id);
+
         if (this.user) {
+          const parseLocalDate = (dateString: string) => {
+            return dateString ? new Date(dateString + 'T00:00:00') : null;
+          };
+
+    
           this.formUpdate.controls['nombre'].setValue(this.user?.nombre)
           this.formUpdate.controls['apellido'].setValue(this.user?.apellido)
           this.formUpdate.controls['cedula'].setValue(this.user?.cedula)
@@ -308,9 +320,13 @@ export class EntrenadorComponent implements OnInit  {
           this.formUpdate.controls['email'].setValue(this.user?.email)
           this.formUpdate.controls['genero'].setValue(this.user?.genero)
           this.formUpdate.controls['edad'].setValue(this.user?.edad)
-          this.formUpdate.controls['fechaNacimiento'].setValue(new Date(this.user?.fechaNacimiento))
-          this.formUpdate.controls['fechaInscripcion'].setValue(new Date(this.user?.fechaInscripcion))
           this.formUpdate.controls['id_grupo'].setValue(this.user?.id_grupo)
+          this.formUpdate.controls['fechaNacimiento'].setValue(
+            parseLocalDate(this.user.fechaNacimiento)
+          );
+          this.formUpdate.controls['fechaInscripcion'].setValue(
+            parseLocalDate(this.user.fechaInscripcion)
+          );
           
         }
         this.visibleUpdate = true;

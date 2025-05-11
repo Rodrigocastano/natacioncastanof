@@ -24,6 +24,7 @@ export class AppMenu {
                 label: 'Home',
                 items: [
                     { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/dashboard'] },
+                    { label: 'Grupo', icon: 'pi pi-user-plus', routerLink: ['/pages/grupo'] },
                     { label: 'Usuario', icon: 'pi pi-user-plus', routerLink: ['/pages/usuario'] },
                     { label: 'Entrenadores', icon: 'pi pi-user-plus', routerLink: ['/pages/entrenador'] },
                     { label: 'Asistencias', icon: 'pi pi-pen-to-square', routerLink: ['/pages/asistencia'] },

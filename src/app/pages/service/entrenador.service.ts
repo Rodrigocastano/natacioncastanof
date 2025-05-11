@@ -31,8 +31,4 @@ export class EntrenadorService {
     return this.http.delete(`${this.apisUrl}/destroyEntrenadore/${id}`);
   }
 
-  getAllGrupo(): Observable<Grupo[]> {
-    return this.http.get<Grupo[]>(`${this.apisUrl}/indexGrupo`);
-  }
-
 }

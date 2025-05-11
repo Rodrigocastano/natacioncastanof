@@ -13,8 +13,6 @@ import { SelectModule } from 'primeng/select';
 import { DialogModule } from 'primeng/dialog';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
@@ -26,22 +24,22 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   selector: 'app-torneo',
   imports: [
     CommonModule,
-        ButtonModule,
-        ToolbarModule,
-        InputIconModule,
-        IconFieldModule,
-        TableModule,
-        FormsModule,
-        InputTextModule,
-        InputNumberModule,
-        MessageModule,
-        ToastModule,
-        ReactiveFormsModule,
-        SelectModule,
-        DialogModule,
-        DropdownModule,
-        DatePickerModule,
-        ProgressSpinnerModule
+    ButtonModule,
+    ToolbarModule,
+    InputIconModule,
+    IconFieldModule,
+    TableModule,
+    FormsModule,
+    InputTextModule,
+    InputNumberModule,
+    MessageModule,
+    ToastModule,
+    ReactiveFormsModule,
+    SelectModule,
+    DialogModule,
+    DropdownModule,
+    DatePickerModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
   templateUrl: './torneo.component.html',
@@ -118,7 +116,7 @@ export class TorneoComponent implements OnInit  {
         this.visibleSave = false;
       },
       error: (err) => {
-        console.error('Error al guardar la usuario:', err);
+        console.error('Error al guardar el torneo:', err);
       }
     });
   }

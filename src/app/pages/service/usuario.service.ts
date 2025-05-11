@@ -35,8 +35,4 @@ export class UsuarioService {
     return this.http.delete(`${this.apisUrl}/destroyUsuario/${id}`);
   }
 
-  getAllGrupo(): Observable<Grupo[]> {
-    return this.http.get<Grupo[]>(`${this.apisUrl}/indexGrupo`);
-  }
-
 }

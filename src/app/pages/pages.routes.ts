@@ -15,6 +15,7 @@ import { TorneoComponent } from './torneo/torneo.component';
 import { CategoriadistanciaComponent } from './categoriadistancia/categoriadistancia.component';
 import { TorneonadoComponent } from './torneonado/torneonado.component';
 import { TiemponadadorComponent } from './tiemponadador/tiemponadador.component';
+import { GrupoComponent } from './grupo/grupo.component';
 
 export default [
     { path: 'usuario', component: UsuarioComponent },
@@ -32,5 +33,6 @@ export default [
     { path: 'categoriaDistancia', component: CategoriadistanciaComponent },
     { path: 'torneoNado', component: TorneonadoComponent },
     { path: 'tiempoNadador', component: TiemponadadorComponent },
+    { path: 'grupo', component: GrupoComponent },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

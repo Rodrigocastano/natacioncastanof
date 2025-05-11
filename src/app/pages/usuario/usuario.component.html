@@ -159,7 +159,9 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <div class="block font-bold mb-3">Fecha Inscripción</div>
-                            <p-datepicker [maxDate]="maxDate" formControlName="fechaInscripcion" inputId="fechaInscripcion" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
+                           
+
+                            <p-datepicker [(ngModel)]="fechaActual"  [maxDate]="maxDate" formControlName="fechaInscripcion" inputId="fechaInscripcion" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
                             <p-message 
                                 *ngIf="formSaveUsuario.get('fechaInscripcion')?.invalid && (formSaveUsuario.get('fechaInscripcion')?.dirty || formSaveUsuario.get('fechaInscripcion')?.touched)" severity="error" variant="simple"size="small">
                                 Fecha inscripción es requerida
@@ -180,7 +182,7 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <div class="block font-bold mb-3">FechaNacimiento</div>
-                            <p-datepicker [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
+                            <p-datepicker [(ngModel)]="fechaActual"  [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
                             <p-message 
                                 *ngIf="formSaveUsuario.get('fechaNacimiento')?.invalid && (formSaveUsuario.get('fechaNacimiento')?.dirty || formSaveUsuario.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">
                                 Fecha Nacimiento es requerido

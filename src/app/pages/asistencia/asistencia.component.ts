@@ -24,6 +24,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { TextareaModule } from 'primeng/textarea';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-asistencia',
@@ -69,13 +70,14 @@ export class AsistenciaComponent implements OnInit{
   cols: any[] = [];
   expanded: boolean = false;
   msgs: ToastMessageOptions[] | null = [];
-
-  submitted: boolean = false;
-  maxDate: Date = new Date();
-  loading: boolean = true;
-
   terminoBusqueda: string = '';
   buscarOriginal: Asistencia[] = [];
+  submitted: boolean = false;
+  maxDate: Date = new Date();
+  fechaActual: Date = new Date();
+  loading: boolean = true;
+
+  
   
   constructor(
       private fb: FormBuilder,
@@ -85,13 +87,13 @@ export class AsistenciaComponent implements OnInit{
     ) {
       this.formSave = this.fb.group({
         id_usuario: ['', [Validators.required]],
-        presente: ['', []],
-        fecha: ['', [Validators.required]]
+        presente: [true],
+        fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
         
       });
       this.formUpdate = fb.group({
         presente: ['', []],
-        fecha: ['', [Validators.required]],
+        fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
         id_usuario: ['', [Validators.required]]
       });
     }
@@ -151,22 +153,29 @@ export class AsistenciaComponent implements OnInit{
       });
     }
 
+    onAusenteChange(event: any) {
+    }
+
     store() {
       this.submitted = true;
-  
+    
       if (this.formSave.invalid) {
         this.errorMessageToast();
         this.formSave.markAllAsTouched();
         return;
       }
-  
+    
       if (this.formSave.valid) {
+        const presenteValue = this.formSave.value.presente !== null && this.formSave.value.presente !== undefined 
+          ? this.formSave.value.presente 
+          : true; // valor por defecto
+    
         const newUsuario: any = {
-          presente: this.formSave.value.presente,
+          presente: presenteValue,
           fecha: this.formatDate(this.formSave.value.fecha),
           id_usuario: this.formSave.value.id_usuario,
         };
-  
+    
         this.asistenciaService.createAsistencia(newUsuario).subscribe({
           next: () => {
             this.saveMessageToast();
@@ -175,11 +184,11 @@ export class AsistenciaComponent implements OnInit{
           },
           error: (err) => {
             console.error('Error al guardar registro asistencias:', err);
-            
           }
         });
       }
     }
+    
 
     showSaveDialog() {
       this.formSave.reset();
@@ -187,7 +196,8 @@ export class AsistenciaComponent implements OnInit{
     }
 
     formatDate = (date: Date): string => {
-      return date.toISOString().split('T')[0];
+      const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+      return adjustedDate.toISOString().split('T')[0];
     };
   
     saveMessageToast() {
@@ -242,10 +252,15 @@ export class AsistenciaComponent implements OnInit{
     edit(asistenId: any) {
       this.idForUpdate = true;
       this.asisten = asistenId
-      if (this.asisten) {
+        if (this.asisten) {
+          const parseLocalDate = (dateString: string) => {
+            return dateString ? new Date(dateString + 'T00:00:00') : null;
+          };
         this.formUpdate.controls['presente'].setValue(this.asisten?.presente)
-        this.formUpdate.controls['fecha'].setValue(new Date(this.asisten?.fecha))
         this.formUpdate.controls['id_usuario'].setValue(this.asisten?.id_usuario) 
+        this.formUpdate.controls['fecha'].setValue(
+          parseLocalDate(this.asisten.fecha)
+        );
       }
       this.visibleUpdate = true;
       

@@ -22,6 +22,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GrupoService } from '../service/grupo.service';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-usuario',
@@ -66,11 +68,13 @@ export class UsuarioComponent implements OnInit  {
   
   submitted: boolean = false;
   maxDate: Date = new Date();
+  fechaActual: Date = new Date();
   loading: boolean = true;
   
     constructor(
       private fb: FormBuilder,
       private usuarioService: UsuarioService,
+      private grupoService :GrupoService,
       private messageService: MessageService
     ) {
       this.formSaveUsuario = this.fb.group({
@@ -83,8 +87,9 @@ export class UsuarioComponent implements OnInit  {
         direccion: ['', []],
         genero: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         edad: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-        fechaNacimiento: ['', [Validators.required]],
-        fechaInscripcion: ['', [Validators.required]]
+        fechaNacimiento: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
+        fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
+
         
       });
       this.formUpdateUsuario = fb.group({
@@ -97,8 +102,8 @@ export class UsuarioComponent implements OnInit  {
         direccion: ['', []],
         genero: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         edad: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-        fechaNacimiento: ['', [Validators.required]],
-        fechaInscripcion: ['', [Validators.required]]
+        fechaNacimiento: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
+        fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
       });
     }
 
@@ -119,11 +124,15 @@ export class UsuarioComponent implements OnInit  {
     }
 
     getGrupo() {
-      this.usuarioService.getAllGrupo().subscribe(data => {
+      this.grupoService.getAllGrupo().subscribe(data => {
         this.grupo = data
-        
       });
     }
+
+    formatDate = (date: Date): string => {
+      const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+      return adjustedDate.toISOString().split('T')[0];
+    };
 
     store() {
       this.submitted = true;
@@ -145,10 +154,11 @@ export class UsuarioComponent implements OnInit  {
           edad: this.formSaveUsuario.value.edad,
           fechaNacimiento: this.formatDate(this.formSaveUsuario.value.fechaNacimiento),
           fechaInscripcion: this.formatDate(this.formSaveUsuario.value.fechaInscripcion),
+          
           id_grupo: this.formSaveUsuario.value.id_grupo,
           id_rol: 3
         };
-    
+        console.log('Datos a enviar al backend:', newUsuario);
         this.usuarioService.createUsuario(newUsuario).subscribe({
           next: () => {
            
@@ -178,11 +188,6 @@ export class UsuarioComponent implements OnInit  {
       this.formSaveUsuario.reset();
       this.visibleSave = true;
     }
-  
-
-    formatDate = (date: Date): string => {
-      return date.toISOString().split('T')[0];
-    };
 
     errorCedulaMessageToast() {
       this.messageService.add({
@@ -273,27 +278,32 @@ export class UsuarioComponent implements OnInit  {
       }
     }
 
-
-    
-    
     edit(id: number) {
-    
       this.idForUpdate = id;
       this.user = this.usuario.find(e => e.id == id);
+      
       if (this.user) {
-        this.formUpdateUsuario.controls['nombre'].setValue(this.user?.nombre)
-        this.formUpdateUsuario.controls['apellido'].setValue(this.user?.apellido)
+        const parseLocalDate = (dateString: string) => {
+          return dateString ? new Date(dateString + 'T00:00:00') : null;
+        };
+    
+        this.formUpdateUsuario.controls['nombre'].setValue(this.user.nombre);
+        this.formUpdateUsuario.controls['apellido'].setValue(this.user.apellido);
         this.formUpdateUsuario.controls['cedula'].setValue(this.user?.cedula)
         this.formUpdateUsuario.controls['ciudad'].setValue(this.user?.ciudad)
         this.formUpdateUsuario.controls['telefono'].setValue(this.user?.telefono)
         this.formUpdateUsuario.controls['direccion'].setValue(this.user?.direccion)
         this.formUpdateUsuario.controls['genero'].setValue(this.user?.genero)
         this.formUpdateUsuario.controls['edad'].setValue(this.user?.edad)
-        this.formUpdateUsuario.controls['fechaNacimiento'].setValue(new Date(this.user?.fechaNacimiento))
-        this.formUpdateUsuario.controls['fechaInscripcion'].setValue(new Date(this.user?.fechaInscripcion))
         this.formUpdateUsuario.controls['id_grupo'].setValue(this.user?.id_grupo)
-        
+        this.formUpdateUsuario.controls['fechaNacimiento'].setValue(
+          parseLocalDate(this.user.fechaNacimiento)
+        );
+        this.formUpdateUsuario.controls['fechaInscripcion'].setValue(
+          parseLocalDate(this.user.fechaInscripcion)
+        );
       }
+      
       this.visibleUpdate = true;
     }
   

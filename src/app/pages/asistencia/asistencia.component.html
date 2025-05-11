@@ -1,6 +1,6 @@
         <p-toolbar styleClass="mb-6">
         <ng-template #start>
-            <p-button label="Agregar Asistencias" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+            <p-button label="Agregar asistencias" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
         </ng-template>
     
         </p-toolbar>
@@ -21,7 +21,7 @@
                     
                 <ng-template #caption>
                     <div class="flex items-center justify-between">
-                        <h5 class="m-0">Registró de Asistencias</h5>
+                        <h5 class="m-0">Registró de asistencias</h5>
                         <p-iconfield>
                             <p-inputicon styleClass="pi pi-search"></p-inputicon>
                             <input pInputText type="text" placeholder="Buscar..."
@@ -94,7 +94,7 @@
             </p-table>
         </div>
     
-        <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar Asistencias" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
+        <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar asistencias" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
             <ng-template #content>
                 <form [formGroup]="formSave" class="formulario">
                     <div class="flex flex-col gap-6">
@@ -114,24 +114,19 @@
 
                         <div class="col-span-6">
                             <label for="presente" class="block font-bold mb-2">Asistencia</label>
-                            <div class="grid grid-cols-12 gap-4">
-                                <div class="flex items-center gap-2 col-span-6 justify-center">
-                                    <p-radiobutton name="presente" [value]="true" formControlName="presente" inputId="aptoSi" />
-                                    <label for="aptoSi">Presente</label>
-                                </div>
-                                <div class="flex items-center gap-2 col-span-6 justify-center ml-6">
-                                    <p-radiobutton name="presente" [value]="false" formControlName="presente" inputId="aptoNo" />
-                                    <label for="aptoNo">Aucente</label>
-                                </div>
+                            <div class="flex items-center gap-2 col-span-6 justify-center ml-6">
+                              <p-radiobutton name="presente" [value]="false" formControlName="presente" inputId="ausente" />
+                              <label for="ausente">Ausente</label>
                             </div>
-                        </div>
+                          </div>
+                          
                         
                         
                         <div class="col-span-12 flex justify-center" >
                             <div class="col-span-6">
                                 <label for="fecha" class="block font-bold mb-2">Fecha Inscripción</label>
                                 <p-datepicker 
-                                    [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
+                                    [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                                     [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96">
                                 </p-datepicker>
                                 <p-message 
@@ -163,7 +158,7 @@
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar Asistencias" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+        <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar asistencias" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
             
             <ng-template #content>
                 <form [formGroup]="formUpdate" class="formulario">
@@ -185,7 +180,7 @@
                                 </div>
                                 <div class="flex items-center gap-2 col-span-6 justify-center ml-6">
                                     <p-radiobutton name="presente" [value]="false" formControlName="presente" inputId="aptoNo" />
-                                    <label for="aptoNo">aucente</label>
+                                    <label for="aptoNo">Ausente</label>
                                 </div>
                             </div>
                         </div>
