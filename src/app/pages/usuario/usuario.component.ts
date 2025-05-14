@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import 'jspdf-autotable';
 import { Usuario } from '../../../app/pages/interfaces/usuario'; 
 import { Grupo } from '../../../app/pages/interfaces/grupo'; 
+import { Genero } from '../../../app/pages/interfaces/genero'; 
+import { Ciudad } from '../../../app/pages/interfaces/ciudad'; 
 import { UsuarioService } from '../../../app/pages/service/usuario.service';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
@@ -23,6 +25,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { GrupoService } from '../service/grupo.service';
+import { GeneroService } from '../service/genero.service';
+import { CiudadService } from '../service/ciudad.service';
 import { formatDate } from '@angular/common';
 
 @Component({
@@ -65,7 +69,8 @@ export class UsuarioComponent implements OnInit  {
   filtro: string = '';
   buscadorFiltrados: Usuario[] = [];
   grupo: Grupo[] = [];
-  
+  genero: Genero[] = [];
+  ciudad: Ciudad[] = [];
   submitted: boolean = false;
   maxDate: Date = new Date();
   fechaActual: Date = new Date();
@@ -76,17 +81,19 @@ export class UsuarioComponent implements OnInit  {
       private fb: FormBuilder,
       private usuarioService: UsuarioService,
       private grupoService :GrupoService,
+      private ciudadService: CiudadService,
+      private generoService: GeneroService,
       private messageService: MessageService
     ) {
       this.formSaveUsuario = this.fb.group({
         id_grupo: ['', [Validators.required]],
+        id_ciudad: ['', [Validators.required]],
+        id_genero: ['', [Validators.required]],
         nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-        ciudad: ['', []],
         cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         direccion: ['', []],
-        genero: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         edad: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
         fechaNacimiento: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
         fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
@@ -94,13 +101,13 @@ export class UsuarioComponent implements OnInit  {
       });
       this.formUpdateUsuario = fb.group({
         id_grupo: ['', [Validators.required]],
+        id_ciudad: ['', [Validators.required]],
+        id_genero: ['', [Validators.required]],
         nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-        ciudad: ['', []],
         cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         direccion: ['', []],
-        genero: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         edad: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
         fechaNacimiento: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
         fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
@@ -110,6 +117,8 @@ export class UsuarioComponent implements OnInit  {
     ngOnInit(): void {
       this.getUsuarios();
       this.getGrupo()
+      this.getGenero()
+      this.getCiudad()
     }
 
     getUsuarios() {
@@ -126,6 +135,18 @@ export class UsuarioComponent implements OnInit  {
     getGrupo() {
       this.grupoService.getAllGrupo().subscribe(data => {
         this.grupo = data
+      });
+    }
+
+     getGenero() {
+      this.generoService.getAllGenero().subscribe(data => {
+        this.genero = data
+      });
+    }
+
+     getCiudad() {
+      this.ciudadService.getAllCiudad().subscribe(data => {
+        this.ciudad = data
       });
     }
 
@@ -147,14 +168,13 @@ export class UsuarioComponent implements OnInit  {
           nombre: this.formSaveUsuario.value.nombre,
           apellido: this.formSaveUsuario.value.apellido,
           cedula: this.formSaveUsuario.value.cedula,
-          ciudad: this.formSaveUsuario.value.ciudad,
           telefono: this.formSaveUsuario.value.telefono,
           direccion: this.formSaveUsuario.value.direccion,
-          genero: this.formSaveUsuario.value.genero,
           edad: this.formSaveUsuario.value.edad,
           fechaNacimiento: this.formatDate(this.formSaveUsuario.value.fechaNacimiento),
           fechaInscripcion: this.formatDate(this.formSaveUsuario.value.fechaInscripcion),
-          
+          id_ciudad: this.formSaveUsuario.value.id_ciudad,
+          id_genero: this.formSaveUsuario.value.id_genero,
           id_grupo: this.formSaveUsuario.value.id_grupo,
           id_rol: 3
         };
@@ -225,6 +245,16 @@ export class UsuarioComponent implements OnInit  {
       return grupoEncontrado ? grupoEncontrado.nombre : 'Sin grupo';
     }
 
+    getNombreGenero(id: number): string {
+      const generoEncontrado = this.genero.find(g => g.id === id);
+      return generoEncontrado ? generoEncontrado.nombre : 'Sin grupo';
+    }
+
+    getNombreCiudad(id: number): string {
+      const ciudadEncontrado = this.ciudad.find(g => g.id === id);
+      return ciudadEncontrado ? ciudadEncontrado.nombre : 'Sin grupo';
+    }
+
     buscador() {
       const termino = this.filtro.toLowerCase().trim();
         if (termino === '') {
@@ -253,13 +283,13 @@ export class UsuarioComponent implements OnInit  {
           nombre: this.formUpdateUsuario.value.nombre,
           apellido: this.formUpdateUsuario.value.apellido,
           cedula: this.formUpdateUsuario.value.cedula,
-          ciudad: this.formUpdateUsuario.value.ciudad,
           telefono: this.formUpdateUsuario.value.telefono,
           direccion: this.formUpdateUsuario.value.direccion,
-          genero: this.formUpdateUsuario.value.genero,
           edad: this.formUpdateUsuario.value.edad,
           fechaNacimiento: this.formatDate(this.formUpdateUsuario.value.fechaNacimiento),
           fechaInscripcion: this.formatDate(this.formUpdateUsuario.value.fechaInscripcion),
+          id_ciudad: this.formUpdateUsuario.value.id_ciudad,
+          id_genero: this.formUpdateUsuario.value.id_genero,
           id_grupo: this.formUpdateUsuario.value.id_grupo,
           id_rol: 3
         };
@@ -297,11 +327,11 @@ export class UsuarioComponent implements OnInit  {
         this.formUpdateUsuario.controls['nombre'].setValue(this.user.nombre);
         this.formUpdateUsuario.controls['apellido'].setValue(this.user.apellido);
         this.formUpdateUsuario.controls['cedula'].setValue(this.user?.cedula)
-        this.formUpdateUsuario.controls['ciudad'].setValue(this.user?.ciudad)
         this.formUpdateUsuario.controls['telefono'].setValue(this.user?.telefono)
         this.formUpdateUsuario.controls['direccion'].setValue(this.user?.direccion)
-        this.formUpdateUsuario.controls['genero'].setValue(this.user?.genero)
         this.formUpdateUsuario.controls['edad'].setValue(this.user?.edad)
+        this.formUpdateUsuario.controls['id_ciudad'].setValue(this.user?.id_ciudad)
+        this.formUpdateUsuario.controls['id_genero'].setValue(this.user?.id_genero)
         this.formUpdateUsuario.controls['id_grupo'].setValue(this.user?.id_grupo)
         this.formUpdateUsuario.controls['fechaNacimiento'].setValue(
           parseLocalDate(this.user.fechaNacimiento)

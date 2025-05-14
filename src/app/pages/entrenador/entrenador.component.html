@@ -65,8 +65,8 @@
                     <td>{{ usuario.cedula }}</td>
                     <td>{{ usuario.telefono }}</td>
                     <td>{{ usuario.direccion }}</td>
-                    <td>{{ usuario.ciudad }}</td>
-                    <td>{{ usuario.genero }}</td>
+                    <td>{{ getNombreCiudad(usuario.id_ciudad) }}</td>
+                    <td>{{ getNombreGenero(usuario.id_genero) }}</td>
                     <td>{{ usuario.edad }}</td>
                     <td>{{ getNombreGrupo(usuario.id_grupo) }}</td>
                     <td>{{ usuario.fechaNacimiento }}</td>
@@ -120,7 +120,7 @@
                         
                         <div class="col-span-6">
                             <label for="email1" class="block font-bold mb-1">Email</label>
-                            <input pInputText id="email" type="text" placeholder=" Ingrese Email" class="w-full text-sm px-0 py-2" formControlName="email"  name="email" type="email"  required/>
+                            <input pInputText id="email" type="text" placeholder=" Ingrese el email" class="w-full text-sm px-0 py-2" formControlName="email"  name="email" type="email"  required/>
                             <p-message 
                                 *ngIf="formSave.get('apellido')?.invalid && (formSave.get('apellido')?.dirty || formSave.get('apellido')?.touched)" severity="error" variant="simple"size="small">
                                 Apellido es requerido
@@ -153,18 +153,26 @@
                     </div>
 
                     <div class="grid grid-cols-12 gap-4">
-                        <div class="col-span-6">
-                            <label for="ciudad" class="block font-bold mb-3">Ciudad</label>
-                            <input type="text" formControlName="ciudad" pInputText id="ciudad" placeholder="Ingrese la ciudad" fluid />
+                         <div class="col-span-6">
+                            <div class="col-span-6">
+                                <label for="id_ciudad" class="block font-bold mb-3">Ciudad</label>
+                                <p-select [options]="ciudad" [appendTo]="'body'" formControlName="id_ciudad"  inputId="id_ciudad"  optionLabel="nombre" optionValue="id" placeholder="Seleccione la ciudad" fluid />
+                                <p-message 
+                                    *ngIf="formSave.get('id_ciudad')?.invalid && (formSave.get('id_ciudad')?.dirty || formSave.get('id_ciudad')?.touched)" severity="error" variant="simple"size="small">
+                                    Grupo es requerido
+                                </p-message>
+                            </div>
                         </div>
 
-                        <div class="col-span-6">
-                            <label for="genero" class="block font-bold mb-3">Género</label>
-                            <input type="text" formControlName="genero" pInputText id="genero" placeholder="Ingrese el género"  required fluid />
-                            <p-message 
-                                *ngIf="formSave.get('genero')?.invalid && (formSave.get('genero')?.dirty || formSave.get('genero')?.touched)" severity="error" variant="simple"size="small">
-                                Género es requerido
-                            </p-message>
+                         <div class="col-span-6">
+                            <div class="col-span-6">
+                                <label for="id_genero" class="block font-bold mb-3">Género</label>
+                                <p-select [options]="genero" [appendTo]="'body'" formControlName="id_genero"  inputId="id_genero"  optionLabel="nombre" optionValue="id" placeholder="Seleccione el género" fluid />
+                                <p-message 
+                                    *ngIf="formSave.get('id_genero')?.invalid && (formSave.get('id_genero')?.dirty || formSave.get('id_genero')?.touched)" severity="error" variant="simple"size="small">
+                                    Grupo es requerido
+                                </p-message>
+                            </div>
                         </div>
                     </div>
 
@@ -175,7 +183,7 @@
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <div class="block font-bold mb-3">Fecha Inscripción</div>
+                            <div class="block font-bold mb-3">Fecha de inscripción</div>
                             <p-datepicker [(ngModel)]="fechaActual" formControlName="fechaInscripcion" inputId="fechaInscripcion" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" [maxDate]="maxDate"> </p-datepicker>
                             <p-message 
                                 *ngIf="formSave.get('fechaInscripcion')?.invalid && (formSave.get('fechaInscripcion')?.dirty || formSave.get('fechaInscripcion')?.touched)" severity="error" variant="simple"size="small">
@@ -196,7 +204,7 @@
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <div class="block font-bold mb-3">Fecha Nacimiento</div>
+                            <div class="block font-bold mb-3">Fecha de nacimiento</div>
                             <p-datepicker [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
                             <p-message 
                             *ngIf="formSave.get('fechaNacimiento')?.invalid && (formSave.get('fechaNacimiento')?.dirty || formSave.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">
@@ -274,7 +282,7 @@
                         
                         <div class="col-span-6">
                             <label for="email1" class="block font-bold mb-1">Email</label>
-                            <input pInputText id="email" type="text" placeholder="Ingrese Email" class="w-full text-sm px-0 py-2" formControlName="email"  name="email" type="email"  required/>
+                            <input pInputText id="email" type="text" placeholder="Ingrese el email" class="w-full text-sm px-0 py-2" formControlName="email"  name="email" type="email"  required/>
                             <p-message 
                             *ngIf="formUpdate.get('apellido')?.invalid && (formUpdate.get('apellido')?.dirty || formUpdate.get('apellido')?.touched)" severity="error" variant="simple"size="small">
                             Email es requerido
@@ -309,18 +317,26 @@
                     </div>
 
                     <div class="grid grid-cols-12 gap-4">
-                        <div class="col-span-6">
-                            <label for="ciudad" class="block font-bold mb-3">Ciudad</label>
-                            <input type="text" formControlName="ciudad" pInputText id="ciudad" placeholder="Ingrese la ciudad" fluid />
+                         <div class="col-span-6">
+                            <div class="col-span-6">
+                                <label for="id_ciudad" class="block font-bold mb-3">Ciudad</label>
+                                <p-select [options]="ciudad" [appendTo]="'body'" formControlName="id_ciudad"  inputId="id_ciudad"  optionLabel="nombre" optionValue="id" placeholder="Seleccione la ciudad" fluid />
+                                <p-message 
+                                    *ngIf="formUpdate.get('id_ciudad')?.invalid && (formUpdate.get('id_ciudad')?.dirty || formUpdate.get('id_ciudad')?.touched)" severity="error" variant="simple"size="small">
+                                    Grupo es requerido
+                                </p-message>
+                            </div>
                         </div>
 
-                        <div class="col-span-6">
-                            <label for="genero" class="block font-bold mb-3">Género</label>
-                            <input type="text" formControlName="genero" pInputText id="genero" placeholder="Ingrese el género"  required fluid />
-                            <p-message 
-                                *ngIf="formUpdate.get('genero')?.invalid && (formUpdate.get('genero')?.dirty || formUpdate.get('genero')?.touched)" severity="error" variant="simple"size="small">
-                                Género es requerido
-                            </p-message>
+                         <div class="col-span-6">
+                            <div class="col-span-6">
+                                <label for="id_genero" class="block font-bold mb-3">Género</label>
+                                <p-select [options]="genero" [appendTo]="'body'" formControlName="id_genero"  inputId="id_genero"  optionLabel="nombre" optionValue="id" placeholder="Seleccione el género" fluid />
+                                <p-message 
+                                    *ngIf="formUpdate.get('id_genero')?.invalid && (formUpdate.get('id_genero')?.dirty || formUpdate.get('id_genero')?.touched)" severity="error" variant="simple"size="small">
+                                    Grupo es requerido
+                                </p-message>
+                            </div>
                         </div>
                     </div>
 
@@ -331,7 +347,7 @@
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <div class="block font-bold mb-3">Fecha Inscripción</div>
+                            <div class="block font-bold mb-3">Fecha de inscripción</div>
                             <p-datepicker [maxDate]="maxDate" formControlName="fechaInscripcion" inputId="fechaInscripcion" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>  
                             <p-message 
                             *ngIf="formUpdate.get('fechaInscripcion')?.invalid && (formUpdate.get('fechaInscripcion')?.dirty || formUpdate.get('fechaInscripcion')?.touched)" severity="error" variant="simple"size="small">
@@ -352,7 +368,7 @@
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <div class="block font-bold mb-3">Fecha Nacimiento</div>
+                            <div class="block font-bold mb-3">Fecha de nacimiento</div>
                             <p-datepicker [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
                             <p-message 
                             *ngIf="formUpdate.get('fechaNacimiento')?.invalid && (formUpdate.get('fechaNacimiento')?.dirty || formUpdate.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">

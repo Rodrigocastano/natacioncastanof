@@ -21,7 +21,7 @@
         [showCurrentPageReport]="true" [rowsPerPageOptions]="[6, 12, 18]">
         <ng-template #caption>
             <div class="flex items-center justify-between">
-                <h5 class="m-0">Registro de genero</h5>
+                <h5 class="m-0">Registro de género</h5>
                 <p-iconfield>
                     <p-inputicon styleClass="pi pi-search" />
                     <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
@@ -32,7 +32,7 @@
         <ng-template #header>
             <tr>
                 <th style="min-width: 6rem">ID</th>
-                <th pSortableColumn="name" style="min-width:8rem">Genero</th>
+                <th pSortableColumn="name" style="min-width:8rem">Género</th>
                 <th pSortableColumn="inventoryStatus" style="min-width: 10rem">Acciones</th>          
             </tr>
         </ng-template>
@@ -51,16 +51,16 @@
     </p-table>
 </div>
 
-<p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar genero" [modal]="true">
+<p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar género" [modal]="true">
     <ng-template #content>
         <form [formGroup]="formSave" class="formulario">
             <div class="flex flex-col gap-6">
                 <div class="col-span-6">
-                    <label for="nombre" class="block font-bold mb-3">Genero</label>
-                    <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese el genero" required fluid />
+                    <label for="nombre" class="block font-bold mb-3">Género</label>
+                    <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese el género" required fluid />
                     <p-message 
                     *ngIf="formSave.get('nombre')?.invalid && (formSave.get('nombre')?.dirty || formSave.get('nombre')?.touched)" severity="error" variant="simple"size="small">
-                    Genero es requerido
+                    Género es requerido
                     </p-message>
                 </div>
 
@@ -79,7 +79,7 @@
 <p-dialog [(visible)]="visibleDelete" header="Confirmación"  [style]="{ width: '350px' }" [modal]="true">
     <div class="flex items-center justify-center">
         <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
-        <span>¿Estás seguro que deseas eliminar este genero?</span>
+        <span>¿Estás seguro que deseas eliminar este género?</span>
     </div>
     <ng-template #footer>
         <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDelete = false" text severity="secondary" (click)="cancelMessageToast()" />
@@ -87,16 +87,16 @@
     </ng-template>
 </p-dialog>
 
-<p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar genero" [modal]="true">  
+<p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar género" [modal]="true">  
     <ng-template #content>
         <form [formGroup]="formUpdate" class="formulario">
             <div class="flex flex-col gap-6"> 
                 <div class="col-span-6">
-                    <label for="nombre" class="block font-bold mb-3">Genero</label>
+                    <label for="nombre" class="block font-bold mb-3">Género</label>
                     <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese el genero"  required fluid />    
                     <p-message 
                         *ngIf="formUpdate.get('nombre')?.invalid && (formUpdate.get('nombre')?.dirty || formUpdate.get('nombre')?.touched)" severity="error" variant="simple"size="small">
-                        Genero es requerido
+                        Género es requerido
                     </p-message>
                 </div>
                     

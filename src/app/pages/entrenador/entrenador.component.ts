@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import 'jspdf-autotable';
 import { Entrenador } from '../../../app/pages/interfaces/entrenador'; 
 import { Grupo } from '../../../app/pages/interfaces/grupo'; 
+import { Ciudad } from '../../../app/pages/interfaces/ciudad'; 
+import { Genero } from '../../../app/pages/interfaces/genero'; 
 import { EntrenadorService } from '../../../app/pages/service/entrenador.service';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
@@ -24,6 +26,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { formatDate } from '@angular/common';
 import { GrupoService } from '../service/grupo.service';
+import { CiudadService } from '../service/ciudad.service';
+import { GeneroService } from '../service/genero.service';
 
 @Component({
   selector: 'app-entrenador',
@@ -65,7 +69,8 @@ export class EntrenadorComponent implements OnInit  {
     filtro: string = '';
     buscadorFiltrados: Entrenador[] = [];
     grupo: Grupo[] = [];
-    
+    genero: Genero[] = [];
+    ciudad: Ciudad[] = [];
     submitted: boolean = false;
     mostrarPassword: boolean = false;
     maxDate: Date = new Date();
@@ -76,19 +81,21 @@ export class EntrenadorComponent implements OnInit  {
       private fb: FormBuilder,
       private entrenadorService: EntrenadorService,
       private grupoService :GrupoService,
+      private ciudadService: CiudadService,
+      private generoService: GeneroService,
       private messageService: MessageService
     ) {
       this.formSave = this.fb.group({
         id_grupo: ['', [Validators.required]],
+        id_ciudad: ['', [Validators.required]],
+        id_genero: ['', [Validators.required]],
         nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(6)]],
-        ciudad: ['', []],
         cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         direccion: ['', []],
-        genero: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         edad: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
         fechaNacimiento: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
         fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
@@ -96,15 +103,15 @@ export class EntrenadorComponent implements OnInit  {
       });
       this.formUpdate = fb.group({
         id_grupo: ['', [Validators.required]],
+        id_ciudad: ['', [Validators.required]],
+        id_genero: ['', [Validators.required]],
         nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         email: ['', [Validators.required, Validators.email]],
         password: ['', []],
-        ciudad: ['', []],
         cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         direccion: ['', []],
-        genero: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         edad: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
         fechaNacimiento: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
         fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
@@ -115,7 +122,8 @@ export class EntrenadorComponent implements OnInit  {
     ngOnInit(): void {
     this.getentrenador();
     this.getGrupo()
-    
+    this.getGenero()
+    this.getCiudad()
     }
 
    getentrenador() {
@@ -135,6 +143,18 @@ export class EntrenadorComponent implements OnInit  {
       console.log(this.grupo)
     });
   }
+
+    getGenero() {
+      this.generoService.getAllGenero().subscribe(data => {
+        this.genero = data
+      });
+    }
+
+     getCiudad() {
+      this.ciudadService.getAllCiudad().subscribe(data => {
+        this.ciudad = data
+      });
+    }
 
   formatDate = (date: Date): string => {
     const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
@@ -162,15 +182,15 @@ export class EntrenadorComponent implements OnInit  {
         nombre: this.formSave.value.nombre,
         apellido: this.formSave.value.apellido,
         cedula: this.formSave.value.cedula,
-        ciudad: this.formSave.value.ciudad,
         email: this.formSave.value.email,
         password: this.formSave.value.password,
         telefono: this.formSave.value.telefono,
         direccion: this.formSave.value.direccion,
-        genero: this.formSave.value.genero,
         edad: this.formSave.value.edad,
         fechaNacimiento: this.formatDate(this.formSave.value.fechaNacimiento),
         fechaInscripcion: this.formatDate(this.formSave.value.fechaInscripcion),
+        id_ciudad: this.formSave.value.id_ciudad,
+        id_genero: this.formSave.value.id_genero,
         id_grupo: this.formSave.value.id_grupo,
         id_rol: 2
       };
@@ -243,7 +263,17 @@ export class EntrenadorComponent implements OnInit  {
         const grupoEncontrado = this.grupo.find(g => g.id === id);
         return grupoEncontrado ? grupoEncontrado.nombre : 'Sin grupo';
       }
-    
+
+      getNombreGenero(id: number): string {
+        const generoEncontrado = this.genero.find(g => g.id === id);
+        return generoEncontrado ? generoEncontrado.nombre : 'Sin grupo';
+      }
+
+      getNombreCiudad(id: number): string {
+        const ciudadEncontrado = this.ciudad.find(g => g.id === id);
+        return ciudadEncontrado ? ciudadEncontrado.nombre : 'Sin grupo';
+      }
+      
       buscador() {
       const termino = this.filtro.toLowerCase().trim();
     
@@ -270,15 +300,15 @@ export class EntrenadorComponent implements OnInit  {
           nombre: this.formUpdate.value.nombre,
           apellido: this.formUpdate.value.apellido,
           cedula: this.formUpdate.value.cedula,
-          ciudad: this.formUpdate.value.ciudad,
           email: this.formUpdate.value.email,
           password: this.formUpdate.value.password,
           telefono: this.formUpdate.value.telefono,
           direccion: this.formUpdate.value.direccion,
-          genero: this.formUpdate.value.genero,
           edad: this.formUpdate.value.edad,
           fechaNacimiento: this.formatDate(this.formUpdate.value.fechaNacimiento),
           fechaInscripcion: this.formatDate(this.formUpdate.value.fechaInscripcion),
+          id_ciudad: this.formUpdate.value.id_ciudad,
+          id_genero: this.formUpdate.value.id_genero,
           id_grupo: this.formUpdate.value.id_grupo,
           id_rol: 2
         };
@@ -316,13 +346,13 @@ export class EntrenadorComponent implements OnInit  {
           this.formUpdate.controls['nombre'].setValue(this.user?.nombre)
           this.formUpdate.controls['apellido'].setValue(this.user?.apellido)
           this.formUpdate.controls['cedula'].setValue(this.user?.cedula)
-          this.formUpdate.controls['ciudad'].setValue(this.user?.ciudad)
           this.formUpdate.controls['telefono'].setValue(this.user?.telefono)
           this.formUpdate.controls['direccion'].setValue(this.user?.direccion)
           this.formUpdate.controls['password'].setValue(this.user?.password)
           this.formUpdate.controls['email'].setValue(this.user?.email)
-          this.formUpdate.controls['genero'].setValue(this.user?.genero)
           this.formUpdate.controls['edad'].setValue(this.user?.edad)
+          this.formUpdate.controls['id_ciudad'].setValue(this.user?.id_ciudad)
+          this.formUpdate.controls['id_genero'].setValue(this.user?.id_genero)
           this.formUpdate.controls['id_grupo'].setValue(this.user?.id_grupo)
           this.formUpdate.controls['fechaNacimiento'].setValue(
             parseLocalDate(this.user.fechaNacimiento)

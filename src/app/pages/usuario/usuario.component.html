@@ -68,8 +68,8 @@
         <td>{{ usuario.cedula }}</td>
         <td>{{ usuario.telefono }}</td>
         <td>{{ usuario.direccion }}</td>
-        <td>{{ usuario.ciudad }}</td>
-        <td>{{ usuario.genero }}</td>
+        <td>{{ getNombreCiudad(usuario.id_ciudad) }}</td>
+        <td>{{ getNombreGenero(usuario.id_genero) }}</td>
         <td>{{ usuario.edad }}</td>
         <td>{{ getNombreGrupo(usuario.id_grupo) }}</td>
         <td>{{ usuario.fechaNacimiento }}</td>
@@ -137,17 +137,25 @@
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <label for="ciudad" class="block font-bold mb-3">Ciudad</label>
-                            <input type="text" formControlName="ciudad" pInputText id="ciudad" placeholder="Ingrese la ciudad" fluid />
+                            <div class="col-span-6">
+                                <label for="id_ciudad" class="block font-bold mb-3">Ciudad</label>
+                                <p-select [options]="ciudad" [appendTo]="'body'" formControlName="id_ciudad"  inputId="id_ciudad"  optionLabel="nombre" optionValue="id" placeholder="Seleccione la ciudad" fluid />
+                                <p-message 
+                                    *ngIf="formSaveUsuario.get('id_ciudad')?.invalid && (formSaveUsuario.get('id_ciudad')?.dirty || formSaveUsuario.get('id_ciudad')?.touched)" severity="error" variant="simple"size="small">
+                                    Grupo es requerido
+                                </p-message>
+                            </div>
                         </div>
 
                         <div class="col-span-6">
-                            <label for="genero" class="block font-bold mb-3">Género</label>
-                            <input type="text" formControlName="genero" pInputText id="genero" placeholder="Ingrese el género"  required fluid />
-                            <p-message 
-                                *ngIf="formSaveUsuario.get('genero')?.invalid && (formSaveUsuario.get('genero')?.dirty || formSaveUsuario.get('genero')?.touched)" severity="error" variant="simple"size="small">
-                                Género es requerido
-                            </p-message>
+                            <div class="col-span-6">
+                                <label for="id_genero" class="block font-bold mb-3">Género</label>
+                                <p-select [options]="genero" [appendTo]="'body'" formControlName="id_genero"  inputId="id_genero"  optionLabel="nombre" optionValue="id" placeholder="Seleccione el grupo" fluid />
+                                <p-message 
+                                    *ngIf="formSaveUsuario.get('id_genero')?.invalid && (formSaveUsuario.get('id_genero')?.dirty || formSaveUsuario.get('id_genero')?.touched)" severity="error" variant="simple"size="small">
+                                    Grupo es requerido
+                                </p-message>
+                            </div>
                         </div>
                     </div>
 
@@ -277,18 +285,26 @@
                     </div>
 
                     <div class="grid grid-cols-12 gap-4">
-                        <div class="col-span-6">
-                            <label for="ciudad" class="block font-bold mb-3">Ciudad</label>
-                            <input type="text" formControlName="ciudad" pInputText id="ciudad" placeholder="Ingrese la ciudad" fluid />
+                         <div class="col-span-6">
+                            <div class="col-span-6">
+                                <label for="id_ciudad" class="block font-bold mb-3">Ciudad</label>
+                                <p-select [options]="ciudad" [appendTo]="'body'" formControlName="id_ciudad"  inputId="id_ciudad"  optionLabel="nombre" optionValue="id" placeholder="Seleccione la ciudad" fluid />
+                                <p-message 
+                                    *ngIf="formUpdateUsuario.get('id_ciudad')?.invalid && (formUpdateUsuario.get('id_ciudad')?.dirty || formUpdateUsuario.get('id_ciudad')?.touched)" severity="error" variant="simple"size="small">
+                                    Grupo es requerido
+                                </p-message>
+                            </div>
                         </div>
 
-                        <div class="col-span-6">
-                            <label for="genero" class="block font-bold mb-3">Género</label>
-                            <input type="text" formControlName="genero" pInputText id="genero" placeholder="Ingrese el género"  required fluid />
-                            <p-message 
-                                *ngIf="formUpdateUsuario.get('genero')?.invalid && (formUpdateUsuario.get('genero')?.dirty || formUpdateUsuario.get('genero')?.touched)" severity="error" variant="simple"size="small">
-                                Genero es requerido
-                            </p-message>
+                         <div class="col-span-6">
+                            <div class="col-span-6">
+                                <label for="id_genero" class="block font-bold mb-3">Género</label>
+                                <p-select [options]="genero" [appendTo]="'body'" formControlName="id_genero"  inputId="id_genero"  optionLabel="nombre" optionValue="id" placeholder="Seleccione el género" fluid />
+                                <p-message 
+                                    *ngIf="formUpdateUsuario.get('id_genero')?.invalid && (formUpdateUsuario.get('id_genero')?.dirty || formUpdateUsuario.get('id_genero')?.touched)" severity="error" variant="simple"size="small">
+                                    Grupo es requerido
+                                </p-message>
+                            </div>
                         </div>
                     </div>
 

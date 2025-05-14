@@ -25,7 +25,7 @@ export class AppMenu {
                 items: [
                     { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/dashboard'] },
                     { label: 'Grupo', icon: 'pi pi-user-plus', routerLink: ['/pages/grupo'] },
-                    { label: 'Genero', icon: 'pi pi-user-plus', routerLink: ['/pages/genero'] },
+                    { label: 'Género', icon: 'pi pi-user-plus', routerLink: ['/pages/genero'] },
                     { label: 'Ciudad', icon: 'pi pi-user-plus', routerLink: ['/pages/ciudad'] },
                     { label: 'Usuario', icon: 'pi pi-user-plus', routerLink: ['/pages/usuario'] },
                     { label: 'Entrenadores', icon: 'pi pi-user-plus', routerLink: ['/pages/entrenador'] },
