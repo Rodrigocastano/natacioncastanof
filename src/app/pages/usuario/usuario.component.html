@@ -86,7 +86,7 @@
         </p-table>
     </div>
 
-    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar Usuario" [modal]="true">
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar usuario" [modal]="true">
         
         <ng-template #content>
             <form [formGroup]="formSaveUsuario" class="formulario">
@@ -114,7 +114,7 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <label for="cedula" class="block font-bold mb-1">Cédula</label>
-                            <input type="text" pInputText formControlName="cedula" id="cedula" placeholder="Ingrese número de cédula" class="w-full text-sm px-0 py-2"/>
+                            <input type="text" pInputText formControlName="cedula" id="cedula" placeholder="Ingrese número de cédula" class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/>
                             <p-message 
                                 *ngIf="formSaveUsuario.get('cedula')?.errors?.['required'] && (formSaveUsuario.get('cedula')?.dirty || formSaveUsuario.get('cedula')?.touched)" severity="error" variant="simple" size="small">
                                 Cédula es requerida
@@ -127,7 +127,7 @@
 
                         <div class="col-span-6">
                             <label for="telefono" class="block font-bold mb-1">Teléfono</label>
-                            <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Ingrese número de teléfono" class="w-full text-sm px-0 py-2" />             
+                            <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Ingrese número de teléfono" class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/>             
                             <p-message
                                 *ngIf="formSaveUsuario.get('telefono')?.errors?.['required'] && (formSaveUsuario.get('telefono')?.dirty || formSaveUsuario.get('telefono')?.touched)" severity="error" variant="simple" size="small" >
                                 Teléfono valido 10 número
@@ -170,7 +170,7 @@
                         <div class="col-span-6">
                             <div class="col-span-6">
                                 <label for="id_grupo" class="block font-bold mb-3">Grupo</label>
-                                <p-select [options]="grupo" [appendTo]="'body'" formControlName="id_grupo"  inputId="id_grupo"  optionLabel="nombre" optionValue="id" placeholder="Selecciones grupo" fluid />
+                                <p-select [options]="grupo" [appendTo]="'body'" formControlName="id_grupo"  inputId="id_grupo"  optionLabel="nombre" optionValue="id" placeholder="Seleccione el grupo" fluid />
                                 <p-message 
                                     *ngIf="formSaveUsuario.get('id_grupo')?.invalid && (formSaveUsuario.get('id_grupo')?.dirty || formSaveUsuario.get('id_grupo')?.touched)" severity="error" variant="simple"size="small">
                                     Grupo es requerido
@@ -181,7 +181,7 @@
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <div class="block font-bold mb-3">FechaNacimiento</div>
+                            <div class="block font-bold mb-3">Fecha Nacimiento</div>
                             <p-datepicker [(ngModel)]="fechaActual"  [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
                             <p-message 
                                 *ngIf="formSaveUsuario.get('fechaNacimiento')?.invalid && (formSaveUsuario.get('fechaNacimiento')?.dirty || formSaveUsuario.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">
@@ -255,7 +255,7 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <label for="cedula" class="block font-bold mb-3">Cédula</label>
-                            <input type="text" formControlName="cedula" pInputText id="cedula" placeholder="Ingrese número de cédula"   required fluid />
+                            <input type="text" formControlName="cedula" pInputText id="cedula" placeholder="Ingrese número de cédula"   required fluid (keypress)="soloNumeros($event)" />
                             <p-message 
                                 *ngIf="formUpdateUsuario.get('cedula')?.errors?.['required'] && (formUpdateUsuario.get('cedula')?.dirty || formUpdateUsuario.get('cedula')?.touched)" severity="error" variant="simple" size="small">
                                 Cédula es requerida
@@ -268,7 +268,7 @@
 
                         <div class="col-span-6">
                             <label for="telefono" class="block font-bold mb-1">Teléfono</label>
-                            <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Ingrese número de teléfono" class="w-full text-sm px-0 py-2" /> 
+                            <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Ingrese número de teléfono" class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/> 
                             <p-message
                                 *ngIf="formUpdateUsuario.get('telefono')?.errors?.['required'] && (formUpdateUsuario.get('telefono')?.dirty || formUpdateUsuario.get('telefono')?.touched)" severity="error" variant="simple" size="small" >
                                 Teléfono válido solo 10 número
@@ -293,8 +293,8 @@
                     </div>
 
                     <div class="col-span-12">
-                        <label for="direccion" class="block font-bold mb-3">Direccion</label>
-                        <input type="text" formControlName="direccion" pInputText id="direccion" placeholder="Ingrese la direccion" fluid />
+                        <label for="direccion" class="block font-bold mb-3">Dirección</label>
+                        <input type="text" formControlName="direccion" pInputText id="direccion" placeholder="Ingrese la dirección" fluid />
                     </div>
 
                     <div class="grid grid-cols-12 gap-4">
@@ -309,7 +309,7 @@
                         <div class="col-span-6">
                             <div class="col-span-6">
                                 <label for="id_grupo" class="block font-bold mb-3">Grupo</label>
-                                <p-select [options]="grupo" [appendTo]="'body'" formControlName="id_grupo"  inputId="id_grupo"  optionLabel="nombre" optionValue="id" placeholder="Selecciones grupo" fluid />
+                                <p-select [options]="grupo" [appendTo]="'body'" formControlName="id_grupo"  inputId="id_grupo"  optionLabel="nombre" optionValue="id" placeholder="Seleccione el grupo" fluid />
                                 <p-message 
                                     *ngIf="formUpdateUsuario.get('id_grupo')?.invalid && (formUpdateUsuario.get('id_grupo')?.dirty || formUpdateUsuario.get('id_grupo')?.touched)" severity="error" variant="simple"size="small">
                                     Grupo es requerido
@@ -320,7 +320,7 @@
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <div class="block font-bold mb-3">FechaNacimiento</div>
+                            <div class="block font-bold mb-3">Fecha Nacimiento</div>
                             <p-datepicker [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
                             <p-message 
                                 *ngIf="formUpdateUsuario.get('fechaNacimiento')?.invalid && (formUpdateUsuario.get('fechaNacimiento')?.dirty || formUpdateUsuario.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">

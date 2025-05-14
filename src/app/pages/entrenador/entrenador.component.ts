@@ -85,8 +85,8 @@ export class EntrenadorComponent implements OnInit  {
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(6)]],
         ciudad: ['', []],
-        cedula: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-        telefono: ['', [Validators.pattern(/^$|^\d{10}$/)]],
+        cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+        telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         direccion: ['', []],
         genero: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         edad: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
@@ -101,8 +101,8 @@ export class EntrenadorComponent implements OnInit  {
         email: ['', [Validators.required, Validators.email]],
         password: ['', []],
         ciudad: ['', []],
-        cedula: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-        telefono: ['', [Validators.pattern(/^$|^\d{10}$/)]],
+        cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+        telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         direccion: ['', []],
         genero: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         edad: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
@@ -140,6 +140,13 @@ export class EntrenadorComponent implements OnInit  {
     const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
     return adjustedDate.toISOString().split('T')[0];
   };
+
+  soloNumeros(event: KeyboardEvent) {
+    const charCode = event.charCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
 
   store() {
     this.submitted = true;
@@ -189,9 +196,6 @@ export class EntrenadorComponent implements OnInit  {
     }
   }
   
-
-  
-  // Método para mostrar el mensaje de error específico por cédula duplicada
   errorCedulaMessageToast() {
     this.messageService.add({
       severity: 'error',
@@ -200,7 +204,6 @@ export class EntrenadorComponent implements OnInit  {
     });
   }
   
-  // Método para mostrar el mensaje de error específico por correo duplicado
   errorCorreoMessageToast() {
     this.messageService.add({
       severity: 'error',

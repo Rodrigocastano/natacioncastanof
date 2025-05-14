@@ -71,6 +71,7 @@ export class UsuarioComponent implements OnInit  {
   fechaActual: Date = new Date();
   loading: boolean = true;
   
+  
     constructor(
       private fb: FormBuilder,
       private usuarioService: UsuarioService,
@@ -82,23 +83,22 @@ export class UsuarioComponent implements OnInit  {
         nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         ciudad: ['', []],
-        cedula: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-        telefono: ['', [Validators.pattern(/^$|^\d{10}$/)]],
+        cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+        telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         direccion: ['', []],
         genero: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         edad: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
         fechaNacimiento: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
         fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
-
-        
+  
       });
       this.formUpdateUsuario = fb.group({
         id_grupo: ['', [Validators.required]],
         nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         ciudad: ['', []],
-        cedula: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-        telefono: ['', [Validators.pattern(/^$|^\d{10}$/)]],
+        cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+        telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         direccion: ['', []],
         genero: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         edad: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
@@ -187,6 +187,13 @@ export class UsuarioComponent implements OnInit  {
     showSaveDialog() {
       this.formSaveUsuario.reset();
       this.visibleSave = true;
+    }
+
+    soloNumeros(event: KeyboardEvent) {
+      const charCode = event.charCode;
+      if (charCode < 48 || charCode > 57) {
+        event.preventDefault();
+      }
     }
 
     errorCedulaMessageToast() {

@@ -1,6 +1,6 @@
     <p-toolbar styleClass="mb-6">
         <ng-template #start>
-            <p-button label="Agregar Nuevo Entrenador" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+            <p-button label="Agregar nuevo entrenador" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
         </ng-template>
 
         <ng-template #end>
@@ -25,7 +25,7 @@
 
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registró de Entrenadores</h5>
+                    <h5 class="m-0">Registró de entrenadores</h5>
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search" />
                         <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
@@ -80,7 +80,7 @@
         </p-table>
     </div>
 
-    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar Entrenadores" [modal]="true">
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar entrenador" [modal]="true">
         
         <ng-template #content>
             <form [formGroup]="formSave" class="formulario">
@@ -88,7 +88,7 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <label for="nombre" class="block font-bold mb-3">Nombre</label>
-                            <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese la nombre" required fluid />
+                            <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese el nombre" required fluid />
                             <p-message 
                                 *ngIf="formSave.get('nombre')?.invalid && (formSave.get('nombre')?.dirty || formSave.get('nombre')?.touched)" severity="error" variant="simple"size="small">
                                 Nombre es requerido
@@ -96,7 +96,7 @@
                         </div>
                         <div class="col-span-6">
                             <label for="apellido" class="block font-bold mb-3">Apellido</label>
-                            <input type="text" formControlName="apellido" pInputText id="apellido" placeholder="Ingrese la apellido"  required fluid />
+                            <input type="text" formControlName="apellido" pInputText id="apellido" placeholder="Ingrese el apellido"  required fluid />
                             <p-message 
                                 *ngIf="formSave.get('apellido')?.invalid && (formSave.get('apellido')?.dirty || formSave.get('apellido')?.touched)" severity="error" variant="simple"size="small">
                                 Apellido es requerido
@@ -131,7 +131,7 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <label for="cedula" class="block font-bold mb-1">Cédula</label>
-                            <input type="text" pInputText formControlName="cedula" id="cedula" placeholder="Ingrese la cédula" class="w-full text-sm px-0 py-2"/>
+                            <input type="text" pInputText formControlName="cedula" id="cedula" placeholder="Ingrese número de cédula" class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/>
                             <p-message 
                                 *ngIf="formSave.get('cedula')?.errors?.['required'] && (formSave.get('cedula')?.dirty || formSave.get('cedula')?.touched)" severity="error" variant="simple" size="small">
                                 Cédula es requerida
@@ -144,7 +144,7 @@
 
                         <div class="col-span-6">
                             <label for="telefono" class="block font-bold mb-1">Teléfono</label>
-                                <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Ingrese número de télefono"class="w-full text-sm px-0 py-2"/>             
+                                <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Ingrese número de télefono"class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/>             
                             <p-message
                                 *ngIf="formSave.get('telefono')?.errors?.['required'] && (formSave.get('telefono')?.dirty || formSave.get('telefono')?.touched)" severity="error" variant="simple" size="small" >
                                 Valido solo 10 número
@@ -185,7 +185,7 @@
                         <div class="col-span-6">
                             <div class="col-span-6">
                                 <label for="id_grupo" class="block font-bold mb-3">Grupo</label>
-                                <p-select [options]="grupo" formControlName="id_grupo"  inputId="id_grupo"  optionLabel="nombre" optionValue="id" placeholder="Selecciones el grupo" [appendTo]="'body'" fluid />
+                                <p-select [options]="grupo" formControlName="id_grupo"  inputId="id_grupo"  optionLabel="nombre" optionValue="id" placeholder="Seleccion el grupo" [appendTo]="'body'" fluid />
                                 <p-message 
                                     *ngIf="formSave.get('id_grupo')?.invalid && (formSave.get('id_grupo')?.dirty || formSave.get('id_grupo')?.touched)" severity="error" variant="simple"size="small">
                                     Grupo es requerido
@@ -196,7 +196,7 @@
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <div class="block font-bold mb-3">FechaNacimiento</div>
+                            <div class="block font-bold mb-3">Fecha Nacimiento</div>
                             <p-datepicker [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
                             <p-message 
                             *ngIf="formSave.get('fechaNacimiento')?.invalid && (formSave.get('fechaNacimiento')?.dirty || formSave.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">
@@ -234,7 +234,7 @@
     <p-dialog [(visible)]="visibleDelete" header="Confirmación" [style]="{ width: '350px' }" [modal]="true">
         <div class="flex items-center justify-center">
             <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
-            <span>¿Estás seguro que deseas eliminar éste Entrenador?</span>
+            <span>¿Estás seguro que deseas eliminar éste entrenador?</span>
         </div>
         <ng-template #footer>
             <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDelete = false" text severity="secondary" (click)="cancelMessageToast()" />
@@ -242,7 +242,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar Entrenador" [modal]="true">
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar entrenador" [modal]="true">
         
         <ng-template #content>
             <form [formGroup]="formUpdate" class="formulario">
@@ -250,7 +250,7 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <label for="nombre" class="block font-bold mb-3">Nombre</label>
-                            <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese la nombre"  required fluid />    
+                            <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese el nombre"  required fluid />    
                             <p-message 
                             *ngIf="formUpdate.get('nombre')?.invalid && (formUpdate.get('nombre')?.dirty || formUpdate.get('nombre')?.touched)" severity="error" variant="simple"size="small">
                             Nombre es requerido
@@ -258,7 +258,7 @@
                         </div>
                         <div class="col-span-6">
                             <label for="apellido" class="block font-bold mb-3">Apellido</label>
-                            <input type="text" formControlName="apellido" pInputText id="apellido" placeholder="Ingrese la apellido"  required fluid />
+                            <input type="text" formControlName="apellido" pInputText id="apellido" placeholder="Ingrese el apellido"  required fluid />
                             <p-message 
                             *ngIf="formUpdate.get('apellido')?.invalid && (formUpdate.get('apellido')?.dirty || formUpdate.get('apellido')?.touched)" severity="error" variant="simple"size="small">
                             Apellido es requerido
@@ -284,8 +284,8 @@
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <label for="cedula" class="block font-bold mb-3">Cédula</label>
-                            <input type="text" formControlName="cedula" pInputText id="cedula" placeholder="Ingrese la Cédula" required fluid />
+                            <label for="cedula" class="block font-bold mb-1">Cédula</label>
+                            <input type="text" formControlName="cedula" pInputText id="cedula" placeholder="Ingrese número de Cédula" required fluid  (keypress)="soloNumeros($event)"/>
                             <p-message 
                             *ngIf="formUpdate.get('cedula')?.errors?.['required'] && (formUpdate.get('cedula')?.dirty || formUpdate.get('cedula')?.touched)" 
                             severity="error" variant="simple" size="small">
@@ -300,7 +300,7 @@
 
                         <div class="col-span-6">
                             <label for="telefono" class="block font-bold mb-1">télefono</label>
-                            <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Ingrese número telefónico" class="w-full text-sm px-0 py-2"/>              
+                            <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Ingrese número de télefono" class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/>              
                             <p-message
                             *ngIf="formUpdate.get('telefono')?.errors?.['required'] && (formUpdate.get('telefono')?.dirty || formUpdate.get('telefono')?.touched)" severity="error" variant="simple" size="small" >
                             Télefono valido solo 10 número
@@ -352,7 +352,7 @@
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <div class="block font-bold mb-3">FechaNacimiento</div>
+                            <div class="block font-bold mb-3">Fecha Nacimiento</div>
                             <p-datepicker [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
                             <p-message 
                             *ngIf="formUpdate.get('fechaNacimiento')?.invalid && (formUpdate.get('fechaNacimiento')?.dirty || formUpdate.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">
