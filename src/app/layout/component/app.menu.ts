@@ -40,7 +40,7 @@ export class AppMenu {
                     { label: 'Antropométrica', icon: 'pi pi-pen-to-square', routerLink: ['/pages/antropometrica'] },
                     { label: 'Torneo', icon: 'pi pi-book', routerLink: ['/pages/torneo'] },
                     { label: 'Categoria Distancia', icon: 'pi pi-book', routerLink: ['/pages/categoriaDistancia'] },
-                    { label: 'Torneo Nado', icon: 'pi pi-book', routerLink: ['/pages/torneoNado'] },
+                    { label: '-------', icon: 'pi pi-book', routerLink: ['/pages/torneoNado'] },
                     { label: 'Tiempo Nadador', icon: 'pi pi-history', routerLink: ['/pages/tiempoNadador'] },
                 ]
             },

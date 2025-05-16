@@ -13,7 +13,6 @@ import { RepresentanteComponent } from './representante/representante.component'
 import { RepresentantenadadorComponent } from './representantenadador/representantenadador.component';
 import { TorneoComponent } from './torneo/torneo.component';
 import { CategoriadistanciaComponent } from './categoriadistancia/categoriadistancia.component';
-import { TorneonadoComponent } from './torneonado/torneonado.component';
 import { TiemponadadorComponent } from './tiemponadador/tiemponadador.component';
 import { GrupoComponent } from './grupo/grupo.component';
 import { CiudadComponent } from './ciudad/ciudad.component';
@@ -33,7 +32,6 @@ export default [
     { path: 'representantenadador', component: RepresentantenadadorComponent },
     { path: 'torneo', component: TorneoComponent },
     { path: 'categoriaDistancia', component: CategoriadistanciaComponent },
-    { path: 'torneoNado', component: TorneonadoComponent },
     { path: 'tiempoNadador', component: TiemponadadorComponent },
     { path: 'grupo', component: GrupoComponent },
     { path: 'ciudad', component: CiudadComponent },
