@@ -68,12 +68,12 @@ export class CiudadComponent implements OnInit  {
     private messageService: MessageService
   ) {
     this.formSave = this.fb.group({
-      nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
+      nombre: ['', Validators.required]
 
       
     });
     this.formUpdate = fb.group({
-      nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
+      nombre: ['', Validators.required]
     });
   }
 

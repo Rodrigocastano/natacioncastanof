@@ -17,11 +17,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { Genero } from '../interfaces/genero';
-import { GeneroService } from '../service/genero.service';
+import { AreaNado } from '../interfaces/areanado';
+import { AreanadoService } from '../service/areanado.service';
 
 @Component({
-  selector: 'app-genero',
+  selector: 'app-areanado',
   imports: [
     CommonModule,
     ButtonModule,
@@ -42,21 +42,21 @@ import { GeneroService } from '../service/genero.service';
     ProgressSpinnerModule
   ],
   providers: [MessageService],
-  templateUrl: './genero.component.html',
+  templateUrl: './areanado.component.html',
 })
-export class GeneroComponent implements OnInit  {
+export class AreanadoComponent implements OnInit  {
 
   formSave!: FormGroup;
   visibleSave: boolean = false;
-  genero: Genero[] = [];
-  idGenero: number = 0;
+  areaNado: AreaNado[] = [];
+  idAreaNado: number = 0;
   visibleDelete: boolean = false;
   formUpdate!: FormGroup;
-  gene: any
+  Area: any
   idForUpdate: number = 0;
   visibleUpdate: boolean = false;
   filtro: string = '';
-  buscadorFiltrados: Genero[] = [];
+  buscadorFiltrados: AreaNado[] = [];
   submitted: boolean = false;
 
   maxDate: Date = new Date();
@@ -64,7 +64,7 @@ export class GeneroComponent implements OnInit  {
 
   constructor(
     private fb: FormBuilder,
-    private generoService: GeneroService,
+    private areanadoService: AreanadoService,
     private messageService: MessageService
   ) {
     this.formSave = this.fb.group({
@@ -78,13 +78,13 @@ export class GeneroComponent implements OnInit  {
   }
 
   ngOnInit(): void {
-    this.getCiudad();
+    this.getAreaNado();
   }
 
-   getCiudad() {
-    this.generoService.getAllGenero().subscribe(
+   getAreaNado() {
+    this.areanadoService.getAllAreaNado().subscribe(
       data => {
-        this.genero = data
+        this.areaNado = data
         this.buscadorFiltrados = [...data];
         this.loading = false;
       }
@@ -95,9 +95,9 @@ export class GeneroComponent implements OnInit  {
     const termino = this.filtro.toLowerCase().trim();
   
     if (termino === '') {
-    this.genero = [...this.buscadorFiltrados];
+    this.areaNado = [...this.buscadorFiltrados];
     } else {
-    this.genero = this.buscadorFiltrados.filter(user =>
+    this.areaNado = this.buscadorFiltrados.filter(user =>
       user.nombre?.toLowerCase().includes(termino)
     );
     }
@@ -113,18 +113,18 @@ export class GeneroComponent implements OnInit  {
       }
     
       if (this.formSave.valid) {
-        const newGenero: any = {
+        const newAreaNado: any = {
           nombre: this.formSave.value.nombre,
         };
     
-        this.generoService.createGenero(newGenero).subscribe({
+        this.areanadoService.createAreaNado(newAreaNado).subscribe({
           next: () => {
             this.saveMessageToast();
-            this.getCiudad();
+            this.getAreaNado();
             this.visibleSave = false;
           },
           error: (err) => {
-            console.error('Error al guardar el grupo:', err);
+            console.error('Error al guardar el área nado:', err);
           }
         });
       }
@@ -164,21 +164,21 @@ export class GeneroComponent implements OnInit  {
       }
   
       if (this.formUpdate.valid) {
-        const updateGenero: Genero = {
+        const updateAreaNado: AreaNado = {
           id: this.idForUpdate,
           nombre: this.formUpdate.value.nombre,
         };
   
-        this.generoService.updateGenero(this.idForUpdate, updateGenero).subscribe({
+        this.areanadoService.updateAreaNado(this.idForUpdate, updateAreaNado).subscribe({
           next: (res) => {
             this.saveMessageToast(); 
-            this.getCiudad();
+            this.getAreaNado();
             this.visibleUpdate = false;
             this.idForUpdate = 0;
           },
           error: (err) => {
             this.errorMessageToast(); 
-            console.error('Error actualizando torneo:', err);
+            console.error('Error actualizando area del nado:', err);
           }
         });
       }
@@ -187,9 +187,9 @@ export class GeneroComponent implements OnInit  {
     edit(id: number) {
     
       this.idForUpdate = id;
-      this.gene = this.genero.find(e => e.id == id);
-      if (this.gene) {
-        this.formUpdate.controls['nombre'].setValue(this.gene?.nombre)
+      this.Area = this.areaNado.find(e => e.id == id);
+      if (this.Area) {
+        this.formUpdate.controls['nombre'].setValue(this.Area?.nombre)
 
       }
       this.visibleUpdate = true;
@@ -201,11 +201,11 @@ export class GeneroComponent implements OnInit  {
     }
 
     delete() {
-      this.generoService.deleteGenero(this.idGenero).subscribe({
+      this.areanadoService.deleteAreaNado(this.idAreaNado).subscribe({
         next: () => {
           this.visibleDelete = false;
-          this.getCiudad()
-          this.idGenero = 0
+          this.getAreaNado()
+          this.idAreaNado = 0
           this.EliminadoMessageToasts(); 
         },
         error: (err) => {
@@ -216,8 +216,9 @@ export class GeneroComponent implements OnInit  {
     }
               
     showModalDelete(id: number) {
-      this.idGenero = id;
+      this.idAreaNado = id;
       this.visibleDelete = true
     }  
-     
+
+        
   }

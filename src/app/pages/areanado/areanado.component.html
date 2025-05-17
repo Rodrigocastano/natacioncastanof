@@ -1,6 +1,6 @@
 <p-toolbar styleClass="mb-6">
     <ng-template #start>
-        <p-button label="Agregar nuevo grupo" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+        <p-button label="Agregar nuevo área de nado" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
     </ng-template>
 </p-toolbar>
 
@@ -14,14 +14,14 @@
 
 <div *ngIf="!loading">
     <p-table
-        #dt [value]="grupo" [rows]="6" [paginator]="true"
+        #dt [value]="areaNado" [rows]="6" [paginator]="true"
         [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
         [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true" dataKey="id"
-        currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Grupo"
+        currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Área"
         [showCurrentPageReport]="true" [rowsPerPageOptions]="[6, 12, 18]">
         <ng-template #caption>
             <div class="flex items-center justify-between">
-                <h5 class="m-0">Registró de grupo</h5>
+                <h5 class="m-0">Registró de área de nado</h5>
                 <p-iconfield>
                     <p-inputicon styleClass="pi pi-search" />
                     <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
@@ -51,16 +51,16 @@
     </p-table>
 </div>
 
-<p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar grupo" [modal]="true">
+<p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar área de nado" [modal]="true">
     <ng-template #content>
         <form [formGroup]="formSave" class="formulario">
             <div class="flex flex-col gap-6">
                 <div class="col-span-6">
-                    <label for="nombre" class="block font-bold mb-3">Grupo</label>
-                    <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese el grupo" required fluid />
+                    <label for="nombre" class="block font-bold mb-3">Área de nado</label>
+                    <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese el área de nado" required fluid />
                     <p-message 
                     *ngIf="formSave.get('nombre')?.invalid && (formSave.get('nombre')?.dirty || formSave.get('nombre')?.touched)" severity="error" variant="simple"size="small">
-                    Grupo es requerido
+                    Área de nado es requerido
                     </p-message>
                 </div>
 
@@ -79,7 +79,7 @@
 <p-dialog [(visible)]="visibleDelete" header="Confirmación"  [style]="{ width: '350px' }" [modal]="true">
     <div class="flex items-center justify-center">
         <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
-        <span>¿Estás seguro que deseas eliminar este grupo?</span>
+        <span>¿Estás seguro que deseas eliminar este área de nado?</span>
     </div>
     <ng-template #footer>
         <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDelete = false" text severity="secondary" (click)="cancelMessageToast()" />
@@ -87,16 +87,16 @@
     </ng-template>
 </p-dialog>
 
-<p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar grupo" [modal]="true">  
+<p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar área de nado" [modal]="true">  
     <ng-template #content>
         <form [formGroup]="formUpdate" class="formulario">
             <div class="flex flex-col gap-6"> 
                 <div class="col-span-6">
-                    <label for="nombre" class="block font-bold mb-3">Grupo</label>
-                    <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese el grupo"  required fluid />    
+                    <label for="nombre" class="block font-bold mb-3">Área de nado</label>
+                    <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese el área de nado"  required fluid />    
                     <p-message 
                         *ngIf="formUpdate.get('nombre')?.invalid && (formUpdate.get('nombre')?.dirty || formUpdate.get('nombre')?.touched)" severity="error" variant="simple"size="small">
-                        Grupo es requerido
+                        Área de nado es requerido
                     </p-message>
                 </div>
                     

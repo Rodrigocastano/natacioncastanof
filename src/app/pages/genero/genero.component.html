@@ -17,11 +17,11 @@
         #dt [value]="genero" [rows]="6" [paginator]="true"
         [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
         [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true" dataKey="id"
-        currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Grupo"
+        currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Género"
         [showCurrentPageReport]="true" [rowsPerPageOptions]="[6, 12, 18]">
         <ng-template #caption>
             <div class="flex items-center justify-between">
-                <h5 class="m-0">Registro de género</h5>
+                <h5 class="m-0">Registró de género</h5>
                 <p-iconfield>
                     <p-inputicon styleClass="pi pi-search" />
                     <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
@@ -63,7 +63,6 @@
                     Género es requerido
                     </p-message>
                 </div>
-
             </div>
         </form>
     </ng-template>

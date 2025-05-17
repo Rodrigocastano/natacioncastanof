@@ -17,11 +17,11 @@
         #dt [value]="ciudad" [rows]="6" [paginator]="true"
         [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
         [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true" dataKey="id"
-        currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Grupo"
+        currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Ciudad"
         [showCurrentPageReport]="true" [rowsPerPageOptions]="[6, 12, 18]">
         <ng-template #caption>
             <div class="flex items-center justify-between">
-                <h5 class="m-0">Registro de ciudad</h5>
+                <h5 class="m-0">Registró de ciudad</h5>
                 <p-iconfield>
                     <p-inputicon styleClass="pi pi-search" />
                     <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />

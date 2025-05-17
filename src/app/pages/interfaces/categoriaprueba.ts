@@ -1,4 +1,4 @@
-export interface AreaNado {
+export interface CategoriaPrueba {
     id: number;
     nombre: string;
-  }
+}

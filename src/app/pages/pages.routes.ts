@@ -17,6 +17,9 @@ import { TiemponadadorComponent } from './tiemponadador/tiemponadador.component'
 import { GrupoComponent } from './grupo/grupo.component';
 import { CiudadComponent } from './ciudad/ciudad.component';
 import { GeneroComponent } from './genero/genero.component';
+import { AreanadoComponent } from './areanado/areanado.component';
+import { CategoriapruebaComponent } from './categoriaprueba/categoriaprueba.component';
+import { CategoriatipoComponent } from './categoriatipo/categoriatipo.component';
 
 export default [
     { path: 'usuario', component: UsuarioComponent },
@@ -36,5 +39,8 @@ export default [
     { path: 'grupo', component: GrupoComponent },
     { path: 'ciudad', component: CiudadComponent },
     { path: 'genero', component: GeneroComponent },
+    { path: 'areaNado', component: AreanadoComponent },
+    { path: 'categoriaProducto', component: CategoriapruebaComponent },
+    { path: 'categoriaTipo', component: CategoriatipoComponent },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;
