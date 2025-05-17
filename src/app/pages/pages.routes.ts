@@ -20,6 +20,8 @@ import { GeneroComponent } from './genero/genero.component';
 import { AreanadoComponent } from './areanado/areanado.component';
 import { CategoriapruebaComponent } from './categoriaprueba/categoriaprueba.component';
 import { CategoriatipoComponent } from './categoriatipo/categoriatipo.component';
+import { TiponadoComponent } from './tiponado/tiponado.component';
+import { TipopagoComponent } from './tipopago/tipopago.component';
 
 export default [
     { path: 'usuario', component: UsuarioComponent },
@@ -42,5 +44,7 @@ export default [
     { path: 'areaNado', component: AreanadoComponent },
     { path: 'categoriaProducto', component: CategoriapruebaComponent },
     { path: 'categoriaTipo', component: CategoriatipoComponent },
+    { path: 'tipoNado', component: TiponadoComponent },
+    { path: 'tipoPago', component: TipopagoComponent },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

@@ -215,7 +215,7 @@ export class PagoComponent implements OnInit{
 
       getNombreTipoPago(id: number): string {
         const tipo = this.tipoPago.find(tp => tp.id === id);
-        return tipo ? tipo.tipos : 'Desconocido';
+        return tipo ? tipo.nombre : 'Desconocido';
       }
       
       getNombreEstadoPago(id: number): string {

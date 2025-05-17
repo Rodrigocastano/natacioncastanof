@@ -1,4 +1,4 @@
 export interface TipoNado {
     id: number;
-    tipos: string;
+    nombre: string;
   }

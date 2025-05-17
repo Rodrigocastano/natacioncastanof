@@ -24,6 +24,8 @@ export class AppMenu {
                 label: 'Home',
                 items: [
                     { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/dashboard'] },
+                    { label: 'Tipo de nado', icon: 'pi pi-user-plus', routerLink: ['/pages/tipoNado'] },
+                    { label: 'Tipo de pago', icon: 'pi pi-user-plus', routerLink: ['/pages/tipoPago'] },
                     { label: 'Grupo', icon: 'pi pi-user-plus', routerLink: ['/pages/grupo'] },
                     { label: 'Género', icon: 'pi pi-user-plus', routerLink: ['/pages/genero'] },
                     { label: 'Ciudad', icon: 'pi pi-user-plus', routerLink: ['/pages/ciudad'] },

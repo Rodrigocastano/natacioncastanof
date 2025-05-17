@@ -182,7 +182,7 @@ export class CategoriadistanciaComponent implements OnInit  {
 
       getNombreTipo(id: number): string {
         const grupoEncontrado = this.tipoNado.find(g => g.id === id);
-        return grupoEncontrado ? grupoEncontrado.tipos : 'Sin grupo';
+        return grupoEncontrado ? grupoEncontrado.nombre : 'Sin grupo';
       }
     
       
