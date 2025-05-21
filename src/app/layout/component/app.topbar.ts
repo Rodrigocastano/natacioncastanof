@@ -47,7 +47,7 @@ import { ToastModule } from 'primeng/toast';
             <p-confirmpopup />
             <p-toast />
             <p-dialog 
-                [(visible)]="dialogPerfilVisible" [modal]="true" [dismissableMask]="false" [draggable]="false" [resizable]="false" [baseZIndex]="10000" header="Perfil de Usuario" closable="true"
+                [(visible)]="dialogPerfilVisible" [modal]="true" [dismissableMask]="true" [draggable]="false" [resizable]="false" [baseZIndex]="10000" header="Perfil de Usuario" closable="true"
                 [style]="{ width: '320px', position: 'fixed', top: '4rem', right: '1rem', margin: '0', borderRadius: '1rem', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', padding: '1rem' }"
                 [contentStyle]="{ padding: '0.5rem' }">
                 <div *ngIf="perfilUsuario" style="display: flex; flex-direction: column; gap: 1rem;">

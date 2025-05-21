@@ -23,6 +23,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { CategoriaDistancia } from '../interfaces/categoriadistancia';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
+
 @Component({
   selector: 'app-categoriadistancia',
   imports: [
@@ -95,7 +96,7 @@ export class CategoriadistanciaComponent implements OnInit  {
       this.categoriadistanciaService.getAllCategoriasDistancia().subscribe(data => {
         this.categoriaDistancia = data.map(item => ({
           ...item,
-          tipos: this.getNombreTipo(item.id_tipo_nado)
+          nombre: this.getNombreTipo(item.id_tipo_nado)
         }));
         this.buscarOriginal = [...this.categoriaDistancia];
         this.loading = false;
@@ -108,7 +109,7 @@ export class CategoriadistanciaComponent implements OnInit  {
         data => {
           this.tipoNado = data.map((tipoNado: any) => ({
             ...tipoNado,
-            displayTipo: `${tipoNado.tipos} `
+            displayTipo: `${tipoNado.nombre} `
           }));
           console.log(this.tipoNado);
         }
@@ -186,7 +187,6 @@ export class CategoriadistanciaComponent implements OnInit  {
       }
     
       
-
       update() {
         if (this.formUpdate.invalid) {
           this.errorMessageToast(); 

@@ -22,6 +22,7 @@ import { NutricionaleService } from '../service/nutricionale.service';
 import { Nutricionales } from '../interfaces/nutricionales';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { formatDate } from '@angular/common';
 @Component({
   selector: 'app-nutricionale',
   imports: 
@@ -68,10 +69,15 @@ export class NutricionaleComponent implements OnInit{
 
   submitted: boolean = false;
   maxDate: Date = new Date();
+  fechaActual: Date = new Date();
+  currentDate: Date = new Date();
   loading: boolean = true;
 
   terminoBusqueda: string = '';
   buscarOriginal: Nutricionales[] = [];
+
+  visibleUserMeasureDialog: boolean = false;
+selectedUser: any;
   
   constructor(
       private fb: FormBuilder,
@@ -83,14 +89,14 @@ export class NutricionaleComponent implements OnInit{
         id_usuario: ['', [Validators.required]],
         caloria_consumida: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
         proteina_consumida: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-        fecha: ['', [Validators.required]]
+        fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
         
       });
       this.formUpdate = fb.group({
         caloria_consumida: ['', [Validators.required]],
         proteina_consumida: ['', [Validators.required]],
-        fecha: ['', [Validators.required]],
-        id_usuario: ['', [Validators.required]]
+        id_usuario: ['', [Validators.required]],
+        fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
       });
     }
 
@@ -171,6 +177,7 @@ export class NutricionaleComponent implements OnInit{
             this.saveMessageToast();
             this.getNutricionales();
             this.visibleSave = false;
+            this.visibleUserMeasureDialog = false;
           },
           error: (err) => {
             console.error('Error al guardar la medida elasticida:', err);
@@ -180,14 +187,58 @@ export class NutricionaleComponent implements OnInit{
       }
     }
 
+    prepareNewMedida(usuario: any) {
+        this.selectedUser = usuario;
+        this.formSave.reset();
+        
+        const today = new Date();
+        this.currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        
+        this.formSave.patchValue({
+            id_usuario: usuario.id,
+            fecha: this.currentDate
+        });
+        
+        this.visibleUserMeasureDialog = true;
+    }
+
+    obtenerMedidasOrdenadas(measures: any[]): any[] {
+      return [...measures].sort((a, b) => {
+        return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
+      });
+    }
+
+  compararProteinaAnterior(medidasOrdenadas: any[], index: number): string {
+    if (index === 0) return 'increase';
+    
+    const actual = medidasOrdenadas[index].proteina_consumida;
+    const anterior = medidasOrdenadas[index - 1].proteina_consumida;
+
+    if (actual > anterior) return 'increase';
+    if (actual < anterior) return 'decrease';
+    return 'equal';
+  }
+
+compararCaloriasAnterior(medidasOrdenadas: any[], index: number): string {
+  if (index === 0) return 'increase';
+  
+  const actual = medidasOrdenadas[index].caloria_consumida;
+  const anterior = medidasOrdenadas[index - 1].caloria_consumida;
+
+  if (actual > anterior) return 'increase';
+  if (actual < anterior) return 'decrease';
+  return 'equal';
+}
+
     showSaveDialog() {
       this.formSave.reset();
       this.visibleSave = true;
     }
 
     formatDate = (date: Date): string => {
-      return date.toISOString().split('T')[0];
-    };
+      const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+      return adjustedDate.toISOString().split('T')[0];
+    }
   
     saveMessageToast() {
       this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Guardado correctamente' });
@@ -243,10 +294,15 @@ export class NutricionaleComponent implements OnInit{
       this.idForUpdate = true;
       this.nutric = nutricionaId
       if (this.nutric) {
+         const parseLocalDate = (dateString: string) => {
+          return dateString ? new Date(dateString + 'T00:00:00') : null;
+        };
         this.formUpdate.controls['proteina_consumida'].setValue(this.nutric?.proteina_consumida)
         this.formUpdate.controls['caloria_consumida'].setValue(this.nutric?.caloria_consumida)
-        this.formUpdate.controls['fecha'].setValue(new Date(this.nutric?.fecha))
         this.formUpdate.controls['id_usuario'].setValue(this.nutric?.id_usuario) 
+        this.formUpdate.controls['fecha'].setValue(
+          parseLocalDate(this.nutric.fecha)
+        );
       }
       this.visibleUpdate = true;
       

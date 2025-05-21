@@ -72,10 +72,16 @@ export class AntropometricaComponent implements OnInit{
 
     submitted: boolean = false;
     maxDate: Date = new Date();
+    fechaActual: Date = new Date();
+    currentDate: Date = new Date();
     loading: boolean = true;
 
     terminoBusqueda: string = '';
     buscarOriginal: Antropometrica[] = [];
+
+        visibleUserMeasureDialog: boolean = false;
+    selectedUser: any;
+
 
     constructor(
           private fb: FormBuilder,
@@ -195,6 +201,7 @@ export class AntropometricaComponent implements OnInit{
             this.saveMessageToast();
             this.getAntropometrica();
             this.visibleSave = false;
+            this.visibleUserMeasureDialog = false;
           },
           error: (err) => {
             console.error('Error al guardar la medida antropométrica:', err);
@@ -203,7 +210,103 @@ export class AntropometricaComponent implements OnInit{
         });
       }
     }
+
+
+        prepareNewMedida(usuario: any) {
+        this.selectedUser = usuario;
+        this.formSave.reset();
+        
+        const today = new Date();
+        this.currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        
+        this.formSave.patchValue({
+            id_usuario: usuario.id,
+            fecha: this.currentDate
+        });
+        
+        this.visibleUserMeasureDialog = true;
+    }
+
+    obtenerMedidasOrdenadas(measures: any[]): any[] {
+      return [...measures].sort((a, b) => {
+      return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
+      });
+    }
+
+    compararPeso(medidasOrdenadas: any[], index: number): string {
+      if (index === 0) return 'increase';
+      const actual = medidasOrdenadas[index].peso;
+      const anterior = medidasOrdenadas[index - 1].peso;
+      if (actual > anterior) return 'increase';
+      if (actual < anterior) return 'decrease';
+      return 'equal';
+    }
+
+    compararTalla(medidasOrdenadas: any[], index: number): string {
+      if (index === 0) return 'increase';
+      const actual = medidasOrdenadas[index].talla;
+      const anterior = medidasOrdenadas[index - 1].talla;
+      if (actual > anterior) return 'increase';
+      if (actual < anterior) return 'decrease';
+      return 'equal';
+    }
+
+    compararEnvergadura(medidasOrdenadas: any[], index: number): string {
+      if (index === 0) return 'increase';
+      const actual = medidasOrdenadas[index].envergadura;
+      const anterior = medidasOrdenadas[index - 1].envergadura;
+      if (actual > anterior) return 'increase';
+      if (actual < anterior) return 'decrease';
+      return 'equal';
+    }
+
+    compararBraquial(medidasOrdenadas: any[], index: number): string {
+      if (index === 0) return 'increase';
+      const actual = medidasOrdenadas[index].circuferencia_braquial;
+      const anterior = medidasOrdenadas[index - 1].circuferencia_braquial;
+      if (actual > anterior) return 'increase';
+      if (actual < anterior) return 'decrease';
+      return 'equal';
+    }
+
+
+    compararCutanio(medidasOrdenadas: any[], index: number): string {
+      if (index === 0) return 'increase';
+      const actual = medidasOrdenadas[index].pliegue_cutanio;
+      const anterior = medidasOrdenadas[index - 1].pliegue_cutanio;
+      if (actual > anterior) return 'increase';
+      if (actual < anterior) return 'decrease';
+      return 'equal';
+    }
     
+    compararCintura(medidasOrdenadas: any[], index: number): string {
+      if (index === 0) return 'increase';
+      const actual = medidasOrdenadas[index].perimetro_cintura;
+      const anterior = medidasOrdenadas[index - 1].perimetro_cintura;
+      if (actual > anterior) return 'increase';
+      if (actual < anterior) return 'decrease';
+      return 'equal';
+    }
+
+    compararCadera(medidasOrdenadas: any[], index: number): string {
+      if (index === 0) return 'increase';
+      const actual = medidasOrdenadas[index].perimetro_cadera;
+      const anterior = medidasOrdenadas[index - 1].perimetro_cadera;
+      if (actual > anterior) return 'increase';
+      if (actual < anterior) return 'decrease';
+      return 'equal';
+    }
+
+    compararSagital(medidasOrdenadas: any[], index: number): string {
+      if (index === 0) return 'increase';
+      const actual = medidasOrdenadas[index].diametro_sagital;
+      const anterior = medidasOrdenadas[index - 1].diametro_sagital;
+      if (actual > anterior) return 'increase';
+      if (actual < anterior) return 'decrease';
+      return 'equal';
+    }
+
+
     showSaveDialog() {
     this.formSave.reset();
     this.visibleSave = true;
@@ -274,6 +377,9 @@ export class AntropometricaComponent implements OnInit{
       this.idForUpdate = true;
       this.antropome = elasticId
       if (this.antropome) {
+          const parseLocalDate = (dateString: string) => {
+          return dateString ? new Date(dateString + 'T00:00:00') : null;
+        };
         this.formUpdate.controls['peso'].setValue(this.antropome?.peso)
         this.formUpdate.controls['talla'].setValue(this.antropome?.talla)
         this.formUpdate.controls['envergadura'].setValue(this.antropome?.envergadura)
@@ -282,8 +388,10 @@ export class AntropometricaComponent implements OnInit{
         this.formUpdate.controls['perimetro_cintura'].setValue(this.antropome?.perimetro_cintura)
         this.formUpdate.controls['perimetro_cadera'].setValue(this.antropome?.perimetro_cadera)
         this.formUpdate.controls['diametro_sagital'].setValue(this.antropome?.diametro_sagital)
-        this.formUpdate.controls['fecha'].setValue(new Date(this.antropome?.fecha))
         this.formUpdate.controls['id_usuario'].setValue(this.antropome?.id_usuario) 
+        this.formUpdate.controls['fecha'].setValue(
+          parseLocalDate(this.antropome.fecha)
+        );
       }
       this.visibleUpdate = true;
       

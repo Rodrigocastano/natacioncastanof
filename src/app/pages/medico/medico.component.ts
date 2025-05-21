@@ -24,6 +24,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TextareaModule } from 'primeng/textarea';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-medico',
@@ -53,29 +54,30 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 })
 export class MedicoComponent implements OnInit{
   
-  formSave!: FormGroup;
-  visibleSave: boolean = false;
-  medico: Medico[] = [];
-  idMedico: number = 0;
-  visibleDelete: boolean = false;
+      formSave!: FormGroup;
+      visibleSave: boolean = false;
+      medico: Medico[] = [];
+      idMedico: number = 0;
+      visibleDelete: boolean = false;
 
-  formUpdate!: FormGroup;
-  medi: any
-  idForUpdate: boolean = false;
-  visibleUpdate: boolean = false;
-  usuarios: Usuario[] = [];
+      formUpdate!: FormGroup;
+      medi: any
+      idForUpdate: boolean = false;
+      visibleUpdate: boolean = false;
+      usuarios: Usuario[] = [];
 
-  expandedRows = {};
-  cols: any[] = [];
-  expanded: boolean = false;
-  msgs: ToastMessageOptions[] | null = [];
+      expandedRows = {};
+      cols: any[] = [];
+      expanded: boolean = false;
+      msgs: ToastMessageOptions[] | null = [];
 
-  submitted: boolean = false;
-  maxDate: Date = new Date();
-  loading: boolean = true;
+      submitted: boolean = false;
+      maxDate: Date = new Date();
+      fechaActual: Date = new Date();
+      loading: boolean = true;
 
-  terminoBusqueda: string = '';
-  buscarOriginal: Medico[] = [];
+      terminoBusqueda: string = '';
+      buscarOriginal: Medico[] = [];
   
   constructor(
       private fb: FormBuilder,
@@ -87,13 +89,13 @@ export class MedicoComponent implements OnInit{
         id_usuario: ['', [Validators.required]],
         diagnostico: ['', []],
         apto: ['', []],
-        fecha: ['', [Validators.required]]
+        fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
         
       });
       this.formUpdate = fb.group({
         diagnostico: ['', []],
         apto: ['', []],
-        fecha: ['', [Validators.required]],
+        fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
         id_usuario: ['', [Validators.required]]
       });
     }
@@ -163,9 +165,13 @@ export class MedicoComponent implements OnInit{
       }
   
       if (this.formSave.valid) {
+           const presenteValue = this.formSave.value.apto !== null && this.formSave.value.apto !== undefined 
+          ? this.formSave.value.apto 
+          : true; 
+
         const newUsuario: any = {
           diagnostico: this.formSave.value.diagnostico,
-          apto: this.formSave.value.apto,
+          apto: presenteValue,
           fecha: this.formatDate(this.formSave.value.fecha),
           id_usuario: this.formSave.value.id_usuario,
         };
@@ -191,8 +197,9 @@ export class MedicoComponent implements OnInit{
     }
 
     formatDate = (date: Date): string => {
-      return date.toISOString().split('T')[0];
-    };
+      const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+      return adjustedDate.toISOString().split('T')[0];
+    }
   
     saveMessageToast() {
       this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Guardado correctamente' });
@@ -249,10 +256,15 @@ export class MedicoComponent implements OnInit{
       this.idForUpdate = true;
       this.medi = elasticId
       if (this.medi) {
+         const parseLocalDate = (dateString: string) => {
+          return dateString ? new Date(dateString + 'T00:00:00') : null;
+        };
         this.formUpdate.controls['diagnostico'].setValue(this.medi?.diagnostico)
         this.formUpdate.controls['apto'].setValue(this.medi?.apto)
-        this.formUpdate.controls['fecha'].setValue(new Date(this.medi?.fecha))
         this.formUpdate.controls['id_usuario'].setValue(this.medi?.id_usuario) 
+         this.formUpdate.controls['fecha'].setValue(
+          parseLocalDate(this.medi.fecha)
+        );
       }
       this.visibleUpdate = true;
       

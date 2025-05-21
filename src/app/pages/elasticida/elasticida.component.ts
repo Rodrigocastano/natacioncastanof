@@ -22,6 +22,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-elasticida',
@@ -68,12 +69,15 @@ export class ElasticidaComponent implements OnInit{
 
     submitted: boolean = false;
     maxDate: Date = new Date();
+    fechaActual: Date = new Date();
+    currentDate: Date = new Date();
     loading: boolean = true;
 
     terminoBusqueda: string = '';
     buscarOriginal: Elasticida[] = [];
 
-
+    visibleUserMeasureDialog: boolean = false;
+    selectedUser: any;
 
     constructor(
         private fb: FormBuilder,
@@ -84,12 +88,12 @@ export class ElasticidaComponent implements OnInit{
         this.formSave = this.fb.group({
           id_usuario: ['', [Validators.required]],
           medida_elasticida: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-          fecha: ['', [Validators.required]]
+          fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
           
         });
         this.formUpdate = fb.group({
           medida_elasticida: ['', [Validators.required]],
-          fecha: ['', [Validators.required]],
+          fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
           id_usuario: ['', [Validators.required]]
         });
     }
@@ -169,6 +173,9 @@ export class ElasticidaComponent implements OnInit{
             this.saveMessageToast();
             this.getElasticida();
             this.visibleSave = false;
+            this.visibleUserMeasureDialog = false;
+
+
           },
           error: (err) => {
             console.error('Error al guardar la medida elasticida:', err);
@@ -178,14 +185,47 @@ export class ElasticidaComponent implements OnInit{
       }
     }
 
+    prepareNewMedida(usuario: any) {
+        this.selectedUser = usuario;
+        this.formSave.reset();
+        
+        const today = new Date();
+        this.currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        
+        this.formSave.patchValue({
+            id_usuario: usuario.id,
+            fecha: this.currentDate
+        });
+        
+        this.visibleUserMeasureDialog = true;
+    }
+
+    obtenerMedidasOrdenadas(measures: any[]): any[] {
+      return [...measures].sort((a, b) => {
+        return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
+      });
+    }
+
+    compararConAnterior(sortedMeasures: any[], currentIndex: number): string {
+      if (currentIndex === 0) return 'first';
+      
+      const current = parseFloat(sortedMeasures[currentIndex].medida_elasticida);
+      const previous = parseFloat(sortedMeasures[currentIndex - 1].medida_elasticida);
+      
+      if (current > previous) return 'increase';
+      if (current < previous) return 'decrease';
+      return 'equal';
+    }
+
     showSaveDialog() {
       this.formSave.reset();
       this.visibleSave = true;
     }
 
     formatDate = (date: Date): string => {
-      return date.toISOString().split('T')[0];
-    };
+      const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+      return adjustedDate.toISOString().split('T')[0];
+    }
     
     saveMessageToast() {
       this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Guardado correctamente' });
@@ -240,9 +280,14 @@ export class ElasticidaComponent implements OnInit{
       this.idForUpdate = true;
       this.elastic = elasticId
       if (this.elastic) {
+           const parseLocalDate = (dateString: string) => {
+          return dateString ? new Date(dateString + 'T00:00:00') : null;
+        };
         this.formUpdate.controls['medida_elasticida'].setValue(this.elastic?.medida_elasticida)
-        this.formUpdate.controls['fecha'].setValue(new Date(this.elastic?.fecha))
         this.formUpdate.controls['id_usuario'].setValue(this.elastic?.id_usuario) 
+         this.formUpdate.controls['fecha'].setValue(
+          parseLocalDate(this.elastic.fecha)
+        );
       }
       this.visibleUpdate = true;
       

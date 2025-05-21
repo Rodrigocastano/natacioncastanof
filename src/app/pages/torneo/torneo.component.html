@@ -33,6 +33,7 @@
                 <tr>
                     <th style="min-width: 6rem">ID</th>
                     <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
+                    <th pSortableColumn="name" style="min-width:8rem">AreaNado</th>
                     <th pSortableColumn="price" style="min-width: 12rem">FechaInscripción</th>
                     <th pSortableColumn="inventoryStatus" style="min-width: 10rem">Acciones</th>          
                 </tr>
@@ -42,6 +43,7 @@
                 <tr>
                     <td>{{ usuario.id }}</td>
                     <td>{{ usuario.nombre }}</td>
+                    <td>{{ getNombreAreaNado(usuario.id_area_nado) }}</td>
                     <td>{{ usuario.fecha }}</td>
                     <td>
                         <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(usuario.id)"/>
@@ -65,12 +67,26 @@
                         Nombre es requerido
                         </p-message>
                     </div>
+
+                    <div class="col-span-6">
+                        <label for="id_area_nado" class="block font-bold mb-3">Area Nado</label>             
+                        <p-select
+                            [options]="areanado" formControlName="id_area_nado" inputId="id_area_nado" optionLabel="displayArea"optionValue="id"
+                            placeholder="Seleccione un Area nado" [filter]="true" filterBy="displayArea" [showClear]="true" class="w-full md:w-70">
+                        </p-select>
+                        <div class="mt-2">
+                            <p-message
+                                *ngIf="formSave.get('id_area_nado')?.invalid && (formSave.get('id_area_nado')?.dirty || formSave.get('id_area_nado')?.touched)" severity="error" variant="simple" size="small" >
+                                Area nado es requerido
+                            </p-message>
+                        </div>
+                    </div>
                 
                     <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
                             <label for="fecha" class="block font-bold mb-2">Fecha Inscripción</label>
                             <p-datepicker 
-                                [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
+                                [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                                 [appendTo]="'body'" dateFormat="yy-mm-dd" class="w-96" [placeholder]="'Seleccione una fecha'">
                             </p-datepicker>
                             <p-message 
@@ -102,7 +118,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar Torneo" [modal]="true">  
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar Torneo" [modal]="true">  
         <ng-template #content>
             <form [formGroup]="formUpdate" class="formulario">
                 <div class="flex flex-col gap-6"> 
@@ -114,17 +130,33 @@
                             Nombre es requerido
                         </p-message>
                     </div>
+
+                     <div class="col-span-6">
+                        <label for="id_area_nado" class="block font-bold mb-3">Area Nado</label>             
+                        <p-select
+                            [options]="areanado" formControlName="id_area_nado" inputId="id_area_nado" optionLabel="displayArea" optionValue="id"
+                            placeholder="Seleccione un Area nado" [filter]="true" filterBy="displayArea" [showClear]="true" class="w-full md:w-70">
+                        </p-select>
+                        <div class="mt-2">
+                            <p-message
+                                *ngIf="formUpdate.get('id_area_nado')?.invalid && (formUpdate.get('id_area_nado')?.dirty || formUpdate.get('id_area_nado')?.touched)" severity="error" variant="simple" size="small" >
+                                Area nado es requerido
+                            </p-message>
+                        </div>
+                    </div>
                         
-                    <div class="col-span-6">
-                        <div class="block font-bold mb-3">FechaInscripción</div>
-                        <p-datepicker 
-                        [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
-                        [appendTo]="'body'" dateFormat="yy-mm-dd" class="w-96" [placeholder]="'Seleccione una fecha'">
-                        </p-datepicker>
-                        <p-message 
-                            *ngIf="formUpdate.get('fechaNacimiento')?.invalid && (formUpdate.get('fechaNacimiento')?.dirty || formUpdate.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">
-                            Fecha Nacimiento es requerido
-                        </p-message>
+                    <div class="col-span-12 flex justify-center" >
+                        <div class="col-span-6">
+                            <div class="block font-bold mb-3">FechaInscripción</div>
+                            <p-datepicker 
+                            [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
+                            [appendTo]="'body'" dateFormat="yy-mm-dd" class="w-96" [placeholder]="'Seleccione una fecha'">
+                            </p-datepicker>
+                            <p-message 
+                                *ngIf="formUpdate.get('fechaNacimiento')?.invalid && (formUpdate.get('fechaNacimiento')?.dirty || formUpdate.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">
+                                Fecha Nacimiento es requerido
+                            </p-message>
+                        </div>
                     </div>
                 </div>
             </form>

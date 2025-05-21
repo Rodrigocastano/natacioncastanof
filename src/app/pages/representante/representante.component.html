@@ -38,7 +38,7 @@
                     <th style="min-width: 6rem">Code</th>
                     <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
-                    <th pSortableColumn="price" style="min-width: 10rem">Cédula</th>
+                    <th pSortableColumn="price" style="min-width: 10rem">Identificación</th>
                     <th pSortableColumn="price" style="min-width: 10rem">Teléfono</th>
                     <th pSortableColumn="inventoryStatus" style="min-width: 10rem">Acciones</th>
                 </tr>
@@ -86,15 +86,15 @@
                     </div>
             
                     <div class="col-span-6">
-                        <label for="cedula" class="block font-bold mb-1">Cédula</label>
-                        <input type="text" pInputText formControlName="cedula" id="cedula" placeholder="Ingrese el número" class="w-full text-sm px-0 py-2"/>
+                        <label for="cedula" class="block font-bold mb-1">Identificación</label>
+                        <input type="text" pInputText formControlName="cedula" id="cedula" placeholder="Número de identificación" class="w-full text-sm px-0 py-2"/>
                         <p-message 
                             *ngIf="formSave.get('cedula')?.errors?.['required'] && (formSave.get('cedula')?.dirty || formSave.get('cedula')?.touched)" severity="error" variant="simple" size="small">
-                            Cédula es requerida
+                            Identificación es requerida
                         </p-message>
                         <p-message 
                             *ngIf="formSave.get('cedula')?.errors?.['pattern'] && (formSave.get('cedula')?.dirty || formSave.get('cedula')?.touched)" severity="error" variant="simple" size="small">
-                            Cédula acepta número valido 10 números
+                            Identificación acepta número valido 10 números
                         </p-message>
                     </div>
 
@@ -156,15 +156,15 @@
                     </div>
 
                     <div class="col-span-6">
-                        <label for="cedula" class="block font-bold mb-3">Cédula</label>
-                        <input type="text" formControlName="cedula" pInputText id="cedula" placeholder="Ingrese la Cedula"   required autofocus fluid />
+                        <label for="cedula" class="block font-bold mb-3">Identificación</label>
+                        <input type="text" formControlName="cedula" pInputText id="cedula" placeholder="Número de Identificación"   required autofocus fluid />
                         <p-message 
                         *ngIf="formUpdate.get('cedula')?.errors?.['required'] && (formUpdate.get('cedula')?.dirty || formUpdate.get('cedula')?.touched)" severity="error" variant="simple" size="small">
-                            Cédula es requerida
+                            Identificación es requerida
                         </p-message>
                         <p-message 
                             *ngIf="formUpdate.get('cedula')?.errors?.['pattern'] && (formUpdate.get('cedula')?.dirty || formUpdate.get('cedula')?.touched)" severity="error" variant="simple" size="small">
-                            Cédula acepta número valido 10 números
+                            Identificación acepta número valido 10 números
                         </p-message>
                     </div>
 

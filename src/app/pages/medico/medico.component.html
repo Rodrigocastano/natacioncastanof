@@ -34,7 +34,7 @@
                     <tr>
                         <th style="min-width: 4rem"></th>
                         <th style="min-width: 6rem">ID</th>
-                        <th pSortableColumn="name" style="min-width:8rem">Cédula</th>
+                        <th pSortableColumn="name" style="min-width:8rem">Identificación</th>
                         <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
                         <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
                         <th pSortableColumn="price" style="min-width: 8rem">Género</th>
@@ -121,15 +121,9 @@
 
                         <div class="col-span-6">
                             <label for="apto" class="block font-bold mb-2">Apto</label>
-                            <div class="grid grid-cols-12 gap-4">
-                                <div class="flex items-center gap-2 col-span-6 justify-center">
-                                    <p-radiobutton name="apto" [value]="true" formControlName="apto" inputId="aptoSi" />
-                                    <label for="aptoSi">Sí</label>
-                                </div>
-                                <div class="flex items-center gap-2 col-span-6 justify-center ml-6">
-                                    <p-radiobutton name="apto" [value]="false" formControlName="apto" inputId="aptoNo" />
-                                    <label for="aptoNo">No</label>
-                                </div>
+                            <div class="flex items-center gap-2 justify-center ml-6">
+                                <p-radiobutton name="apto" [value]="false" formControlName="apto" inputId="aptoNo" />
+                                <label for="aptoNo">No</label>
                             </div>
                         </div>  
                         
@@ -137,7 +131,7 @@
                             <div class="col-span-6">
                                 <label for="fecha" class="block font-bold mb-2">Fecha Inscripción</label>
                                 <p-datepicker 
-                                    [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
+                                    [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                                     [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
                                 </p-datepicker>
                                 <p-message 

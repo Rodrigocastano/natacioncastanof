@@ -19,6 +19,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { AreaNado } from '../interfaces/areanado';
+import { AreanadoService } from '../../../app/pages/service/areanado.service';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-torneo',
@@ -46,42 +49,46 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 })
 export class TorneoComponent implements OnInit  {
 
-  formSave!: FormGroup;
-  visibleSave: boolean = false;
-  torneo: Torneo[] = [];
-  idTorneo: number = 0;
-  visibleDelete: boolean = false;
-  formUpdate!: FormGroup;
-  torn: any
-  idForUpdate: number = 0;
-  visibleUpdate: boolean = false;
-  filtro: string = '';
-  buscadorFiltrados: Torneo[] = [];
-  submitted: boolean = false;
-
-  maxDate: Date = new Date();
-  loading: boolean = true;
+    formSave!: FormGroup;
+    visibleSave: boolean = false;
+    torneo: Torneo[] = [];
+    idTorneo: number = 0;
+    visibleDelete: boolean = false;
+    formUpdate!: FormGroup;
+    torn: any
+    idForUpdate: number = 0;
+    visibleUpdate: boolean = false;
+    filtro: string = '';
+    buscadorFiltrados: Torneo[] = [];
+    submitted: boolean = false;
+    areanado: AreaNado[] = [];
+    maxDate: Date = new Date();
+    fechaActual: Date = new Date();
+    loading: boolean = true;
 
   constructor(
     private fb: FormBuilder,
     private torneoService: TorneoService,
+    private areanadoService: AreanadoService,
     private messageService: MessageService
   ) {
     this.formSave = this.fb.group({
       nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-      fecha: ['', [Validators.required]],
-
+      fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
+      id_area_nado: ['', [Validators.required]],
       
     });
     this.formUpdate = fb.group({
       nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-      fecha: ['', [Validators.required]],
+      fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
+      id_area_nado: ['', [Validators.required]],
     });
   }
 
 
   ngOnInit(): void {
     this.getTorneo();
+    this.getAreaNado();
   }
 
    getTorneo() {
@@ -93,6 +100,18 @@ export class TorneoComponent implements OnInit  {
       }
     );
   }
+
+   getAreaNado() {
+        this.areanadoService.getAllAreaNado().subscribe( 
+          data => {
+            this.areanado = data.map((areanado: any) => ({
+              ...areanado,
+              displayArea: `${areanado.nombre}`
+            }));
+            console.log(this.areanado);
+          }
+        );
+      }
 
  store() {
   this.submitted = true;
@@ -106,6 +125,7 @@ export class TorneoComponent implements OnInit  {
   if (this.formSave.valid) {
     const newTorneo: any = {
       nombre: this.formSave.value.nombre,
+      id_area_nado: this.formSave.value.id_area_nado,
       fecha: this.formatDate(this.formSave.value.fecha),
     };
 
@@ -122,6 +142,11 @@ export class TorneoComponent implements OnInit  {
   }
 }
 
+ getNombreAreaNado(id: number): string {
+        const estado = this.areanado.find(ep => ep.id === id);
+        return estado ? estado.nombre : 'Desconocido';
+      }
+
 cancelSave() {
   this.visibleSave = false;
   this.cancelMessageToast();
@@ -133,8 +158,9 @@ showSaveDialog() {
 }
 
 formatDate = (date: Date): string => {
-  return date.toISOString().split('T')[0];
-};
+      const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+      return adjustedDate.toISOString().split('T')[0];
+    }
 
 saveMessageToast() {
   this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Guardado correctamente' });
@@ -175,6 +201,7 @@ errorMessageToast() {
           const updateTorneo: Torneo = {
             id: this.idForUpdate,
             nombre: this.formUpdate.value.nombre,
+            id_area_nado: this.formUpdate.value.id_area_nado,
             fecha: this.formatDate(this.formUpdate.value.fecha),
           };
     
@@ -198,8 +225,14 @@ errorMessageToast() {
         this.idForUpdate = id;
         this.torn = this.torneo.find(e => e.id == id);
         if (this.torn) {
+           const parseLocalDate = (dateString: string) => {
+          return dateString ? new Date(dateString + 'T00:00:00') : null;
+          };
           this.formUpdate.controls['nombre'].setValue(this.torn?.nombre)
-          this.formUpdate.controls['fecha'].setValue(new Date(this.torn?.fecha))
+          this.formUpdate.controls['id_area_nado'].setValue(this.torn?.id_area_nado);
+            this.formUpdate.controls['fecha'].setValue(
+          parseLocalDate(this.torn.fecha)
+        );
         }
         this.visibleUpdate = true;
       }

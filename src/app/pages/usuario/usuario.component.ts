@@ -91,29 +91,48 @@ export class UsuarioComponent implements OnInit  {
         id_genero: ['', [Validators.required]],
         nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
         cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         direccion: ['', []],
-        edad: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-        fechaNacimiento: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
+        edad: [{value: '', disabled: true}, [Validators.required, Validators.pattern('^[0-9]+$')]], 
+        fechaNacimiento: ['', [Validators.required]],
         fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
-  
       });
+
+      this.formSaveUsuario.get('fechaNacimiento')?.valueChanges.subscribe((date) => {
+        if (date) {
+          const age = this.calculateAge(new Date(date));
+          this.formSaveUsuario.get('edad')?.setValue(age, {emitEvent: false});
+        }
+      });
+      
       this.formUpdateUsuario = fb.group({
         id_grupo: ['', [Validators.required]],
         id_ciudad: ['', [Validators.required]],
         id_genero: ['', [Validators.required]],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', []],
         nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         direccion: ['', []],
-        edad: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-        fechaNacimiento: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
+        edad: [{ value: '', disabled: true }, [Validators.required, Validators.pattern('^[0-9]+$')]],
+        fechaNacimiento: ['', [Validators.required]],
         fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
       });
-    }
 
+      this.formUpdateUsuario.get('fechaNacimiento')?.valueChanges.subscribe((date) => {
+        if (date) {
+          const age = this.calculateAge(new Date(date));
+          this.formUpdateUsuario.get('edad')?.setValue(age, { emitEvent: false });
+        }
+      });
+
+  }
+    
     ngOnInit(): void {
       this.getUsuarios();
       this.getGrupo()
@@ -155,48 +174,73 @@ export class UsuarioComponent implements OnInit  {
       return adjustedDate.toISOString().split('T')[0];
     };
 
-    store() {
-      this.submitted = true;
-      if (this.formSaveUsuario.invalid) {
-        this.errorMessageToast();
-        this.formSaveUsuario.markAllAsTouched();
-        return;
-      }
-    
-      if (this.formSaveUsuario.valid) {
-        const newUsuario: any = {
-          nombre: this.formSaveUsuario.value.nombre,
-          apellido: this.formSaveUsuario.value.apellido,
-          cedula: this.formSaveUsuario.value.cedula,
-          telefono: this.formSaveUsuario.value.telefono,
-          direccion: this.formSaveUsuario.value.direccion,
-          edad: this.formSaveUsuario.value.edad,
-          fechaNacimiento: this.formatDate(this.formSaveUsuario.value.fechaNacimiento),
-          fechaInscripcion: this.formatDate(this.formSaveUsuario.value.fechaInscripcion),
-          id_ciudad: this.formSaveUsuario.value.id_ciudad,
-          id_genero: this.formSaveUsuario.value.id_genero,
-          id_grupo: this.formSaveUsuario.value.id_grupo,
-          id_rol: 3
-        };
-        console.log('Datos a enviar al backend:', newUsuario);
-        this.usuarioService.createUsuario(newUsuario).subscribe({
-          next: () => {
-           
-            this.saveMessageToast();
-            this.getUsuarios();
-            this.visibleSave = false;
-          },
-          error: (err) => {
-            console.error('Error recibido:', err); 
-            if (err.status === 409) { 
-              this.errorCedulaMessageToast(); 
-            } else {
-              this.errorMessageToast(); 
-            }
-          }
-        });
-      }
+    calculateAge(birthDate: Date): number {
+        const today = new Date();
+        const birthDateObj = new Date(birthDate);
+        let age = today.getFullYear() - birthDateObj.getFullYear();
+        const monthDiff = today.getMonth() - birthDateObj.getMonth();
+        
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+          age--;
+        }
+        
+        return age;
     }
+
+   store() {
+  this.submitted = true;
+  this.formSaveUsuario.get('edad')?.enable();
+
+  if (this.formSaveUsuario.invalid) {
+    this.errorMessageToast();
+    this.formSaveUsuario.markAllAsTouched();
+    this.formSaveUsuario.get('edad')?.disable();
+    return;
+  }
+
+  if (this.formSaveUsuario.valid) {
+    const formValues = this.formSaveUsuario.getRawValue();
+    this.formSaveUsuario.get('edad')?.disable();
+
+    const newUsuario: any = {
+      nombre: formValues.nombre,
+      apellido: formValues.apellido,
+      email: formValues.email,
+      password: formValues.password,
+      cedula: formValues.cedula,
+      telefono: formValues.telefono,
+      direccion: formValues.direccion,
+      edad: formValues.edad,
+      fechaNacimiento: this.formatDate(formValues.fechaNacimiento),
+      fechaInscripcion: this.formatDate(formValues.fechaInscripcion),
+      id_ciudad: formValues.id_ciudad,
+      id_genero: formValues.id_genero,
+      id_grupo: formValues.id_grupo,
+      id_rol: 3
+    };
+
+    console.log('Datos a enviar al backend:', newUsuario);
+
+    this.usuarioService.createUsuario(newUsuario).subscribe({
+      next: () => {
+        this.saveMessageToast();
+        this.getUsuarios();
+        this.visibleSave = false;
+      },
+       error: (err) => {
+      if (err.status === 409 && err.error.message === 'Cédula duplicada') {
+        this.errorCedulaMessageToast();
+      } else if (err.status === 422 && err.error.message.includes('email')) {
+            this.errorCorreoMessageToast();
+          } 
+          else {
+            this.errorMessageToast();
+          }
+    }
+      });
+    }
+  }
+
     
 
     cancelSave() {
@@ -240,6 +284,14 @@ export class UsuarioComponent implements OnInit  {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al guardar el usuario.' });
     }
 
+      errorCorreoMessageToast() {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Correo duplicado',
+      detail: 'Ya existe un entrenador registrado con este correo.'
+    });
+  }
+
     getNombreGrupo(id: number): string {
       const grupoEncontrado = this.grupo.find(g => g.id === id);
       return grupoEncontrado ? grupoEncontrado.nombre : 'Sin grupo';
@@ -269,51 +321,58 @@ export class UsuarioComponent implements OnInit  {
     }
   
     update() {
-      this.submitted = true;
-    
-      if (this.formUpdateUsuario.invalid) {
-        this.errorMessageToast(); 
-        this.formUpdateUsuario.markAllAsTouched();
-        return;
-      }
-    
-      if (this.formUpdateUsuario.valid) {
-        const updateUsuario: Usuario = {
-          id: this.idForUpdate,
-          nombre: this.formUpdateUsuario.value.nombre,
-          apellido: this.formUpdateUsuario.value.apellido,
-          cedula: this.formUpdateUsuario.value.cedula,
-          telefono: this.formUpdateUsuario.value.telefono,
-          direccion: this.formUpdateUsuario.value.direccion,
-          edad: this.formUpdateUsuario.value.edad,
-          fechaNacimiento: this.formatDate(this.formUpdateUsuario.value.fechaNacimiento),
-          fechaInscripcion: this.formatDate(this.formUpdateUsuario.value.fechaInscripcion),
-          id_ciudad: this.formUpdateUsuario.value.id_ciudad,
-          id_genero: this.formUpdateUsuario.value.id_genero,
-          id_grupo: this.formUpdateUsuario.value.id_grupo,
-          id_rol: 3
-        };
-    
-        this.usuarioService.updateUsuario(this.idForUpdate, updateUsuario).subscribe({
-          next: (res) => {
-            this.saveMessageToast(); 
-            this.getUsuarios();
-            this.visibleUpdate = false;
-            this.idForUpdate = 0;
-          },
-          error: (err) => {
-            if (err.status === 409 && err.error.message === 'Cédula duplicada') {
-              this.errorCedulaMessageToast();
-            } 
+  this.submitted = true;
 
-            else {
-              this.errorMessageToast();
-            }
-            console.error('Error actualizando usuario:', err);
+  this.formUpdateUsuario.get('edad')?.enable();
+
+  if (this.formUpdateUsuario.invalid) {
+    this.errorMessageToast();
+    this.formUpdateUsuario.markAllAsTouched();
+    this.formUpdateUsuario.get('edad')?.disable();
+    return;
+  }
+
+  const formValues = this.formUpdateUsuario.getRawValue();
+  this.formUpdateUsuario.get('edad')?.disable(); 
+
+  const updateUsuario: Usuario = {
+    id: this.idForUpdate,
+    nombre: formValues.nombre,
+    apellido: formValues.apellido,
+    email: formValues.email,
+    password: formValues.password,
+    cedula: formValues.cedula,
+    telefono: formValues.telefono,
+    direccion: formValues.direccion,
+    edad: formValues.edad,
+    fechaNacimiento: this.formatDate(formValues.fechaNacimiento),
+    fechaInscripcion: this.formatDate(formValues.fechaInscripcion),
+    id_ciudad: formValues.id_ciudad,
+    id_genero: formValues.id_genero,
+    id_grupo: formValues.id_grupo,
+    id_rol: 3
+  };
+
+  this.usuarioService.updateUsuario(this.idForUpdate, updateUsuario).subscribe({
+    next: () => {
+      this.saveMessageToast();
+      this.getUsuarios();
+      this.visibleUpdate = false;
+      this.idForUpdate = 0;
+    },
+    error: (err) => {
+      if (err.status === 409 && err.error.message === 'Cédula duplicada') {
+        this.errorCedulaMessageToast();
+      } else if (err.status === 422 && err.error.message.includes('email')) {
+            this.errorCorreoMessageToast();
+          } 
+          else {
+            this.errorMessageToast();
           }
-        });
-      }
     }
+  });
+}
+
 
     edit(id: number) {
       this.idForUpdate = id;
@@ -326,6 +385,8 @@ export class UsuarioComponent implements OnInit  {
     
         this.formUpdateUsuario.controls['nombre'].setValue(this.user.nombre);
         this.formUpdateUsuario.controls['apellido'].setValue(this.user.apellido);
+        this.formUpdateUsuario.controls['password'].setValue(this.user?.password)
+        this.formUpdateUsuario.controls['email'].setValue(this.user?.email)
         this.formUpdateUsuario.controls['cedula'].setValue(this.user?.cedula)
         this.formUpdateUsuario.controls['telefono'].setValue(this.user?.telefono)
         this.formUpdateUsuario.controls['direccion'].setValue(this.user?.direccion)

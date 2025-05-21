@@ -17,6 +17,10 @@ export class CategoriadistanciaService {
     getAllCategoriasDistancia(): Observable<CategoriaDistancia[]> {
       return this.http.get<CategoriaDistancia[]>(`${this.apisUrl}/indexCategoriasDistancia`);
     }
+
+    getAllCategoriasDistanciaTipos(): Observable<CategoriaDistancia[]> {
+      return this.http.get<CategoriaDistancia[]>(`${this.apisUrl}/indexCategoriasDistanciaTipo`);
+    }
   
     createCategoriasDistancia(categoriaDistancia: CategoriaDistancia): Observable<any> {
       return this.http.post(`${this.apisUrl}/storeCategoriasDistancia`, categoriaDistancia);

@@ -24,6 +24,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { TextareaModule } from 'primeng/textarea';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-psicologo',
@@ -72,6 +73,7 @@ export class PsicologoComponent implements OnInit{
 
   submitted: boolean = false;
   maxDate: Date = new Date();
+  fechaActual: Date = new Date();
   loading: boolean = true;
 
   terminoBusqueda: string = '';
@@ -87,13 +89,13 @@ export class PsicologoComponent implements OnInit{
         id_usuario: ['', [Validators.required]],
         diagnostico: ['', []],
         apto: ['', []],
-        fecha: ['', [Validators.required]]
+        fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
         
       });
       this.formUpdate = fb.group({
         diagnostico: ['', []],
         apto: ['', []],
-        fecha: ['', [Validators.required]],
+        fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
         id_usuario: ['', [Validators.required]]
       });
     }
@@ -164,9 +166,13 @@ export class PsicologoComponent implements OnInit{
       }
   
       if (this.formSave.valid) {
+           const presenteValue = this.formSave.value.apto !== null && this.formSave.value.apto !== undefined 
+          ? this.formSave.value.apto 
+          : true; 
+
         const newUsuario: any = {
+          apto: presenteValue,
           diagnostico: this.formSave.value.diagnostico,
-          apto: this.formSave.value.apto,
           fecha: this.formatDate(this.formSave.value.fecha),
           id_usuario: this.formSave.value.id_usuario,
         };
@@ -191,8 +197,9 @@ export class PsicologoComponent implements OnInit{
     }
 
     formatDate = (date: Date): string => {
-      return date.toISOString().split('T')[0];
-    };
+      const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+      return adjustedDate.toISOString().split('T')[0];
+    }
   
     saveMessageToast() {
       this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Guardado correctamente' });
@@ -248,11 +255,19 @@ export class PsicologoComponent implements OnInit{
       console.log(elasticId)
       this.idForUpdate = true;
       this.psico = elasticId
-      if (this.psico) {
+       if (this.psico) {
+        const parseLocalDate = (dateString: string) => {
+          return dateString ? new Date(dateString + 'T00:00:00') : null;
+        };
+
+        
         this.formUpdate.controls['diagnostico'].setValue(this.psico?.diagnostico)
         this.formUpdate.controls['apto'].setValue(this.psico?.apto)
         this.formUpdate.controls['fecha'].setValue(new Date(this.psico?.fecha))
         this.formUpdate.controls['id_usuario'].setValue(this.psico?.id_usuario) 
+        this.formUpdate.controls['fecha'].setValue(
+          parseLocalDate(this.psico.fecha)
+        );
       }
       this.visibleUpdate = true;
       

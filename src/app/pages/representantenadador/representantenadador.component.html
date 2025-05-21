@@ -18,7 +18,7 @@
       dataKey="id" [tableStyle]="{ 'min-width': '60rem' }" [expandedRowKeys]="expandedRows" 
       (onRowExpand)="abrirExpand($event)" (onRowCollapse)="cerrarCollapse($event)" [paginator]="true"
       [rows]="6" [rowsPerPageOptions]="[6, 12, 18]" [showCurrentPageReport]="true"
-      currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Usuarios">
+      currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Representante">
       <ng-template #caption>
           <div class="flex items-center justify-between">
               <h5 class="m-0">Registro de representante al nadador</h5>
@@ -65,7 +65,7 @@
                                   <th>ID</th>
                                   <th>Nombre</th>
                                   <th>Apellido</th>
-                                  <th>Cédula</th>
+                                  <th>Identificación</th>
                                   <th>Género</th>
                                   <th>Edad</th>
                                   <th>Acciones</th>

@@ -6,6 +6,8 @@ export interface Usuario {
     id_rol: number;
     nombre: string;
     apellido: string;
+    email: string
+    password:string
     cedula: string;
     telefono: string;
     direccion: string;

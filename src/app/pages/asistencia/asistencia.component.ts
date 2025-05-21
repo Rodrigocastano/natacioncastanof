@@ -168,7 +168,7 @@ export class AsistenciaComponent implements OnInit{
       if (this.formSave.valid) {
         const presenteValue = this.formSave.value.presente !== null && this.formSave.value.presente !== undefined 
           ? this.formSave.value.presente 
-          : true; // valor por defecto
+          : true; 
     
         const newUsuario: any = {
           presente: presenteValue,

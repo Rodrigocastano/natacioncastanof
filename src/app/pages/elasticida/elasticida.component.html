@@ -1,6 +1,6 @@
     <p-toolbar styleClass="mb-6">
         <ng-template #start>
-            <p-button label="Agregar Nuevo Elasticida" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+            <p-button label="Agregar nueva elasticida" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
         </ng-template>
     </p-toolbar>
 
@@ -20,7 +20,7 @@
         
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                  <h5 class="m-0">Registro de Elasticidad</h5>
+                  <h5 class="m-0">Registro de elasticidad</h5>
                   <p-iconfield>
                     <p-inputicon styleClass="pi pi-search"></p-inputicon>
                     <input pInputText type="text" placeholder="Buscar..."
@@ -35,7 +35,7 @@
                 <tr>
                     <th style="min-width: 4rem"></th>
                     <th style="min-width: 6rem">ID</th>
-                    <th pSortableColumn="name" style="min-width:8rem">Cédula</th>
+                    <th pSortableColumn="name" style="min-width:8rem">Identificación</th>
                     <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Género</th>
@@ -56,44 +56,151 @@
                     <td>{{ usuario.edad }}</td>
                 </tr>
             </ng-template>
+
             <ng-template #expandedrow let-usuario>
                 <tr>
                     <td colspan="7">
                         <div class="p-4">
-                            <p-table [value]="usuario.medidaElasticidas" dataKey="id">
-                                <ng-template #header>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Apellido</th>
-                                        <th>Medida</th>
-                                        <th>Fecha Registró</th>
-                                        <th>Acciones</th>
-                                    </tr>
-
-                                </ng-template>
-                                <ng-template #body let-elast>
-                                    <tr>
-                                        <td>{{ elast.id }}</td>
-                                        <td>{{ elast.nombre }}</td>
-                                        <td>{{ elast.apellido }}</td>
-                                        <td>{{ elast.medida_elasticida }} Kg</td>
-                                        <td>{{ elast.fecha }}</td>
-                                        <td>
-                                            <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(elast)"/>
-                                            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(elast.id)" />
-                                        </td>
-                                    </tr>
-                                </ng-template>
-                            </p-table>
+                            <div class="overflow-x-auto">
+                                <table class="w-full border-collapse">
+                                    <thead>
+                                        <tr class="bg-gray-100">
+                                            <th class="text-center p-3 border w-20">Agregar</th>
+                                            <th class="text-left p-3 border">Medida</th>
+                                            <th *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaElasticidas)" 
+                                                class="text-center p-3 border">
+                                                {{ medida.fecha | date: 'dd-MM-yyyy' }}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    
+                                    <tbody>
+                                        <!-- Fila de Elasticidad -->
+                                        <tr>
+                                            <td class="p-3 border text-center align-middle" rowspan="2">
+                                                <div class="flex justify-center items-center h-full">
+                                                    <p-button icon="pi pi-plus" 
+                                                            [rounded]="true" 
+                                                            [outlined]="true"
+                                                            severity="success"
+                                                            styleClass="p-button-sm"
+                                                            tooltip="Agregar nueva medida"
+                                                            (click)="prepareNewMedida(usuario)"/>
+                                                </div>
+                                            </td>
+                                            <td class="p-3 border">Elasticidad</td>
+                                            
+                                            <td *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaElasticidas); let i = index" 
+                                                class="text-center p-3 border">
+                                                <div class="flex flex-row items-center justify-center gap-2">
+                                                    <span class="font-medium">{{ medida.medida_elasticida | number:'1.2-2' }}kg</span>
+                                                    <ng-container *ngIf="i === 0">
+                                                        <i class="pi pi-arrow-right text-blue-500"></i>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="i > 0">
+                                                        <i *ngIf="compararConAnterior(obtenerMedidasOrdenadas(usuario.medidaElasticidas), i) === 'increase'" 
+                                                        class="pi pi-arrow-up text-green-500"></i>
+                                                        <i *ngIf="compararConAnterior(obtenerMedidasOrdenadas(usuario.medidaElasticidas), i) === 'decrease'" 
+                                                        class="pi pi-arrow-down text-red-500"></i>
+                                                        <i *ngIf="compararConAnterior(obtenerMedidasOrdenadas(usuario.medidaElasticidas), i) === 'equal'" 
+                                                        class="pi pi-arrows-h text-orange-500"></i>
+                                                    </ng-container>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        
+                                        <!-- Fila de Acciones -->
+                                        <tr>
+                                            <td class="p-3 border font-bold text-lg">Acciones</td>
+                                            <td *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaElasticidas)" 
+                                                class="text-center p-3 border">
+                                                <div class="flex justify-center space-x-1">
+                                                    <p-button icon="pi pi-pencil" 
+                                                            [rounded]="true" 
+                                                            [outlined]="true"
+                                                            severity="secondary"
+                                                            styleClass="p-button-xs"
+                                                            (click)="edit(medida)"/>
+                                                    
+                                                    <p-button icon="pi pi-trash" 
+                                                            [rounded]="true" 
+                                                            [outlined]="true"
+                                                            severity="danger"
+                                                            styleClass="p-button-xs"
+                                                            (click)="showModalDelete(medida.id)"/>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </td>
                 </tr>
             </ng-template>
+            
         </p-table>
     </div>
 
-    <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar Elasticida" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+
+    <p-dialog [(visible)]="visibleUserMeasureDialog" [style]="{ width: '400px' }" [header]="'Nueva medida para ' + (selectedUser?.nombre || 'Usuario')" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">   
+        <ng-template #content>
+            <form [formGroup]="formSave" class="flex flex-col gap-5 p-3">
+
+                <div class="field">
+                    <label class="block font-bold mb-2 text-gray-700">Usuario</label>
+                    <div class="p-3 bg-gray-100 rounded-md">
+                        <p class="font-semibold">{{selectedUser?.nombre}} {{selectedUser?.apellido}}-{{selectedUser?.cedula}}</p>
+
+                    </div>
+                </div>
+                
+                <div class="col-span-6">
+                    <label for="medida_elasticida" class="block font-bold mb-2">Medida Elasticida</label>
+                    <p-inputnumber formControlName="medida_elasticida" id="medida_elasticida" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-1" />             
+                    <p-message
+                        *ngIf="formSave.get('medida_elasticida')?.errors?.['required'] && (formSave.get('medida_elasticida')?.dirty || formSave.get('medida_elasticida')?.touched)" severity="error" variant="simple" size="small" >
+                        Medida elasticida es requerida
+                    </p-message>
+                </div>
+                
+
+                <div class="col-span-12 flex justify-center">
+                    <div class="col-span-6">
+                        <label for="fecha" class="block font-bold mb-2">Fecha Inscripción</label>
+                        <p-datepicker 
+                            [(ngModel)]="currentDate" [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" 
+                            [showButtonBar]="true" [appendTo]="'body'"  dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96">
+                        </p-datepicker>
+                        <p-message 
+                            *ngIf="formSave.get('fecha')?.invalid && (formSave.get('fecha')?.dirty || formSave.get('fecha')?.touched)"  severity="error"  variant="simple" size="small">
+                            Fecha es requerida
+                        </p-message>
+                    </div>
+                </div>
+
+            </form>
+        </ng-template>
+        
+        <ng-template #footer>
+            <div class="flex justify-end gap-3">
+                <p-button label="Cancelar" 
+                        icon="pi pi-times" 
+                        (click)="visibleUserMeasureDialog = false" 
+                        styleClass="p-button-text p-button-secondary"/>
+                        
+                <p-button label="Guardar" 
+                        icon="pi pi-check" 
+                        (click)="store()" 
+                        [disabled]="formSave.invalid"
+                        styleClass="p-button-success"/>
+            </div>
+        </ng-template>
+    </p-dialog>
+
+    
+
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar elasticida" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
         
         <ng-template #content>
             <form [formGroup]="formSave" class="formulario">
@@ -113,19 +220,19 @@
                     </div>
                     
                     <div class="col-span-6">
-                        <label for="medida_elasticida" class="block font-bold mb-2">Medida Elasticida</label>
+                        <label for="medida_elasticida" class="block font-bold mb-2">Medida elasticida</label>
                         <p-inputnumber formControlName="medida_elasticida" id="medida_elasticida" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-1" />             
                         <p-message
                             *ngIf="formSave.get('medida_elasticida')?.errors?.['required'] && (formSave.get('medida_elasticida')?.dirty || formSave.get('medida_elasticida')?.touched)" severity="error" variant="simple" size="small" >
-                            Medida Elasticida es requerida
+                            Medida elasticida es requerida
                         </p-message>
                     </div>
 
                     <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
-                        <label for="fecha" class="block font-bold mb-2">Fecha Inscripción</label>
+                        <label for="fecha" class="block font-bold mb-2">Fecha inscripción</label>
                         <p-datepicker 
-                            [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
+                            [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                             [appendTo]="'body'"  dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
                         </p-datepicker>
                         <p-message 
@@ -158,7 +265,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar Medida" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">  
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar medida elasticida" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">  
         <ng-template #content>
             <form [formGroup]="formUpdate" class="formulario">
                 <div class="flex flex-col gap-6">      
@@ -170,24 +277,24 @@
                     </div>
 
                     <div class="col-span-6">
-                        <label for="medida_elasticida" class="block font-bold mb-2 ">Medida Elasticida</label>
+                        <label for="medida_elasticida" class="block font-bold mb-2 ">Medida elasticida</label>
                         <p-inputnumber type="text" formControlName="medida_elasticida"  id="medida_elasticida" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-1" />             
                         <p-message
                         *ngIf="formUpdate.get('medida_elasticida')?.errors?.['required'] && (formUpdate.get('medida_elasticida')?.dirty || formUpdate.get('medida_elasticida')?.touched)" severity="error" variant="simple" size="small" >
-                        Medida Elasticida es requerida
+                        Medida elasticida es requerida
                         </p-message>
                     </div>
     
                     <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
-                            <label for="fecha" class="block font-bold mb-2">Fecha Inscripción</label>
+                            <label for="fecha" class="block font-bold mb-2">Fecha inscripción</label>
                             <p-datepicker 
                                 [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                                 [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
                             </p-datepicker>
                             <p-message 
                                 *ngIf="formUpdate.get('fecha')?.invalid && (formUpdate.get('fecha')?.dirty || formUpdate.get('fecha')?.touched)"  severity="error"  variant="simple" size="small">
-                                Fecha Nacimiento es requerido
+                                Fecha nacimiento es requerido
                             </p-message>
                         </div>
                     </div>

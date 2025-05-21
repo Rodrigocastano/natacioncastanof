@@ -24,29 +24,49 @@ export class AppMenu {
                 label: 'Home',
                 items: [
                     { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/dashboard'] },
-                    { label: 'Tipo de nado', icon: 'pi pi-user-plus', routerLink: ['/pages/tipoNado'] },
-                    { label: 'Tipo de pago', icon: 'pi pi-user-plus', routerLink: ['/pages/tipoPago'] },
-                    { label: 'Grupo', icon: 'pi pi-user-plus', routerLink: ['/pages/grupo'] },
-                    { label: 'Género', icon: 'pi pi-user-plus', routerLink: ['/pages/genero'] },
-                    { label: 'Ciudad', icon: 'pi pi-user-plus', routerLink: ['/pages/ciudad'] },
-                    { label: 'Área de Nado', icon: 'pi pi-user-plus', routerLink: ['/pages/areaNado'] },
-                    { label: 'Categoría de Prueba', icon: 'pi pi-user-plus', routerLink: ['/pages/categoriaProducto'] },
-                    { label: 'Tipo de Categoría', icon: 'pi pi-user-plus', routerLink: ['/pages/categoriaTipo'] },
+
+                    { label: 'Datos personales', icon: 'pi pi-id-card', items: [
+                    { label: 'Grupo', icon: 'pi pi-sitemap', routerLink: ['/pages/grupo'] },
+                    { label: 'Género', icon: 'pi pi-mars', routerLink: ['/pages/genero'] },
+                    { label: 'Ciudad', icon: 'pi pi-building', routerLink: ['/pages/ciudad'] },
                     { label: 'Usuario', icon: 'pi pi-user-plus', routerLink: ['/pages/usuario'] },
-                    { label: 'Entrenadores', icon: 'pi pi-user-plus', routerLink: ['/pages/entrenador'] },
+                    { label: 'Entrenadores', icon: 'pi pi-user-plus', routerLink: ['/pages/entrenador'] }
+                    ]},
+
+                    { label: 'Representante', icon: 'pi pi-user-plus', routerLink: ['/pages/representante'] },
+                    { label: 'Representante Nadador', icon: 'pi pi-users', routerLink: ['/pages/representantenadador'] },
+                   
+                    
+                    { label: 'Área médica', icon: 'pi pi-book', items: [
+                     { label: 'Médico', icon: 'pi pi-book', routerLink: ['/pages/medico'] },
+                    { label: 'Psicólogo', icon: 'pi pi-book', routerLink: ['/pages/psicologo'] },
+                    ]},
+
+                    { label: 'Medidas físicas', icon: 'pi pi-id-card', items: [
+                    { label: 'Elasticida', icon: 'pi pi-id-card', routerLink: ['/pages/elasticida'] },
+                    { label: 'Nutricionales', icon: 'pi pi-id-card', routerLink: ['/pages/nutricionales'] },
+                    { label: 'Antropométrica', icon: 'pi pi-id-card', routerLink: ['/pages/antropometrica'] }
+                    ]},
+                
+                    { label: 'Rendimiento deportivo', icon: 'pi pi-history', items: [
+                    { label: 'Tipo de nado', icon: 'pi pi-sync', routerLink: ['/pages/tipoNado'] },
+                    { label: 'Categoria Distancia', icon: 'pi pi-send' , routerLink: ['/pages/categoriaDistancia'] },
+                    { label: 'Tiempo Nadador', icon: 'pi pi-history', routerLink: ['/pages/tiempoNadador'] }
+                    ]},
+
+                    { label: 'Área de Nado', icon: 'pi pi-arrows-h', routerLink: ['/pages/areaNado'] },
+                    { label: 'Categoría de Prueba', icon: 'pi pi-tags', routerLink: ['/pages/categoriaProducto'] },
+                    { label: 'Tipo de Categoría', icon: 'pi pi-tags', routerLink: ['/pages/categoriaTipo'] },
+                    { label: 'Torneo', icon: 'pi pi-book', routerLink: ['/pages/torneo'] },
+                    { label: 'Prueba Torneo', icon: 'pi pi-book', routerLink: ['/pages/pruebaTorneo'] },
+
                     { label: 'Asistencias', icon: 'pi pi-pen-to-square', routerLink: ['/pages/asistencia'] },
                     { label: 'Pago', icon: 'pi pi-book', routerLink: ['/pages/pago'] },
-                    { label: 'Representante', icon: 'pi pi-book', routerLink: ['/pages/representante'] },
-                    { label: 'Representante Nadador', icon: 'pi pi-book', routerLink: ['/pages/representantenadador'] },
-                    { label: 'Médico', icon: 'pi pi-pen-to-square', routerLink: ['/pages/medico'] },
-                    { label: 'Psicólogo', icon: 'pi pi-pen-to-square', routerLink: ['/pages/psicologo'] },
-                    { label: 'Elasticida', icon: 'pi pi-pen-to-square', routerLink: ['/pages/elasticida'] },
-                    { label: 'Nutricionales', icon: 'pi pi-pen-to-square', routerLink: ['/pages/nutricionales'] },
-                    { label: 'Antropométrica', icon: 'pi pi-pen-to-square', routerLink: ['/pages/antropometrica'] },
-                    { label: 'Torneo', icon: 'pi pi-book', routerLink: ['/pages/torneo'] },
-                    { label: 'Categoria Distancia', icon: 'pi pi-book', routerLink: ['/pages/categoriaDistancia'] },
+                    { label: 'Tipo de pago', icon: 'pi pi-user-plus', routerLink: ['/pages/tipoPago'] },
+                    
+                      
                     { label: '-------', icon: 'pi pi-book', routerLink: ['/pages/torneoNado'] },
-                    { label: 'Tiempo Nadador', icon: 'pi pi-history', routerLink: ['/pages/tiempoNadador'] },
+                   
                 ]
             },
            

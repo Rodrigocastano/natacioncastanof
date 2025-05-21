@@ -40,7 +40,7 @@
                     <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Email</th>
                     <th pSortableColumn="price" style="min-width: 8rem">password</th>
-                    <th pSortableColumn="price" style="min-width: 10rem">Cédula</th>
+                    <th pSortableColumn="price" style="min-width: 10rem">Identificación</th>
                     <th pSortableColumn="price" style="min-width: 10rem">Teléfono</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Dirección</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Ciudad</th>
@@ -123,22 +123,22 @@
                             <input pInputText id="email" type="text" placeholder=" Ingrese el email" class="w-full text-sm px-0 py-2" formControlName="email"  name="email" type="email"  required/>
                             <p-message 
                                 *ngIf="formSave.get('apellido')?.invalid && (formSave.get('apellido')?.dirty || formSave.get('apellido')?.touched)" severity="error" variant="simple"size="small">
-                                Apellido es requerido
+                                Email es requerido
                             </p-message>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <label for="cedula" class="block font-bold mb-1">Cédula</label>
-                            <input type="text" pInputText formControlName="cedula" id="cedula" placeholder="Ingrese número de cédula" class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/>
+                            <label for="cedula" class="block font-bold mb-1">Identificación</label>
+                            <input type="text" pInputText formControlName="cedula" id="cedula" placeholder="Número de identificación" class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/>
                             <p-message 
                                 *ngIf="formSave.get('cedula')?.errors?.['required'] && (formSave.get('cedula')?.dirty || formSave.get('cedula')?.touched)" severity="error" variant="simple" size="small">
-                                Cédula es requerida
+                                Identificación es requerida
                             </p-message>
                             <p-message 
                                 *ngIf="formSave.get('cedula')?.errors?.['pattern'] && (formSave.get('cedula')?.dirty || formSave.get('cedula')?.touched)" severity="error" variant="simple" size="small">
-                                Cédula valido 10 números
+                                Identificación valido 10 números
                             </p-message>
                         </div>
 
@@ -205,7 +205,7 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <div class="block font-bold mb-3">Fecha de nacimiento</div>
-                            <p-datepicker [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
+                            <p-datepicker [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
                             <p-message 
                             *ngIf="formSave.get('fechaNacimiento')?.invalid && (formSave.get('fechaNacimiento')?.dirty || formSave.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">
                             Fecha Nacimiento es requerido
@@ -214,16 +214,7 @@
 
                         <div class="col-span-6">
                             <label for="edad" class="block font-bold mb-1">Edad</label>
-                            <p-inputnumber  formControlName="edad" id="edad" placeholder="Ingrese la edad" required fluid class="w-full text-sm px-0 py-2" />
-                            <p-message 
-                                *ngIf="formSave.get('edad')?.errors?.['required'] && (formSave.get('edad')?.dirty || formSave.get('edad')?.touched)" severity="error" variant="simple" size="small">
-                                Edad es requerido
-                            </p-message>
-                            <p-message 
-                                *ngIf="formSave.get('edad')?.errors?.['pattern'] && (formSave.get('edad')?.dirty || formSave.get('edad')?.touched)" severity="error" variant="simple" size="small">
-                                Edad solo acepta número.
-                            </p-message>
-                            
+                            <p-inputnumber  formControlName="edad" id="edad" placeholder="Edad automatica" required fluid class="w-full text-sm px-0 py-2" />
                         </div>
                     </div>
                 </div>
@@ -293,16 +284,16 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <label for="cedula" class="block font-bold mb-1">Cédula</label>
-                            <input type="text" formControlName="cedula" pInputText id="cedula" placeholder="Ingrese número de Cédula" required fluid  (keypress)="soloNumeros($event)"/>
+                            <input type="text" formControlName="cedula" pInputText id="cedula" placeholder="Número de identificación" required fluid  (keypress)="soloNumeros($event)"/>
                             <p-message 
                             *ngIf="formUpdate.get('cedula')?.errors?.['required'] && (formUpdate.get('cedula')?.dirty || formUpdate.get('cedula')?.touched)" 
                             severity="error" variant="simple" size="small">
-                            Cédula es requerida
+                            Identificación es requerida
                             </p-message>
                             <p-message 
                             *ngIf="formUpdate.get('cedula')?.errors?.['pattern'] && (formUpdate.get('cedula')?.dirty || formUpdate.get('cedula')?.touched)" 
                             severity="error" variant="simple" size="small">
-                            Cédula solo valido 10 números
+                            Identificación solo valido 10 números
                             </p-message>
                         </div>
 
@@ -378,14 +369,6 @@
                         <div class="col-span-6">
                             <label for="edad" class="block font-bold mb-3">Edad</label>
                             <input type="text" formControlName="edad" pInputText id="edad" placeholder="Ingrese la edad" required fluid />
-                            <p-message 
-                                *ngIf="formUpdate.get('edad')?.errors?.['required'] && (formUpdate.get('edad')?.dirty || formUpdate.get('edad')?.touched)" severity="error" variant="simple" size="small">
-                                Edad es requerido
-                            </p-message>
-                            <p-message 
-                                *ngIf="formUpdate.get('edad')?.errors?.['pattern'] && (formUpdate.get('edad')?.dirty || formUpdate.get('edad')?.touched)" severity="error" variant="simple" size="small">
-                                Edad solo acepta número.
-                            </p-message>
                         </div>
                     </div>
 

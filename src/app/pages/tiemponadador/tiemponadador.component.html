@@ -145,7 +145,7 @@
                         <div class="col-span-6">
                         <label for="fecha" class="block font-bold mb-2">Fecha Inscripción</label>
                         <p-datepicker 
-                            [maxDate]= "maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
+                            [(ngModel)]="fechaActual"  [maxDate]= "maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                             [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
                         </p-datepicker>
                         <p-message 

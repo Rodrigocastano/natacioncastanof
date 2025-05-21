@@ -26,7 +26,8 @@ import { Usuario } from '../interfaces/usuario';
 import { TiemponadadorService } from '../service/tiemponadador.service';
 import { TiempoNadador } from '../interfaces/tiemponadador';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-
+import { formatDate } from '@angular/common';
+import { TiponadoService } from '../service/tiponado.service';
 
 @Component({
   selector: 'app-tiemponadador',
@@ -77,30 +78,35 @@ export class TiemponadadorComponent implements OnInit{
 
       submitted: boolean = false;
       maxDate: Date = new Date();
+      fechaActual: Date = new Date();
       loading: boolean = true;
 
       terminoBusqueda: string = '';
       buscarOriginal: TiempoNadador[] = [];
 
+      tiposNado: any[] = [];
+  
       constructor(
         private fb: FormBuilder,
         private tiemponadadorService: TiemponadadorService,
         private usuarioService: UsuarioService,
         private categoriadistanciaService: CategoriadistanciaService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private tiponadoService: TiponadoService
+        
       ) {
         this.formSave = this.fb.group({
           id_usuario: ['', [Validators.required]],
           id_categoria: ['', [Validators.required]],
           tiempo: ['', [Validators.required]],
-          fecha: ['', [Validators.required]]
+          fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
           
         });
         this.formUpdate = fb.group({
           id_usuario: ['', [Validators.required]],
           id_categoria: ['', [Validators.required]],
           tiempo: ['', [Validators.required]],
-          fecha: ['', [Validators.required]]
+          fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
         });
       }
   
@@ -132,28 +138,16 @@ export class TiemponadadorComponent implements OnInit{
         );
       }
 
-      tiposNado = [
-        { id: 1, nombre: 'Libre' },
-        { id: 2, nombre: 'Mariposa' },
-        { id: 3, nombre: 'Espalda' },
-        { id: 4, nombre: 'Pecho' }
-      ];
-      
-
       getCategoria() {
-        this.categoriadistanciaService.getAllCategoriasDistancia().subscribe(
-          data => {
-            this.categoriaDistancia = data.map((categoriaDistancia: any) => {
-              const tipo = this.tiposNado.find(t => t.id === categoriaDistancia.id_tipo_nado);
-              return {
-                ...categoriaDistancia,
-                displayCategoria: `${categoriaDistancia.distancia} - ${tipo ? tipo.nombre : categoriaDistancia.id_tipo_nado}`
-              };
-            });
-            console.log(this.categoriaDistancia);
-          }
-        );
-      }
+  this.categoriadistanciaService.getAllCategoriasDistanciaTipos().subscribe(data => {
+    this.categoriaDistancia = data.map(c => {
+      const tipoNombre = typeof c.id_tipo_nado === 'object' 
+        ? c.id_tipo_nado.nombre 
+        : this.tiposNado.find(t => t.id === c.id_tipo_nado)?.nombre;
+      return { ...c, displayCategoria: `${c.distancia} - ${tipoNombre || c.id_tipo_nado}` };
+    });
+  });
+}
       
       filtrarBusqueda() {
         const termino = this.terminoBusqueda.trim().toLowerCase();
@@ -225,7 +219,8 @@ export class TiemponadadorComponent implements OnInit{
       }
   
       formatDate = (date: Date): string => {
-        return date.toISOString().split('T')[0];
+        const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+        return adjustedDate.toISOString().split('T')[0];
       };
     
       saveMessageToast() {
@@ -296,9 +291,14 @@ export class TiemponadadorComponent implements OnInit{
           this.tiempoNa = tiempoId;
       
           if (this.tiempoNa) {
+              const parseLocalDate = (dateString: string) => {
+              return dateString ? new Date(dateString + 'T00:00:00') : null;
+              };
               this.formUpdate.controls['id_usuario'].setValue(this.tiempoNa?.id_usuario);
               this.formUpdate.controls['id_categoria'].setValue(this.tiempoNa?.id_categoria);
-              this.formUpdate.controls['fecha'].setValue(new Date(this.tiempoNa?.fecha));
+              this.formUpdate.controls['fecha'].setValue(
+              parseLocalDate(this.tiempoNa.fecha)
+              );
 
               if (this.tiempoNa?.tiempo) {
                   const tiempoString = this.tiempoNa.tiempo;
