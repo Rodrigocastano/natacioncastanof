@@ -23,6 +23,7 @@ import { CategoriatipoComponent } from './categoriatipo/categoriatipo.component'
 import { TiponadoComponent } from './tiponado/tiponado.component';
 import { TipopagoComponent } from './tipopago/tipopago.component';
 import { PruebatorneoComponent } from './pruebatorneo/pruebatorneo.component';
+import { PruebanadadorComponent } from './pruebanadador/pruebanadador.component';
 
 export default [
     { path: 'usuario', component: UsuarioComponent },
@@ -48,5 +49,6 @@ export default [
     { path: 'tipoNado', component: TiponadoComponent },
     { path: 'tipoPago', component: TipopagoComponent },
     { path: 'pruebaTorneo', component: PruebatorneoComponent },
+    { path: 'pruebaNadador', component: PruebanadadorComponent },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

@@ -16,6 +16,9 @@ export class PruebatorneoService {
     getAllPruebaTorneo(): Observable<PruebaTorneo[]> {
       return this.http.get<PruebaTorneo[]>(`${this.apisUrl}/indexPruebaTorneo`);
     }
+    getAllPruebaTorneoNombre(): Observable<PruebaTorneo[]> {
+      return this.http.get<PruebaTorneo[]>(`${this.apisUrl}/indexPruebaTorneosNombre`);
+    }
   
     createPruebaTorneo(torneo: PruebaTorneo): Observable<any> {
       return this.http.post(`${this.apisUrl}/storePruebaTorneo`, torneo);

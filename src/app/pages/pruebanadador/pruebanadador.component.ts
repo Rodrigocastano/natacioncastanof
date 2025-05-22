@@ -19,21 +19,19 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TextareaModule } from 'primeng/textarea';
 import { DatePickerModule } from 'primeng/datepicker';
-import { CategoriadistanciaService } from '../service/categoriadistancia.service';
-import { CategoriaDistancia } from '../interfaces/categoriadistancia';
-import { UsuarioService } from '../service/usuario.service';
+import { PruebaTorneo } from '../interfaces/pruebatorneo';
+import { PruebanadadorService } from '../service/pruebanadador.service';
+import { PruebaNadador } from '../interfaces/pruebanadador';
+import { PruebatorneoService } from '../service/pruebatorneo.service';
 import { Usuario } from '../interfaces/usuario';
-import { TiemponadadorService } from '../service/tiemponadador.service';
-import { TiempoNadador } from '../interfaces/tiemponadador';
+import { UsuarioService } from '../service/usuario.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { formatDate } from '@angular/common';
-import { TiponadoService } from '../service/tiponado.service';
 
 @Component({
-  selector: 'app-tiemponadador',
-  imports: [
+  selector: 'app-pruebanadador',
+   imports: [
     CommonModule,
-
     ButtonModule,
     ToolbarModule,
     InputIconModule,
@@ -54,14 +52,14 @@ import { TiponadoService } from '../service/tiponado.service';
     ProgressSpinnerModule
   ],
   providers: [MessageService],
-  templateUrl: './tiemponadador.component.html',
+  templateUrl: './pruebanadador.component.html',
 })
-export class TiemponadadorComponent implements OnInit{
+export class PruebanadadorComponent implements OnInit{
   
       formSave!: FormGroup;
       visibleSave: boolean = false;
-      tiempoNadador: TiempoNadador[] = [];
-      idTiempoNadador: number = 0;
+      pruebaNadador: PruebaNadador[] = [];
+      idPruebaNadador: number = 0;
       visibleDelete: boolean = false;
 
       formUpdate!: FormGroup;
@@ -69,7 +67,7 @@ export class TiemponadadorComponent implements OnInit{
       idForUpdate: boolean = false;
       visibleUpdate: boolean = false;
       usuarios: Usuario[] = [];
-      categoriaDistancia: CategoriaDistancia[] = [];
+      pruebaTorneo: PruebaTorneo[] = [];
 
       expandedRows = {};
       cols: any[] = [];
@@ -82,44 +80,44 @@ export class TiemponadadorComponent implements OnInit{
       loading: boolean = true;
 
       terminoBusqueda: string = '';
-      buscarOriginal: TiempoNadador[] = [];
+      buscarOriginal: PruebaNadador[] = [];
 
       tiposNado: any[] = [];
   
       constructor(
         private fb: FormBuilder,
-        private tiemponadadorService: TiemponadadorService,
+        private pruebanadadorService: PruebanadadorService,
         private usuarioService: UsuarioService,
-        private categoriadistanciaService: CategoriadistanciaService,
+        private pruebatorneoService: PruebatorneoService,
         private messageService: MessageService,
-        private tiponadoService: TiponadoService
         
       ) {
         this.formSave = this.fb.group({
           id_usuario: ['', [Validators.required]],
-          id_categoria: ['', [Validators.required]],
+          id_prueba_torneo: ['', [Validators.required]],
           tiempo: ['', [Validators.required]],
           fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
           
         });
         this.formUpdate = fb.group({
           id_usuario: ['', [Validators.required]],
-          id_categoria: ['', [Validators.required]],
+          id_prueba_torneo: ['', [Validators.required]],
           tiempo: ['', [Validators.required]],
           fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
         });
       }
   
       ngOnInit(): void {
-        this.getTorneoNado();
+        this.getPruebaNadador();
         this.getUsuarios();
-        this.getCategoria()
+        this.getPruebaTorneo()
       }
 
-      getTorneoNado() {
-        this.tiemponadadorService.getAllTodoTiemposNado().subscribe(
+      getPruebaNadador() {
+        this.pruebanadadorService.getAllTodoPruebaNadador().subscribe(
           data => {
-            this.tiempoNadador = data.data
+             console.log('Datos recibidos:', data);
+            this.pruebaNadador = data.data
             this.buscarOriginal = data.data; 
             this.loading = false;
           }
@@ -138,20 +136,22 @@ export class TiemponadadorComponent implements OnInit{
         );
       }
 
-      getCategoria() {
-        this.categoriadistanciaService.getAllCategoriasDistanciaTipos().subscribe(data => {
-          this.categoriaDistancia = data.map(c => {
-            const tipoNombre = typeof c.id_tipo_nado === 'object' 
-              ? c.id_tipo_nado.nombre 
-              : this.tiposNado.find(t => t.id === c.id_tipo_nado)?.nombre;
-            return { ...c, displayCategoria: `${c.distancia} - ${tipoNombre || c.id_tipo_nado}` };
-          });
-        });
-      }
+getPruebaTorneo() {
+  this.pruebatorneoService.getAllPruebaTorneoNombre().subscribe( 
+    data => {
+      this.pruebaTorneo = data.map((pruebaTorneo: any) => ({
+        ...pruebaTorneo,
+        displayPrueba: `${pruebaTorneo.nombre} - ${pruebaTorneo.categoria_tipo}`
+      }));
+      console.log(this.pruebaTorneo);
+    }
+  );
+}
+
       
       filtrarBusqueda() {
         const termino = this.terminoBusqueda.trim().toLowerCase();
-        this.tiempoNadador = this.buscarOriginal.filter(usuario => {
+        this.pruebaNadador = this.buscarOriginal.filter(usuario => {
           return (
             usuario.nombre?.toLowerCase().includes(termino) ||
             usuario.apellido?.toLowerCase().includes(termino) ||
@@ -192,21 +192,21 @@ export class TiemponadadorComponent implements OnInit{
           const minutos = tiempoMinutos % 60;
           const tiempoFormateado = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:00`;
       
-          const newTorneo: any = {
+          const newPrueba: any = {
             id_usuario: this.formSave.value.id_usuario,
-            id_categoria: this.formSave.value.id_categoria,
+            id_prueba_torneo: this.formSave.value.id_prueba_torneo,
             fecha: this.formatDate(this.formSave.value.fecha),
             tiempo: tiempoFormateado,
           };
       
-          this.tiemponadadorService.createTiemposNado(newTorneo).subscribe({
+          this.pruebanadadorService.createPruebaNadador(newPrueba).subscribe({
             next: () => {
               this.saveMessageToast();
-              this.getTorneoNado();
+              this.getPruebaNadador();
               this.visibleSave = false;
             },
             error: (err) => {
-              console.error('Error al guardar registro del pago:', err);
+              console.error('Error al guardar registro de prueba nadador:', err);
             }
           });
         }
@@ -261,25 +261,22 @@ export class TiemponadadorComponent implements OnInit{
         if (this.formUpdate.valid) {
             const tiempoEnMinutos = this.formUpdate.value.tiempo;
     
-            const updateTiempo: TiempoNadador = {
+            const updatePrueba: PruebaNadador = {
                 id: this.tiempoNa.id,
-                id_usuario: this.formUpdate.value.id_usuario?.id ?? this.formUpdate.value.id_usuario,
-                id_categoria: this.formUpdate.value.id_categoria,
+               id_usuario: this.formUpdate.value.id_usuario,
+                id_prueba_torneo: this.formUpdate.value.id_prueba_torneo,
                 tiempo: tiempoEnMinutos,
                 fecha: this.formatDate(this.formUpdate.value.fecha),
             };
-
-            console.log('Datos enviados al backend:', updateTiempo);
-    
-    
-            this.tiemponadadorService.updateTiemposNado(this.tiempoNa.id, updateTiempo).subscribe({
+     console.log('Datos que se enviarán en la actualización:', updatePrueba);
+            this.pruebanadadorService.updatePruebaNadador(this.tiempoNa.id, updatePrueba).subscribe({
                 next: (res) => {
-                    this.getTorneoNado();
+                    this.getPruebaNadador();
                     this.visibleUpdate = false;
                     this.saveMessageToast();
                 },
                 error: (err) => {
-                    console.error('Error actualizando registro torneo nado:', err);
+                    console.error('Error actualizando registro prueba nado:', err);
                     this.errorMessageToast();
                 }
             });
@@ -294,8 +291,8 @@ export class TiemponadadorComponent implements OnInit{
               const parseLocalDate = (dateString: string) => {
               return dateString ? new Date(dateString + 'T00:00:00') : null;
               };
-              this.formUpdate.controls['id_usuario'].setValue(this.tiempoNa?.id_usuario);
-              this.formUpdate.controls['id_categoria'].setValue(this.tiempoNa?.id_categoria);
+              this.formUpdate.controls['id_usuario'].setValue(this.tiempoNa?.id_usuario) 
+              this.formUpdate.controls['id_prueba_torneo'].setValue(this.tiempoNa?.id_prueba_torneo);
               this.formUpdate.controls['fecha'].setValue(
               parseLocalDate(this.tiempoNa.fecha)
               );
@@ -318,11 +315,11 @@ export class TiemponadadorComponent implements OnInit{
       }
       
       delete() {
-        this.tiemponadadorService.deleteTiemposNado(this.idTiempoNadador).subscribe({
+        this.pruebanadadorService.deletePruebaNadador(this.idPruebaNadador).subscribe({
           next: () => {
             this.visibleDelete = false;
-            this.getTorneoNado();
-            this.idTiempoNadador = 0;
+            this.getPruebaNadador();
+            this.idPruebaNadador = 0;
             this.EliminadoMessageToasts(); 
           },
           error: (err) => {
@@ -333,9 +330,9 @@ export class TiemponadadorComponent implements OnInit{
       }
       
       showModalDelete(id: number) {
-        this.idTiempoNadador = id;
+        this.idPruebaNadador = id;
         this.visibleDelete = true
       }
       
-      }
+}
       

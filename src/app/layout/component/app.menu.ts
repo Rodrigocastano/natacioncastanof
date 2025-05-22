@@ -25,7 +25,7 @@ export class AppMenu {
                 items: [
                     { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/dashboard'] },
 
-                    { label: 'Datos personales', icon: 'pi pi-id-card', items: [
+                    { label: 'Gestión de Usuarios', icon: 'pi pi-id-card', items: [
                     { label: 'Grupo', icon: 'pi pi-sitemap', routerLink: ['/pages/grupo'] },
                     { label: 'Género', icon: 'pi pi-mars', routerLink: ['/pages/genero'] },
                     { label: 'Ciudad', icon: 'pi pi-building', routerLink: ['/pages/ciudad'] },
@@ -48,18 +48,23 @@ export class AppMenu {
                     { label: 'Antropométrica', icon: 'pi pi-id-card', routerLink: ['/pages/antropometrica'] }
                     ]},
                 
-                    { label: 'Rendimiento deportivo', icon: 'pi pi-history', items: [
+                    { label: 'Rendimiento natación', icon: 'pi pi-history', items: [
                     { label: 'Tipo de nado', icon: 'pi pi-sync', routerLink: ['/pages/tipoNado'] },
                     { label: 'Categoria Distancia', icon: 'pi pi-send' , routerLink: ['/pages/categoriaDistancia'] },
                     { label: 'Tiempo Nadador', icon: 'pi pi-history', routerLink: ['/pages/tiempoNadador'] }
                     ]},
 
+                    { label: 'Competencia natación', icon: 'pi pi-history', items: [
                     { label: 'Área de Nado', icon: 'pi pi-arrows-h', routerLink: ['/pages/areaNado'] },
                     { label: 'Categoría de Prueba', icon: 'pi pi-tags', routerLink: ['/pages/categoriaProducto'] },
                     { label: 'Tipo de Categoría', icon: 'pi pi-tags', routerLink: ['/pages/categoriaTipo'] },
                     { label: 'Torneo', icon: 'pi pi-book', routerLink: ['/pages/torneo'] },
                     { label: 'Prueba Torneo', icon: 'pi pi-book', routerLink: ['/pages/pruebaTorneo'] },
+                    { label: 'Prueba Nadador', icon: 'pi pi-book', routerLink: ['/pages/pruebaNadador'] }
+                    ]},
 
+
+                    
                     { label: 'Asistencias', icon: 'pi pi-pen-to-square', routerLink: ['/pages/asistencia'] },
                     { label: 'Pago', icon: 'pi pi-book', routerLink: ['/pages/pago'] },
                     { label: 'Tipo de pago', icon: 'pi pi-user-plus', routerLink: ['/pages/tipoPago'] },

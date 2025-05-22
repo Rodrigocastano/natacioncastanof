@@ -4,5 +4,5 @@ export interface PruebaTorneo {
     distancia: number;
     id_torneo:number;
     id_categoria_prueba:number;
-    id_caregoria_tipo:number;
+    id_categoria_tipo:number;
   }

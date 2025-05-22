@@ -84,7 +84,7 @@ export class PruebatorneoComponent implements OnInit  {
       distancia: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
       id_torneo: ['', [Validators.required]],
       id_categoria_prueba: ['', [Validators.required]],
-      id_caregoria_tipo: ['', [Validators.required]],
+      id_categoria_tipo: ['', [Validators.required]],
       
     });
     this.formUpdate = fb.group({
@@ -92,7 +92,7 @@ export class PruebatorneoComponent implements OnInit  {
       distancia: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
       id_torneo: ['', [Validators.required]],
       id_categoria_prueba: ['', [Validators.required]],
-      id_caregoria_tipo: ['', [Validators.required]],
+      id_categoria_tipo: ['', [Validators.required]],
     });
   }
 
@@ -167,7 +167,7 @@ getPruebaTorneo() {
       distancia: this.formSave.value.distancia,
       id_torneo: this.formSave.value.id_torneo,
       id_categoria_prueba: this.formSave.value.id_categoria_prueba,
-      id_caregoria_tipo: this.formSave.value.id_caregoria_tipo,
+      id_categoria_tipo: this.formSave.value.id_categoria_tipo,
 
     };
 
@@ -250,7 +250,7 @@ buscador() {
             distancia: this.formUpdate.value.distancia,
             id_torneo: this.formUpdate.value.id_torneo,
             id_categoria_prueba: this.formUpdate.value.id_categoria_prueba,
-            id_caregoria_tipo: this.formUpdate.value.id_caregoria_tipo,
+            id_categoria_tipo: this.formUpdate.value.id_categoria_tipo,
           };
     
           this.pruebatorneoService.updatePruebaTorneo(this.idForUpdate, updateTorneo).subscribe({
@@ -277,7 +277,7 @@ buscador() {
           this.formUpdate.controls['distancia'].setValue(this.torneoPru?.distancia);
           this.formUpdate.controls['id_torneo'].setValue(this.torneoPru?.id_torneo);
           this.formUpdate.controls['id_categoria_prueba'].setValue(this.torneoPru?.id_categoria_prueba);
-          this.formUpdate.controls['id_caregoria_tipo'].setValue(this.torneoPru?.id_caregoria_tipo);
+          this.formUpdate.controls['id_categoria_tipo'].setValue(this.torneoPru?.id_categoria_tipo);
         }
         this.visibleUpdate = true;
       }

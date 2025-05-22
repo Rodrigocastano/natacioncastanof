@@ -48,7 +48,7 @@
                     <td>{{ usuario.distancia }}</td>
                     <td>{{ getNombreTorneo(usuario.id_torneo) }}</td>
                     <td>{{ getNombrePrueba(usuario.id_categoria_prueba) }}</td>
-                    <td>{{ getNombreTipo(usuario.id_caregoria_tipo) }}</td>
+                    <td>{{ getNombreTipo(usuario.id_categoria_tipo) }}</td>
                     <td>
                         <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(usuario.id)"/>
                         <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(usuario.id)" />
@@ -59,7 +59,7 @@
         </p-table>
     </div>
 
-    <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar Torneo" [modal]="true">
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar prueba torneo" [modal]="true">
         <ng-template #content>
             <form [formGroup]="formSave" class="formulario">
                 <div class="flex flex-col gap-6">
@@ -81,7 +81,7 @@
                         <label for="id_torneo" class="block font-bold mb-3">Torneo</label>             
                         <p-select
                             [options]="torneo" formControlName="id_torneo" inputId="id_torneo" optionLabel="displayTorneo"optionValue="id"
-                            placeholder="Seleccione un Area nado" [filter]="true" filterBy="displayTorneo" [appendTo]="'body'" [showClear]="true" class="w-full md:w-70">
+                            placeholder="Seleccione un torneo" [filter]="true" filterBy="displayTorneo" [appendTo]="'body'" [showClear]="true" class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message
@@ -95,7 +95,7 @@
                         <label for="id_categoria_prueba" class="block font-bold mb-3">Prueba de categoría</label>             
                         <p-select
                             [options]="categoriaPrueba" formControlName="id_categoria_prueba" inputId="id_categoria_prueba" optionLabel="displayPrueba"optionValue="id"
-                            placeholder="Seleccione un Area nado" [filter]="true" filterBy="displayPrueba" [appendTo]="'body'" [showClear]="true" class="w-full md:w-70">
+                            placeholder="Seleccione prueba de categoría" [filter]="true" filterBy="displayPrueba" [appendTo]="'body'" [showClear]="true" class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message
@@ -106,14 +106,14 @@
                     </div>
 
                     <div class="col-span-6">
-                        <label for="id_caregoria_tipo" class="block font-bold mb-3">Tipo de categoría</label>             
+                        <label for="id_categoria_tipo" class="block font-bold mb-3">Tipo de categoría</label>             
                         <p-select
-                            [options]="categoriaTipo" formControlName="id_caregoria_tipo" inputId="id_caregoria_tipo" optionLabel="displayTipo"optionValue="id"
-                            placeholder="Seleccione un Area nado" [filter]="true" filterBy="displayTipo" [appendTo]="'body'" [showClear]="true" class="w-full md:w-70">
+                            [options]="categoriaTipo" formControlName="id_categoria_tipo" inputId="id_categoria_tipo" optionLabel="displayTipo"optionValue="id"
+                            placeholder="Seleccione un tipo de categoría" [filter]="true" filterBy="displayTipo" [appendTo]="'body'" [showClear]="true" class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message
-                                *ngIf="formSave.get('id_caregoria_tipo')?.invalid && (formSave.get('id_caregoria_tipo')?.dirty || formSave.get('id_caregoria_tipo')?.touched)" severity="error" variant="simple" size="small" >
+                                *ngIf="formSave.get('id_categoria_tipo')?.invalid && (formSave.get('id_categoria_tipo')?.dirty || formSave.get('id_categoria_tipo')?.touched)" severity="error" variant="simple" size="small" >
                                 Tipo de categoría es requerido
                             </p-message>
                         </div>
@@ -164,7 +164,7 @@
                         <label for="id_torneo" class="block font-bold mb-3">Torneo</label>             
                         <p-select
                             [options]="torneo" formControlName="id_torneo" inputId="id_torneo" optionLabel="displayTorneo"optionValue="id"
-                            placeholder="Seleccione un Area nado" [filter]="true" filterBy="displayTorneo" [showClear]="true" class="w-full md:w-70">
+                            placeholder="Seleccione un torneo" [filter]="true" filterBy="displayTorneo" [showClear]="true" class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message
@@ -178,7 +178,7 @@
                         <label for="id_categoria_prueba" class="block font-bold mb-3">Prueba de categoría</label>             
                         <p-select
                             [options]="categoriaPrueba" formControlName="id_categoria_prueba" inputId="id_categoria_prueba" optionLabel="displayPrueba"optionValue="id"
-                            placeholder="Seleccione un Area nado" [filter]="true" filterBy="displayPrueba" [showClear]="true" class="w-full md:w-70">
+                            placeholder="Seleccione una prueba categoría" [filter]="true" filterBy="displayPrueba" [showClear]="true" class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message
@@ -189,14 +189,14 @@
                     </div>
 
                     <div class="col-span-6">
-                        <label for="id_caregoria_tipo" class="block font-bold mb-3">Tipo de categoría</label>             
+                        <label for="id_categoria_tipo" class="block font-bold mb-3">Tipo de categoría</label>             
                         <p-select
-                            [options]="categoriaTipo" formControlName="id_caregoria_tipo" inputId="id_caregoria_tipo" optionLabel="displayTipo"optionValue="id"
-                            placeholder="Seleccione un Area nado" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
+                            [options]="categoriaTipo" formControlName="id_categoria_tipo" inputId="id_categoria_tipo" optionLabel="displayTipo"optionValue="id"
+                            placeholder="Seleccione un tipo de categoría " [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message
-                                *ngIf="formUpdate.get('id_caregoria_tipo')?.invalid && (formUpdate.get('id_caregoria_tipo')?.dirty || formUpdate.get('id_caregoria_tipo')?.touched)" severity="error" variant="simple" size="small" >
+                                *ngIf="formUpdate.get('id_categoria_tipo')?.invalid && (formUpdate.get('id_categoria_tipo')?.dirty || formUpdate.get('id_categoria_tipo')?.touched)" severity="error" variant="simple" size="small" >
                                 Tipo de categoría es requerido
                             </p-message>
                         </div>

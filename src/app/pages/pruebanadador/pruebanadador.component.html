@@ -1,6 +1,6 @@
     <p-toolbar styleClass="mb-6">
         <ng-template #start>
-            <p-button label="Agregar registró del tiempo nadador" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+            <p-button label="Agregar registró prueba nadador" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
         </ng-template>
     </p-toolbar>
 
@@ -13,7 +13,7 @@
     </div>
 
     <div *ngIf="!loading">
-        <p-table [value]="tiempoNadador" 
+        <p-table [value]="pruebaNadador" 
             dataKey="id" [tableStyle]="{ 'min-width': '60rem' }" [expandedRowKeys]="expandedRows" 
             (onRowExpand)="abrirExpand($event)" (onRowCollapse)="cerrarCollapse($event)" [paginator]="true"
             [rows]="6" [rowsPerPageOptions]="[6, 12, 18]" [showCurrentPageReport]="true" 
@@ -21,7 +21,7 @@
 
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registró Tiempo del nadador</h5>
+                    <h5 class="m-0">Registró prueba nadador</h5>
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search"></p-inputicon>
                         <input pInputText type="text" placeholder="Buscar..."
@@ -35,7 +35,7 @@
                 <tr>
                     <th style="min-width: 4rem"></th>
                     <th style="min-width: 6rem">ID</th>
-                    <th pSortableColumn="name" style="min-width:8rem">Identificación</th>
+                    <th pSortableColumn="name" style="min-width:8rem">Identificacíon</th>
                     <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Género</th>
@@ -61,14 +61,12 @@
                 <tr>
                     <td colspan="7">
                         <div class="p-4">
-                            <p-table [value]="usuario.tiemposNado" dataKey="id">
+                            <p-table [value]="usuario.pruebas" dataKey="id">
                                 <ng-template #header>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Apellido</th>
+                                        <th>Prueba nadador</th>
                                         <th>Tiempo</th>
-                                        <th>Categoría Distancia</th>
                                         <th>Fecha</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -77,10 +75,8 @@
                                 <ng-template #body let-elast>
                                     <tr>
                                         <td>{{ elast.id }}</td>
-                                        <td>{{ elast.nombre }}</td>
-                                        <td>{{ elast.apellido }}</td>
+                                        <td>{{ elast.pruebaTorneo }} </td>
                                         <td>{{ elast.tiempo }}</td>
-                                        <td>{{ elast.categoria_nombre }} </td>
                                         <td>{{ elast.fecha }}</td>
                                         <td>
                                             <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(elast)"/>
@@ -96,7 +92,7 @@
         </p-table>
     </div>
 
-    <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar Tiempo de nadador" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar prueba nadador" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
         <ng-template #content>
             <form [formGroup]="formSave" class="formulario">
                 <div class="flex flex-col gap-6">
@@ -116,15 +112,15 @@
                     </div>
 
                     <div class="col-span-6">
-                        <label for="id_categoria" class="block font-bold mb-3">Categoría</label>             
+                        <label for="id_prueba_torneo" class="block font-bold mb-3">Prueba nadador </label>             
                         <p-select
-                            [options]="categoriaDistancia" [appendTo]="'body'" formControlName="id_categoria" inputId="id_categoria" optionLabel="displayCategoria"optionValue="id"
-                            placeholder="Seleccione un categoría" [filter]="true" filterBy="displayCategoria" [showClear]="true" class="w-full md:w-70">
+                            [options]="pruebaTorneo" [appendTo]="'body'" formControlName="id_prueba_torneo" inputId="id_prueba_torneo" optionLabel="displayPrueba"optionValue="id"
+                            placeholder="Seleccione prueba nadador" [filter]="true" filterBy="displayPrueba" [showClear]="true" class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message
-                                *ngIf="formSave.get('id_categoria')?.invalid && (formSave.get('id_categoria')?.dirty || formSave.get('id_categoria')?.touched)" severity="error" variant="simple" size="small" >
-                                Categoría es requerido
+                                *ngIf="formSave.get('id_prueba_torneo')?.invalid && (formSave.get('id_prueba_torneo')?.dirty || formSave.get('id_prueba_torneo')?.touched)" severity="error" variant="simple" size="small" >
+                                Prueba nadador es requerido
                             </p-message>
                         </div>
                     </div>
@@ -177,29 +173,29 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar Torneo nado" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar prueba nadador" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
 
         <ng-template #content>
             <form [formGroup]="formUpdate" class="formulario">
                 <div class="flex flex-col gap-6">
 
                     <div class="col-span-6">
-                        <label for="id_usuario" class="block font-bold mb-3">Usuario</label>   
-                        <p-select 
-                            [options]="usuarios" formControlName="id_usuario" optionLabel="display" optionValue="id" [readonly]="true" [style]="{'background-color': '#e0e0e0'}" class="w-full md:w-70 ">
-                        </p-select>
-                    </div>
+                            <label for="id_usuario" class="block font-bold mb-3">Usuario</label>   
+                            <p-select 
+                                [options]="usuarios" formControlName="id_usuario" optionLabel="display" optionValue="id" [readonly]="true" [style]="{'background-color': '#e0e0e0'}" class="w-full md:w-70 ">
+                            </p-select>
+                        </div>
 
                     <div class="col-span-6">
-                        <label for="id_categoria" class="block font-bold mb-3">Categoría</label>             
+                        <label for="id_prueba_torneo" class="block font-bold mb-3">Prueba nadador</label>             
                         <p-select
-                            [options]="categoriaDistancia" [appendTo]="'body'" formControlName="id_categoria" inputId="id_categoria" optionLabel="displayCategoria"optionValue="id"
-                            placeholder="Seleccione un categoría"[filter]="true" filterBy="displayCategoria" [showClear]="true" class="w-full md:w-70">
+                            [options]="pruebaTorneo" [appendTo]="'body'" formControlName="id_prueba_torneo" inputId="id_prueba_torneo" optionLabel="displayPrueba"optionValue="id"
+                            placeholder="Seleccione un categoría"[filter]="true" filterBy="displayPrueba" [showClear]="true" class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message
-                                *ngIf="formUpdate.get('id_categoria')?.invalid && (formUpdate.get('id_categoria')?.dirty || formUpdate.get('id_categoria')?.touched)" severity="error" variant="simple" size="small" >
-                                Categoria es requerido
+                                *ngIf="formUpdate.get('id_prueba_torneo')?.invalid && (formUpdate.get('id_prueba_torneo')?.dirty || formUpdate.get('id_categoria')?.touched)" severity="error" variant="simple" size="small" >
+                                Prueba nadador es requerido
                             </p-message>
                         </div>
                     </div>
@@ -225,7 +221,7 @@
                         </p-datepicker>
                         <p-message 
                             *ngIf="formUpdate.get('fecha')?.invalid && (formUpdate.get('fecha')?.dirty || formUpdate.get('fecha')?.touched)"  severity="error"  variant="simple" size="small">
-                            Fecha de inscripcion es requerido
+                            Fecha es requerido
                         </p-message>
                         </div>
                     </div>             
@@ -241,6 +237,3 @@
         </ng-template>
 
     </p-dialog>
-
-
-
