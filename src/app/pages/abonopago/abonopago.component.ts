@@ -2,16 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { Pago } from '../interfaces/pago';
 import { ButtonModule } from 'primeng/button';
 import { ToolbarModule } from 'primeng/toolbar';
-import { PagoService } from '../service/pago.service';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { TableModule, TableRowCollapseEvent, TableRowExpandEvent } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
-import { UsuarioService } from '../service/usuario.service';
-import { Usuario } from '../interfaces/usuario';
 import { CommonModule } from '@angular/common';
 import { MessageService, ToastMessageOptions } from 'primeng/api';
 import { MessageModule } from 'primeng/message';
@@ -22,15 +18,16 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TextareaModule } from 'primeng/textarea';
-import { EstadoPago } from '../interfaces/estadoPago';
-import { TipoPago } from '../interfaces/tipoPagos';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { AbonopagoService } from '../service/abonopago.service';
+import { AbonoPago } from '../interfaces/abonopago';
+import { PagoService } from '../service/pago.service';
+import { Pago } from '../interfaces/pago';
 import { formatDate } from '@angular/common';
-
 @Component({
-  selector: 'app-pago',
-  imports: [
+  selector: 'app-abonopago',
+   imports: [
     CommonModule,
     ButtonModule,
     ToolbarModule,
@@ -52,23 +49,21 @@ import { formatDate } from '@angular/common';
     ProgressSpinnerModule
   ],
   providers: [MessageService],
-  templateUrl: './pago.component.html',
+  templateUrl: './abonopago.component.html',
 })
-export class PagoComponent implements OnInit{
+export class AbonopagoComponent implements OnInit{
   
       formSave!: FormGroup;
       visibleSave: boolean = false;
-      pago: Pago[] = [];
-      idPago: number = 0;
+      abonoPago: AbonoPago[] = [];
+      idAbonoPago: number = 0;
       visibleDelete: boolean = false;
 
       formUpdate!: FormGroup;
-      pag: any
+      abonoPa: any
       idForUpdate: boolean = false;
       visibleUpdate: boolean = false;
-      usuarios: Usuario[] = [];
-      estadoPago: EstadoPago[] = [];
-      tipoPago: TipoPago[] = [];
+      pago: Pago[] = [];
       expandedRows = {};
       cols: any[] = [];
       expanded: boolean = false;
@@ -78,90 +73,78 @@ export class PagoComponent implements OnInit{
       maxDate: Date = new Date();
       fechaActual: Date = new Date();
       loading: boolean = true;
+      abonoPagoSelect: any[] = [];
 
       terminoBusqueda: string = '';
-      buscarOriginal: Pago[] = [];
+      buscarOriginal: AbonoPago[] = [];
 
       constructor(
         private fb: FormBuilder,
         private pagoService: PagoService,
-        private usuarioService: UsuarioService,
+        private abonopagoService: AbonopagoService,
         private messageService: MessageService
       ) {
         this.formSave = this.fb.group({
-          id_usuario: ['', [Validators.required]],
-          id_tipo_pago: ['', [Validators.required]],
-          id_estado_pago: ['', [Validators.required]],
+          id_registro_pago: ['', [Validators.required]],
           monto: ['', [Validators.required]],
-          fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
-          monto_abonado: ['', [Validators.required]],
-          fecha_vencimiento: ['', [Validators.required]]
+          fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
           
         });
         this.formUpdate = fb.group({
-          id_estado_pago: ['', [Validators.required]],
-          id_tipo_pago: ['', [Validators.required]],
-          fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
-          id_usuario: ['', [Validators.required]],
+          id_registro_pago: ['', [Validators.required]],
           monto: ['', [Validators.required]],
-          monto_abonado: ['', [Validators.required]],
-          fecha_vencimiento: ['', [Validators.required]]
+          fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
         });
       }
   
       ngOnInit(): void {
-        this.getPago();
-        this.getUsuarios();
-        this.getTipoPago();
-        this.getEstadoPago();
+        this.getAbonoPago();
+        this.getPagos();
+
+          setInterval(() => {
+          this.getPagos();
+          }, 30000);
       }
 
-      getPago() {
-        this.pagoService.getAllTodoPago().subscribe(
-          data => {
-            this.pago = data.data
-            this.buscarOriginal = data.data; 
-            this.loading = false;
-          }
-        );
+      getAbonoPago() {
+        this.abonopagoService.getAllAbonoPago().subscribe(data => {
+
+          this.abonoPago = data.data;
+          this.buscarOriginal = data.data;
+          this.loading = false;
+          this.abonoPagoSelect = [];
+          data.data.forEach((usuario: any) => {
+            usuario.abonosPagos.forEach((abono: any) => {
+              this.abonoPagoSelect.push({
+                id: abono.id_registro_pago,
+                display: `${usuario.nombre} ${usuario.apellido} - ${abono.fecha}`
+              });
+            });
+          });
+        });
       }
 
-      getUsuarios() {
-        this.usuarioService.getAllUsuarios().subscribe(
-          data => {
-            this.usuarios = data.map((usuario: any) => ({
-              ...usuario,
-              display: `${usuario.nombre} ${usuario.apellido} - ${usuario.cedula}`
-            }));
-          }
-        );
+
+      getPagos() {
+        this.pagoService.getAllRegistroPago().subscribe(data => {
+          console.log('Datos recibidos:', data);
+
+          this.pago = data.map((pago: any) => ({
+            ...pago,
+           displayPago: `${pago.nombre} ${pago.apellido} | ${pago.fecha} | Monto: $${pago.monto} | Abonado: $${pago.monto_abonado}`
+
+
+          }));
+
+          console.log('Datos para el select:', this.pago);
+        });
       }
 
-      getTipoPago() {
-        this.pagoService.getAllTipoPago().subscribe(
-          data => {
-            this.tipoPago = data.map((tipoPago: any) => ({
-              ...tipoPago,
-              displayEstado: `${tipoPago.nombre}`
-            }));
-          }
-        );
-      }
 
-      getEstadoPago() {
-        this.pagoService.getAllEstadoPago().subscribe(
-          data => {
-            this.estadoPago = data.map((estadoPago: any) => ({
-              ...estadoPago,
-              displayTipo: `${estadoPago.pagos}`
-            }));
-          }
-        );
-      }
 
       filtrarBusqueda() {
         const termino = this.terminoBusqueda.trim().toLowerCase();
-        this.pago = this.buscarOriginal.filter(usuario => {
+        this.abonoPa = this.buscarOriginal.filter(usuario => {
           return (
             usuario.nombre?.toLowerCase().includes(termino) ||
             usuario.apellido?.toLowerCase().includes(termino) ||
@@ -198,19 +181,15 @@ export class PagoComponent implements OnInit{
   
       if (this.formSave.valid) {
         const newPago: any = {
-          id_tipo_pago: this.formSave.value.id_tipo_pago,
-          id_estado_pago: this.formSave.value.id_estado_pago,
+          id_registro_pago: this.formSave.value.id_registro_pago,
           fecha: this.formatDate(this.formSave.value.fecha),
           monto: this.formSave.value.monto,
-          fecha_vencimiento: this.formatDate(this.formSave.value.fecha_vencimiento),
-          monto_abonado: this.formSave.value.monto_abonado,
-          id_usuario: this.formSave.value.id_usuario,
         };
   
-        this.pagoService.createPago(newPago).subscribe({
+        this.abonopagoService.createAbonoPago(newPago).subscribe({
           next: () => {
             this.saveMessageToast();
-            this.getPago();
+            this.getAbonoPago();
             this.visibleSave = false;
           },
           error: (err) => {
@@ -221,22 +200,17 @@ export class PagoComponent implements OnInit{
       }
       }
 
-      getNombreTipoPago(id: number): string {
-        const tipo = this.tipoPago.find(tp => tp.id === id);
-        return tipo ? tipo.nombre : 'Desconocido';
+      getNombrePago(id: number): string {
+        const tipo = this.pago.find(tp => tp.id === id);
+        return tipo ? tipo.fecha_vencimiento : 'Desconocido';
       }
       
-      getNombreEstadoPago(id: number): string {
-        const estado = this.estadoPago.find(ep => ep.id === id);
-        return estado ? estado.pagos : 'Desconocido';
-      }
-
       showSaveDialog() {
         this.formSave.reset();
         this.visibleSave = true;
       }
 
-      formatDate = (date: Date): string => {
+    formatDate = (date: Date): string => {
       const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
       return adjustedDate.toISOString().split('T')[0];
     }
@@ -269,25 +243,21 @@ export class PagoComponent implements OnInit{
           return;
         }
         if (this.formUpdate.valid) {
-          const updatePago: Pago = {
-            id: this.pag.id,
-            id_tipo_pago: this.formUpdate.value.id_tipo_pago,
-            id_estado_pago: this.formUpdate.value.id_estado_pago,
+          const updatePago: AbonoPago = {
+            id: this.abonoPa.id,
+            id_registro_pago: this.formUpdate.value.id_registro_pago,
             monto: this.formUpdate.value.monto,
             fecha: this.formatDate(this.formUpdate.value.fecha),
-            monto_abonado: this.formUpdate.value.monto_abonado,
-            fecha_vencimiento: this.formatDate(this.formUpdate.value.fecha_vencimiento),
-            id_usuario: this.formUpdate.value.id_usuario,
           };
       
-          this.pagoService.updatePago(this.pag.id, updatePago).subscribe({
+          this.abonopagoService.updateAbonoPago(this.abonoPa.id, updatePago).subscribe({
             next: (res) => {
-              this.getPago();
+              this.getAbonoPago();
               this.visibleUpdate = false;
               this.saveMessageToast();
             },
             error: (err) => {
-              console.error('Error actualizando registro del pago:', err);
+              console.error('Error actualizando el abono pago:', err);
               this.errorMessageToast(); 
             }
           });
@@ -297,19 +267,15 @@ export class PagoComponent implements OnInit{
       edit(elasticId: any) {
         console.log('datos', elasticId)
         this.idForUpdate = true;
-        this.pag = elasticId
-        if (this.pag) {
+        this.abonoPa = elasticId
+        if (this.abonoPa) {
           const parseLocalDate = (dateString: string) => {
           return dateString ? new Date(dateString + 'T00:00:00') : null;
         };
-          this.formUpdate.controls['id_tipo_pago'].setValue(this.pag?.id_tipo_pago)
-          this.formUpdate.controls['id_estado_pago'].setValue(this.pag?.id_estado_pago)
-          this.formUpdate.controls['fecha_vencimiento'].setValue(new Date(this.pag?.fecha_vencimiento))
-          this.formUpdate.controls['id_usuario'].setValue(this.pag?.id_usuario) 
-          this.formUpdate.controls['monto'].setValue(this.pag?.monto) 
-          this.formUpdate.controls['monto_abonado'].setValue(this.pag?.monto_abonado) 
+          this.formUpdate.controls['id_registro_pago'].setValue(this.abonoPa?.id_registro_pago)
+          this.formUpdate.controls['monto'].setValue(this.abonoPa?.monto) 
           this.formUpdate.controls['fecha'].setValue(
-          parseLocalDate(this.pag.fecha)
+          parseLocalDate(this.abonoPa.fecha)
         );
         }
         this.visibleUpdate = true;
@@ -322,11 +288,12 @@ export class PagoComponent implements OnInit{
       }
 
       delete() {
-        this.pagoService.deletePago(this.idPago).subscribe({
+        console.log('ID a eliminar:', this.abonoPa);
+        this.abonopagoService.deleteAbonoPago(this.abonoPa).subscribe({
           next: () => {
             this.visibleDelete = false;
-            this.getPago();
-            this.idPago = 0;
+            this.getAbonoPago();
+            this.abonoPa = 0;
             this.EliminadoMessageToasts(); 
           },
           error: (err) => {
@@ -335,11 +302,10 @@ export class PagoComponent implements OnInit{
           }
         });
       }
-         
 
       showModalDelete(id: number) {
-        this.idPago = id;
-        this.visibleDelete = true
+        this.abonoPa = id;
+        this.visibleDelete = true;
       }
 
 }

@@ -24,6 +24,8 @@ import { TiponadoComponent } from './tiponado/tiponado.component';
 import { TipopagoComponent } from './tipopago/tipopago.component';
 import { PruebatorneoComponent } from './pruebatorneo/pruebatorneo.component';
 import { PruebanadadorComponent } from './pruebanadador/pruebanadador.component';
+import { PlanPagoComponent } from './plan-pago/plan-pago.component';
+import { AbonopagoComponent } from './abonopago/abonopago.component';
 
 export default [
     { path: 'usuario', component: UsuarioComponent },
@@ -50,5 +52,7 @@ export default [
     { path: 'tipoPago', component: TipopagoComponent },
     { path: 'pruebaTorneo', component: PruebatorneoComponent },
     { path: 'pruebaNadador', component: PruebanadadorComponent },
+    { path: 'planPago', component: PlanPagoComponent },
+    { path: 'abonoPago', component: AbonopagoComponent },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

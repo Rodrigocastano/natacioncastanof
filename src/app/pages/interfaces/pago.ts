@@ -4,7 +4,9 @@ export interface Pago {
     id_tipo_pago: any;
     id_estado_pago: any;
     fecha: string;
+    fecha_vencimiento: string;
     monto:number;
+    monto_abonado:number;
     estado?: boolean;
     nombre?: string;
     apellido?: string

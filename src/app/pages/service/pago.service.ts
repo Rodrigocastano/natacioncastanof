@@ -18,6 +18,10 @@ export class PagoService {
      getAllTodoPago() {
       return this.http.get<any>(`${this.apisUrl}/indexRegistroPagosPorEstado`);
     }
+
+    getAllRegistroPago() {
+      return this.http.get<any>(`${this.apisUrl}/indexRegistroPago`);
+    }
  
     createPago(pago: Pago): Observable<any> {
       return this.http.post(`${this.apisUrl}/storeRegistroPago`, pago);

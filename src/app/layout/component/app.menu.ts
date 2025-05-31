@@ -62,12 +62,15 @@ export class AppMenu {
                     { label: 'Prueba Torneo', icon: 'pi pi-book', routerLink: ['/pages/pruebaTorneo'] },
                     { label: 'Prueba Nadador', icon: 'pi pi-book', routerLink: ['/pages/pruebaNadador'] }
                     ]},
-
-
+                    
+                    { label: 'Tipo de pago', icon: 'pi pi-user-plus', routerLink: ['/pages/tipoPago'] },
+                    { label: 'Plan pago', icon: 'pi pi-book', routerLink: ['/pages/planPago'] },
+                    { label: 'Pago', icon: 'pi pi-book', routerLink: ['/pages/pago'] },
+                    { label: 'Pagar abono', icon: 'pi pi-book', routerLink: ['/pages/abonoPago'] },
                     
                     { label: 'Asistencias', icon: 'pi pi-pen-to-square', routerLink: ['/pages/asistencia'] },
-                    { label: 'Pago', icon: 'pi pi-book', routerLink: ['/pages/pago'] },
-                    { label: 'Tipo de pago', icon: 'pi pi-user-plus', routerLink: ['/pages/tipoPago'] },
+                    
+                  
                     
                       
                     { label: '-------', icon: 'pi pi-book', routerLink: ['/pages/torneoNado'] },

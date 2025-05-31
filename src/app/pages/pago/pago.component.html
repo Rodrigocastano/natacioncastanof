@@ -67,11 +67,13 @@
                                         <th>ID</th>
                                         <th>Nombre</th>
                                         <th>Apellido</th>
-                                        <th>EstadoPago</th>
-                                        <th>TipoPago</th>
-                                        <th>Monto</th>
-                                        <th>Fecha</th>
-                                        <th>Acciones</th>
+                                        <th pSortableColumn="price" style="min-width: 8rem">Estado pago</th>
+                                        <th pSortableColumn="price" style="min-width: 7rem">Tipo pago</th>
+                                        <th pSortableColumn="price" style="min-width: 5rem">Monto</th>
+                                        <th pSortableColumn="price" style="min-width: 10rem">Monto abonado</th>
+                                        <th pSortableColumn="price" style="min-width: 9rem">Fecha registró</th>
+                                        <th pSortableColumn="price" style="min-width: 11rem">Fecha vencimiento</th>
+                                        <th pSortableColumn="price" style="min-width: 8rem">Acciones</th>
                                     </tr>
 
                                 </ng-template>
@@ -83,7 +85,9 @@
                                         <td>{{ getNombreTipoPago(elast.id_tipo_pago) }}</td>
                                         <td>{{ getNombreEstadoPago(elast.id_estado_pago) }}</td>
                                         <td>{{ elast.monto }}</td>
+                                        <td>{{ elast.monto_abonado }}</td>
                                         <td>{{ elast.fecha }}</td>
+                                        <td>{{ elast.fecha_vencimiento }}</td>
                                         <td>
                                             <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(elast)"/>
                                             <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(elast.id)" />
@@ -98,7 +102,7 @@
         </p-table>
     </div>
 
-    <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar Nuevo pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar nuevo pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
         <ng-template #content>
             <form [formGroup]="formSave" class="formulario">
                 <div class="flex flex-col gap-6">
@@ -116,59 +120,88 @@
                         </div>
                     </div>
 
-                    <div class="col-span-6">
-                        <label for="id_tipo_pago" class="block font-bold mb-3">Tipo Pago</label>             
-                        <p-select
-                            [options]="tipoPago" [appendTo]="'body'" formControlName="id_tipo_pago" inputId="id_tipo_pago" optionLabel="displayEstado" optionValue="id"
-                            placeholder="Seleccione el Tipo Pago" [filter]="true" filterBy="displayEstado" [showClear]="true" class="w-full md:w-70">
-                        </p-select>
-                        <div class="mt-2">
-                            <p-message
-                                *ngIf="formSave.get('id_tipo_pago')?.invalid && (formSave.get('id_tipo_pago')?.dirty || formSave.get('id_tipo_pago')?.touched)" severity="error" variant="simple" size="small" >
-                                Tipo Pago es requerido
-                            </p-message>
-                        </div>
-                    </div>
-
-                    <div class="col-span-6">
-                        <label for="id_estado_pago" class="block font-bold mb-3">Estado Pago</label>             
-                        <p-select
-                            [options]="estadoPago" [appendTo]="'body'" formControlName="id_estado_pago" inputId="id_estado_pago" optionLabel="displayTipo" optionValue="id"
-                            placeholder="Seleccione el Estado Pago" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
-                        </p-select>
-                        <div class="mt-2">
-                            <p-message
-                                *ngIf="formSave.get('id_estado_pago')?.invalid && (formSave.get('id_estado_pago')?.dirty || formSave.get('id_estado_pago')?.touched)" severity="error" variant="simple" size="small" >
-                                Estado Pago es requerido
-                            </p-message>
-                        </div>
-                    </div>
-
-                    <div class="col-span-6">
-                        <label for="monto" class="block font-bold mb-1">Monto</label>
-                        <p-inputnumber 
-                            formControlName="monto" id="monto" placeholder="Ingrese el monto" required mode="currency" currency="USD" locale="en-US" class="w-full text-sm px-0 py-2">
-                        </p-inputnumber>
-                                
-                        <p-message
-                            *ngIf="formUpdate.get('monto')?.errors?.['required'] && (formUpdate.get('monto')?.dirty || formUpdate.get('monto')?.touched)" severity="error" variant="simple" size="small">
-                            El campo monto es requerido
-                        </p-message>
-                    </div>                
-                    
-                    <div class="col-span-12 flex justify-center" >
+                    <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                        <label for="fecha" class="block font-bold mb-2">Fecha Inscripción</label>
-                        <p-datepicker 
-                            [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
-                            [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
-                        </p-datepicker>
-                        <p-message 
-                            *ngIf="formSave.get('fecha')?.invalid && (formSave.get('fecha')?.dirty || formSave.get('fecha')?.touched)"  severity="error"  variant="simple" size="small">
-                            Fecha Nacimiento es requerido
-                        </p-message>
+                            <label for="id_tipo_pago" class="block font-bold mb-3">Tipo pago</label>             
+                            <p-select
+                                [options]="tipoPago" [appendTo]="'body'" formControlName="id_tipo_pago" inputId="id_tipo_pago" optionLabel="displayEstado" optionValue="id"
+                                placeholder="Seleccione el Tipo Pago" [filter]="true" filterBy="displayEstado" [showClear]="true" class="w-full md:w-70">
+                            </p-select>
+                            <div class="mt-2">
+                                <p-message
+                                    *ngIf="formSave.get('id_tipo_pago')?.invalid && (formSave.get('id_tipo_pago')?.dirty || formSave.get('id_tipo_pago')?.touched)" severity="error" variant="simple" size="small" >
+                                    Tipo Pago es requerido
+                                </p-message>
+                            </div>
                         </div>
-                    </div>               
+
+                        <div class="col-span-6">
+                            <label for="id_estado_pago" class="block font-bold mb-3">Estado pago</label>             
+                            <p-select
+                                [options]="estadoPago" [appendTo]="'body'" formControlName="id_estado_pago" inputId="id_estado_pago" optionLabel="displayTipo" optionValue="id"
+                                placeholder="Seleccione el Estado Pago" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
+                            </p-select>
+                            <div class="mt-2">
+                                <p-message
+                                    *ngIf="formSave.get('id_estado_pago')?.invalid && (formSave.get('id_estado_pago')?.dirty || formSave.get('id_estado_pago')?.touched)" severity="error" variant="simple" size="small" >
+                                    Estado Pago es requerido
+                                </p-message>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="monto" class="block font-bold mb-1">Monto</label>
+                            <p-inputnumber 
+                                formControlName="monto" id="monto" placeholder="Ingrese el monto" required mode="currency" currency="USD" locale="en-US" class="w-full text-sm px-0 py-2">
+                            </p-inputnumber>
+                                    
+                            <p-message
+                                *ngIf="formUpdate.get('monto')?.errors?.['required'] && (formUpdate.get('monto')?.dirty || formUpdate.get('monto')?.touched)" severity="error" variant="simple" size="small">
+                                El campo monto es requerido
+                            </p-message>
+                        </div>
+                    
+                        <div class="col-span-6">
+                            <label for="monto_abonado" class="block font-bold mb-1">Monto abonado</label>
+                            <p-inputnumber 
+                                formControlName="monto_abonado" id="monto_abonado" placeholder="Ingrese el monto abonado" required mode="currency" currency="USD" locale="en-US" class="w-full text-sm px-0 py-2">
+                            </p-inputnumber>
+                                    
+                            <p-message
+                                *ngIf="formUpdate.get('monto_abonado')?.errors?.['required'] && (formUpdate.get('monto_abonado')?.dirty || formUpdate.get('monto_abonado')?.touched)" severity="error" variant="simple" size="small">
+                                El campo monto abonado es requerido
+                            </p-message>
+                        </div> 
+                    </div>
+                    
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="fecha" class="block font-bold mb-2">Fecha registró</label>
+                            <p-datepicker 
+                                [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
+                                [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
+                            </p-datepicker>
+                            <p-message 
+                                *ngIf="formSave.get('fecha')?.invalid && (formSave.get('fecha')?.dirty || formSave.get('fecha')?.touched)"  severity="error"  variant="simple" size="small">
+                                Fecha registró es requerido
+                            </p-message>
+                        </div>
+
+                        <div class="col-span-6">
+                            <label for="fecha_vencimiento" class="block font-bold mb-2">Fecha vencimiento</label>
+                            <p-datepicker 
+                                [maxDate]="maxDate" formControlName="fecha_vencimiento" inputId="fecha_vencimiento" [showIcon]="true" [showButtonBar]="true" 
+                                [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha '" class="w-96" >
+                            </p-datepicker>
+                            <p-message 
+                                *ngIf="formSave.get('fecha_vencimiento')?.invalid && (formSave.get('fecha_vencimiento')?.dirty || formSave.get('fecha_vencimiento')?.touched)"  severity="error"  variant="simple" size="small">
+                                Fecha vencimiento es requerido
+                            </p-message>
+                        </div>
+                    </div>
+
                 </div>
             </form>
         </ng-template>
@@ -192,7 +225,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar registró de pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar registró de pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
         
         <ng-template #content>
             <form [formGroup]="formUpdate" class="formulario">
@@ -203,61 +236,85 @@
                             [options]="usuarios" formControlName="id_usuario" optionLabel="display" optionValue="id" [readonly]="true" [style]="{'background-color': '#e0e0e0'}" class="w-full md:w-70 ">
                         </p-select>
                     </div>
-                      
-                    <div class="col-span-6">
-                        <label for="id_tipo_pago" class="block font-bold mb-3">Tipo Pago</label>             
-                        <p-select
-                            [options]="tipoPago" [appendTo]="'body'" formControlName="id_tipo_pago" inputId="id_tipo_pago" optionLabel="displayEstado" optionValue="id"
-                            placeholder="Seleccione el Tipo Pago" [filter]="true" filterBy="displayEstado" [showClear]="true" class="w-full md:w-70">
-                        </p-select>
-                        <div class="mt-2">
-                            <p-message
-                                *ngIf="formUpdate.get('id_tipo_pago')?.invalid && (formUpdate.get('id_tipo_pago')?.dirty || formUpdate.get('id_tipo_pago')?.touched)" severity="error" variant="simple" size="small" >
-                                Tipo Pago es requerido
-                            </p-message>
-                        </div>
-                    </div>
-    
-                    <div class="col-span-6">
-                        <label for="id_estado_pago"  class="block font-bold mb-3">Estado Pago</label>             
-                        <p-select
-                            [options]="estadoPago" [appendTo]="'body'" formControlName="id_estado_pago" inputId="id_estado_pago" optionLabel="displayTipo" optionValue="id" 
-                            placeholder="Seleccione el Estado Pago" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
-                        </p-select>
-                        <div class="mt-2">
-                            <p-message
-                                *ngIf="formUpdate.get('id_estado_pago')?.invalid && (formUpdate.get('id_estado_pago')?.dirty || formUpdate.get('id_estado_pago')?.touched)" severity="error" variant="simple" size="small" >
-                                Estado Pago es requerido
-                            </p-message>
-                        </div>
-                    </div>
-    
-                    <div class="col-span-6">
-                        <label for="monto" class="block font-bold mb-1">Monto</label>
-                        <p-inputnumber 
-                            formControlName="monto" id="monto" placeholder="Ingrese el monto" required mode="currency" currency="USD" locale="en-US" class="w-full text-sm px-0 py-2">
-                        </p-inputnumber>
-                                 
-                        <p-message
-                            *ngIf="formUpdate.get('monto')?.errors?.['required'] && (formUpdate.get('monto')?.dirty || formUpdate.get('monto')?.touched)" severity="error" variant="simple" size="small">
-                            El campo monto es requerido
-                        </p-message>
-                    </div>                
-                    
-                    <div class="col-span-12 flex justify-center" >
+
+                    <div class="grid grid-cols-12 gap-4">  
                         <div class="col-span-6">
-                            <label for="fecha" class="block font-bold mb-2">Fecha Inscripción</label>
+                            <label for="id_tipo_pago" class="block font-bold mb-3">Tipo pago</label>             
+                            <p-select
+                                [options]="tipoPago" [appendTo]="'body'" formControlName="id_tipo_pago" inputId="id_tipo_pago" optionLabel="displayEstado" optionValue="id"
+                                placeholder="Seleccione el Tipo pago" [filter]="true" filterBy="displayEstado" [showClear]="true" class="w-full md:w-70">
+                            </p-select>
+                            <div class="mt-2">
+                                <p-message
+                                    *ngIf="formUpdate.get('id_tipo_pago')?.invalid && (formUpdate.get('id_tipo_pago')?.dirty || formUpdate.get('id_tipo_pago')?.touched)" severity="error" variant="simple" size="small" >
+                                    Tipo pago es requerido
+                                </p-message>
+                            </div>
+                        </div>
+    
+                        <div class="col-span-6">
+                            <label for="id_estado_pago"  class="block font-bold mb-3">Estado pago</label>             
+                            <p-select
+                                [options]="estadoPago" [appendTo]="'body'" formControlName="id_estado_pago" inputId="id_estado_pago" optionLabel="displayTipo" optionValue="id" 
+                                placeholder="Seleccione el Estado pago" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
+                            </p-select>
+                            <div class="mt-2">
+                                <p-message
+                                    *ngIf="formUpdate.get('id_estado_pago')?.invalid && (formUpdate.get('id_estado_pago')?.dirty || formUpdate.get('id_estado_pago')?.touched)" severity="error" variant="simple" size="small" >
+                                    Estado Pago es requerido
+                                </p-message>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4"> 
+                        <div class="col-span-6">
+                            <label for="monto" class="block font-bold mb-1">Monto</label>
+                            <p-inputnumber 
+                                formControlName="monto" id="monto" placeholder="Ingrese el monto" required mode="currency" currency="USD" locale="en-US" class="w-full text-sm px-0 py-2">
+                            </p-inputnumber>
+                                    
+                            <p-message
+                                *ngIf="formUpdate.get('monto')?.errors?.['required'] && (formUpdate.get('monto')?.dirty || formUpdate.get('monto')?.touched)" severity="error" variant="simple" size="small">
+                                El campo monto es requerido
+                            </p-message>
+                        </div>
+                        
+                        <div class="col-span-6">
+                            <label for="monto_abonado" class="block font-bold mb-1">Monto abonado</label>
+                            <p-inputnumber 
+                                [readonly]="true" formControlName="monto_abonado" id="monto_abonado" placeholder="Ingrese el monto abonado" required mode="currency" currency="USD" locale="en-US" class="w-full text-sm px-0 py-2">
+                            </p-inputnumber>
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4"> 
+                        <div class="col-span-6">
+                            <label for="fecha" class="block font-bold mb-2">Fecha registró</label>
                             <p-datepicker 
                                 [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                                 [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
                             </p-datepicker>
                             <p-message 
                                 *ngIf="formUpdate.get('fecha')?.invalid && (formUpdate.get('fecha')?.dirty || formUpdate.get('fecha')?.touched)"  severity="error"  variant="simple" size="small">
-                                Fecha Nacimiento es requerido
+                                Fecha registró es requerido
+                            </p-message>
+                        </div>
+                   
+                        <div class="col-span-6">
+                            <label for="fecha_vencimiento" class="block font-bold mb-2">Fecha vencimiento</label>
+                            <p-datepicker 
+                                [maxDate]="maxDate" formControlName="fecha_vencimiento" inputId="fecha_vencimiento" [showIcon]="true" [showButtonBar]="true" 
+                                [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
+                            </p-datepicker>
+                            <p-message 
+                                *ngIf="formUpdate.get('fecha_vencimiento')?.invalid && (formUpdate.get('fecha_vencimiento')?.dirty || formUpdate.get('fecha_vencimiento')?.touched)"  severity="error"  variant="simple" size="small">
+                                Fecha vencimiento es requerido
                             </p-message>
                         </div>
                     </div>
-                                
+       
                 </div>
             </form>
         </ng-template>

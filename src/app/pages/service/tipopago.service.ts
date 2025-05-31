@@ -14,18 +14,18 @@ export class TipopagoService {
        constructor(private http: HttpClient) {}
     
       getAllTipoPago(): Observable<TipoPago[]> {
-        return this.http.get<TipoPago[]>(`${this.apisUrl}/indexTipoNado`);
+        return this.http.get<TipoPago[]>(`${this.apisUrl}/indexTipoPago`);
       }
     
       createTipoPago(tipoPago: TipoPago): Observable<any> {
-        return this.http.post(`${this.apisUrl}/storeTipoNado`, tipoPago);
+        return this.http.post(`${this.apisUrl}/storeTipoPago`, tipoPago);
       }
     
       updateTipoPago(id: number, tipoPago: TipoPago): Observable<any> {
-        return this.http.put(`${this.apisUrl}/updateTipoNado/${id}`, tipoPago);
+        return this.http.put(`${this.apisUrl}/updateTipoPago/${id}`, tipoPago);
       }
     
       deleteTipoPago(id: number): Observable<any> {
-        return this.http.delete(`${this.apisUrl}/destroyTipoNado/${id}`);
+        return this.http.delete(`${this.apisUrl}/destroyTipoPago/${id}`);
       }
 }

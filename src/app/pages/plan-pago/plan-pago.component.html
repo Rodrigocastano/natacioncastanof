@@ -1,0 +1,345 @@
+    <p-toolbar styleClass="mb-6">
+    <ng-template #start>
+        <p-button label="Agregar registró de pago" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+    </ng-template>
+    </p-toolbar>
+
+    <p-toast />
+        <div 
+            *ngIf="loading" style="display: flex; justify-content: center; align-items: center; height: 300px;">
+            <p-progressSpinner 
+                [style]="{ width: '50px', height: '50px' }" styleClass="p-text-primary">
+            </p-progressSpinner>
+        </div>
+
+    <div *ngIf="!loading">
+        <p-table [value]="planPago" 
+            dataKey="id" [tableStyle]="{ 'min-width': '60rem' }" 
+            [paginator]="true"[rows]="6" [rowsPerPageOptions]="[6, 12, 18]"
+            [showCurrentPageReport]="true" currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Usuarios">
+
+            <ng-template #caption>
+                <div class="flex items-center justify-between">
+                    <h5 class="m-0">Registró de pago</h5>
+                    <p-iconfield>
+                        <p-inputicon styleClass="pi pi-search"></p-inputicon>
+                        <input pInputText type="text" placeholder="Buscar..."
+                               [(ngModel)]="terminoBusqueda"
+                               (input)="filtrarBusqueda()" />
+                      </p-iconfield>
+                </div>
+            </ng-template>
+
+            <ng-template #header>
+                <tr>
+                <th style="min-width: 6rem">ID</th>
+                <th pSortableColumn="nombre" style="min-width: 8rem">Nombre</th>
+                <th pSortableColumn="apellido" style="min-width: 8rem">Apellido</th>
+                <th pSortableColumn="price" style="min-width: 8rem">Tipo pago</th>
+                <th pSortableColumn="price" style="min-width: 8rem">Monto</th>
+                <th pSortableColumn="cedula" style="min-width: 10rem">Estado</th>
+                <th style="min-width: 12rem">Fecha inicio</th>
+                <th style="min-width: 12rem">Fecha fin</th>
+                <th style="min-width: 12rem">Fecha cobro</th>
+                <th style="min-width: 10rem">Acciones</th> 
+                </tr>
+            </ng-template>
+
+            <ng-template #body let-usuario>
+                <tr>
+                <td>{{ usuario.id }}</td>
+                <td>{{ usuario.nombre }}</td>
+                <td>{{ usuario.apellido }}</td>
+                <td>{{ getNombreTipoPago(usuario.id_tipo_pago) }}</td>
+                <td>{{ usuario.monto }}</td>
+                <td>{{ usuario.estado_funcional ? 'Activo' : 'Inactivo' }}</td>
+                <td>{{ usuario.fecha_inicio }}</td>
+                <td>{{ usuario.fecha_fin }}</td>
+                <td>{{ usuario.fecha_cobro }}</td>
+                <td>
+                    <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" 
+                            (click)="edit(usuario)"></p-button>
+                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" 
+                            (click)="showModalDelete(usuario.id)"></p-button>
+
+                    <p-button icon="pi pi-times" [rounded]="true" [outlined]="true" 
+                            (click)="cancelarPlan(usuario)"></p-button>
+                </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar Nuevo pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
+        <ng-template #content>
+            <form [formGroup]="formSave" class="formulario">
+                <div class="flex flex-col gap-6">
+
+
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-6">
+                        <label for="id_usuario" class="block font-bold mb-3">Usuario</label>             
+                        <p-select
+                            [options]="usuarios" [appendTo]="'body'" formControlName="id_usuario"inputId="id_usuario"optionLabel="display"optionValue="id"
+                            placeholder="Seleccione un usuario" [filter]="true" filterBy="display" [showClear]="true" class="w-full md:w-70">
+                        </p-select>
+                        <div class="mt-2">
+                            <p-message
+                                *ngIf="formSave.get('id_usuario')?.invalid && (formSave.get('id_usuario')?.dirty || formSave.get('id_usuario')?.touched)" severity="error" variant="simple" size="small" >
+                                Usuario es requerido
+                            </p-message>
+                        </div>
+                    </div>
+
+                    <div class="col-span-6">
+                        <label for="id_tipo_pago" class="block font-bold mb-3">Tipo Pago</label>             
+                        <p-select
+                            [options]="tipoPago" [appendTo]="'body'" formControlName="id_tipo_pago" inputId="id_tipo_pago" optionLabel="displayEstado" optionValue="id"
+                            placeholder="Seleccione el Tipo Pago" [filter]="true" filterBy="displayEstado" [showClear]="true" class="w-full md:w-70">
+                        </p-select>
+                        <div class="mt-2">
+                            <p-message
+                                *ngIf="formSave.get('id_tipo_pago')?.invalid && (formSave.get('id_tipo_pago')?.dirty || formSave.get('id_tipo_pago')?.touched)" severity="error" variant="simple" size="small" >
+                                Tipo Pago es requerido
+                            </p-message>
+                        </div>
+                    </div>
+                </div>
+
+                   <!--  <div class="col-span-6">
+                        <label for="estado_funcional" class="block font-bold mb-2">Estado</label>
+                        <div class="grid grid-cols-12 gap-4">
+                            <div class="flex items-center gap-2 col-span-6 justify-center">
+                                <p-radiobutton name="estado_funcional" [value]="true" formControlName="estado_funcional" inputId="aptoSi" />
+                                <label for="aptoSi">Activo</label>
+                            </div>
+                            <div class="flex items-center gap-2 col-span-6 justify-center ml-6">
+                                <p-radiobutton name="estado_funcional" [value]="false" formControlName="estado_funcional" inputId="aptoNo" />
+                                <label for="aptoNo">Inactivo</label>
+                            </div>
+                        </div>
+                    </div> -->
+
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-6">
+                        <label for="monto" class="block font-bold mb-1">Monto</label>
+                        <p-inputnumber 
+                            formControlName="monto" id="monto" placeholder="Ingrese el monto" required mode="currency" currency="USD" locale="en-US" class="w-full text-sm px-0 py-2">
+                        </p-inputnumber>
+                                
+                        <p-message
+                            *ngIf="formUpdate.get('monto')?.errors?.['required'] && (formUpdate.get('monto')?.dirty || formUpdate.get('monto')?.touched)" severity="error" variant="simple" size="small">
+                            El campo monto es requerido
+                        </p-message>
+                    </div>                
+                   
+                    <div class="col-span-6">
+                        <label for="fecha_inicio" class="block font-bold mb-2">Fecha Inicio</label>
+                        <p-datepicker 
+                            [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fecha_inicio" inputId="fecha_inicio" [showIcon]="true" [showButtonBar]="true" 
+                            [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione fecha inicio'" class="w-96" >
+                        </p-datepicker>
+                        <p-message 
+                            *ngIf="formSave.get('fecha_inicio')?.invalid && (formSave.get('fecha_inicio')?.dirty || formSave.get('fecha_inicio')?.touched)"  severity="error"  variant="simple" size="small">
+                            Fecha inicio es requerido
+                        </p-message>
+                    </div>
+                     
+                </div>
+
+                    <div class="col-span-6">
+                        <label for="fecha_fin" class="block font-bold mb-2">Fecha fin</label>
+                        <p-datepicker 
+                            [maxDate]="maxDate" formControlName="fecha_fin" inputId="fecha_fin" [showIcon]="true" [showButtonBar]="true" 
+                            [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione fecha fin'" class="w-96" >
+                        </p-datepicker>
+                        <p-message 
+                            *ngIf="formSave.get('fecha_fin')?.invalid && (formSave.get('fecha_fin')?.dirty || formSave.get('fecha_fin')?.touched)"  severity="error"  variant="simple" size="small">
+                            Fecha inicio es requerido
+                        </p-message>
+                    </div>
+
+
+                    <div class="grid grid-cols-12 gap-4" formGroupName="fecha_cobro">
+                        <div class="col-span-6">
+                            <label for="frecuencia" class="block font-bold mb-2">Frecuencia</label>
+                            <p-dropdown 
+                                [appendTo]="'body'"
+                                inputId="frecuencia"
+                                formControlName="frecuencia"
+                                [options]="[
+                                {label: 'Diario', value: 'diario'},
+                                {label: 'Semanal', value: 'semanal'},
+                                {label: 'Quincenal', value: 'quincenal'},
+                                {label: 'Mensual', value: 'mensual'}
+                                ]"
+                                (onChange)="onFrecuenciaChange()"
+                                placeholder="Seleccione frecuencia"
+                                class="w-full">
+                            </p-dropdown>
+                        </div>
+
+                        <div class="col-span-6">
+                        <label for="dias" class="block font-bold mb-2">Días de cobro</label>
+                        <p-multiSelect 
+                        [appendTo]="'body'"
+                            inputId="dias"
+                            [options]="opcionesDias" 
+                            formControlName="dias" 
+                            placeholder="Seleccione días"
+                            [disabled]="formSave.get('fecha_cobro.frecuencia')?.value === 'diario'"
+                            class="w-full">
+                        </p-multiSelect>
+                        </div>
+                    </div>
+
+
+                </div>
+            </form>
+        </ng-template>
+
+        <ng-template #footer>
+            <form [formGroup]="formSave" class="formulario">
+            <p-button label="Cancel" icon="pi pi-times" text (click)="cancelSave()"  />
+            <p-button label="Save" icon="pi pi-check" (click)="store()" />
+        </form>
+        </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="visibleDelete" header="Confirm fación"  [style]="{ width: '350px' }" [modal]="true">
+        <div class="flex items-center justify-center">
+            <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
+            <span>¿Estás seguro que deseas eliminar este registro?</span>
+        </div>
+        <ng-template #footer>
+            <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDelete = false" text severity="secondary" (click)="cancelMessageToast()" />
+            <p-button label="Eliminar" icon="pi pi-check" (click)="delete()" severity="danger" outlined />
+        </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar registró de pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+        
+        <ng-template #content>
+            <form [formGroup]="formUpdate" class="formulario">
+                <div class="flex flex-col gap-6">
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="id_usuario" class="block font-bold mb-3">Usuario</label>   
+                            <p-select 
+                                [options]="usuarios" formControlName="id_usuario" optionLabel="display" optionValue="id" [readonly]="true" [style]="{'background-color': '#e0e0e0'}" class="w-full md:w-70 ">
+                            </p-select>
+                        </div>
+                        
+                        <div class="col-span-6">
+                            <label for="id_tipo_pago" class="block font-bold mb-3">Tipo Pago</label>             
+                            <p-select
+                                [options]="tipoPago" [appendTo]="'body'" formControlName="id_tipo_pago" inputId="id_tipo_pago" optionLabel="displayEstado" optionValue="id"
+                                placeholder="Seleccione el Tipo Pago" [filter]="true" filterBy="displayEstado" [showClear]="true" class="w-full md:w-70">
+                            </p-select>
+                            <div class="mt-2">
+                                <p-message
+                                    *ngIf="formUpdate.get('id_tipo_pago')?.invalid && (formUpdate.get('id_tipo_pago')?.dirty || formUpdate.get('id_tipo_pago')?.touched)" severity="error" variant="simple" size="small" >
+                                    Tipo Pago es requerido
+                                </p-message>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="monto" class="block font-bold mb-1">Monto</label>
+                            <p-inputnumber 
+                                formControlName="monto" id="monto" placeholder="Ingrese el monto" required mode="currency" currency="USD" locale="en-US" class="w-full text-sm px-0 py-2">
+                            </p-inputnumber>
+                                    
+                            <p-message
+                                *ngIf="formUpdate.get('monto')?.errors?.['required'] && (formUpdate.get('monto')?.dirty || formUpdate.get('monto')?.touched)" severity="error" variant="simple" size="small">
+                                El campo monto es requerido
+                            </p-message>
+                        </div>                
+                    
+                        <div class="col-span-6">
+                            <label for="fecha_inicio" class="block font-bold mb-2">Fecha inicio</label>
+                            <p-datepicker 
+                                [maxDate]="maxDate" formControlName="fecha_inicio" inputId="fecha_inicio" [showIcon]="true" [showButtonBar]="true" 
+                                [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha_inicio'" class="w-96" >
+                            </p-datepicker>
+                            <p-message 
+                                *ngIf="formUpdate.get('fecha_inicio')?.invalid && (formUpdate.get('fecha_inicio')?.dirty || formUpdate.get('fecha_inicio')?.touched)"  severity="error"  variant="simple" size="small">
+                                Fecha Nacimiento es requerido
+                            </p-message>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="fecha_fin" class="block font-bold mb-2">Fecha fin</label>
+                            <p-datepicker 
+                                [maxDate]="maxDate" formControlName="fecha_fin" inputId="fecha_fin" [showIcon]="true" [showButtonBar]="true" 
+                                [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha_fin'" class="w-96" >
+                            </p-datepicker>
+                            <p-message 
+                                *ngIf="formUpdate.get('fecha_fin')?.invalid && (formUpdate.get('fecha_fin')?.dirty || formUpdate.get('fecha_fin')?.touched)"  severity="error"  variant="simple" size="small">
+                                Fecha fin es requerido
+                            </p-message>
+                        </div>                
+                    </div>
+
+
+                    <div class="grid grid-cols-12 gap-4" formGroupName="fecha_cobro">
+                    <div class="col-span-6">
+                        <label for="frecuencia" class="block font-bold mb-2">Frecuencia</label>
+                        <p-dropdown 
+                        [appendTo]="'body'"
+                        inputId="frecuencia"
+                        formControlName="frecuencia"
+                        [options]="frecuencias"
+                        (onChange)="onFrecuenciaChangeUpdate()"
+                        placeholder="Seleccione frecuencia"
+                        class="w-full">
+                        </p-dropdown>
+                    </div>
+
+                    <div class="col-span-6">
+                        <label for="dias" class="block font-bold mb-2">Días de cobro</label>
+                        <p-multiSelect 
+                        [appendTo]="'body'"
+                        inputId="dias"
+                        [options]="opcionesDiasUpdate" 
+                        formControlName="dias" 
+                        placeholder="Seleccione días"
+                        [disabled]="formUpdate.get('fecha_cobro.frecuencia')?.value === 'diario'"
+                        class="w-full">
+                        </p-multiSelect>
+                    </div>
+                    </div>
+
+
+                    <div class="col-span-6">
+                        <label for="estado_funcional" class="block font-bold mb-2">Estado</label>
+                        <div class="grid grid-cols-12 gap-4">
+                            <div class="flex items-center gap-2 col-span-6 justify-center">
+                                <p-radiobutton name="estado_funcional" [value]="true" formControlName="estado_funcional" inputId="aptoSi" />
+                                <label for="aptoSi">Activo</label>
+                            </div>
+                            <div class="flex items-center gap-2 col-span-6 justify-center ml-6">
+                                <p-radiobutton name="estado_funcional" [value]="false" formControlName="estado_funcional" inputId="aptoNo" />
+                                <label for="aptoNo">Inactivo</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                </div>
+            </form>
+        </ng-template>
+    
+        <ng-template #footer>
+            <form [formGroup]="formUpdate" class="formulario">
+                <p-button label="Cancel" icon="pi pi-times" text (click)="canceUpdate()"  />
+                <p-button label="Guardar" icon="pi pi-check" (click)="update()" />
+        </form>
+        </ng-template>
+    
+    </p-dialog>
