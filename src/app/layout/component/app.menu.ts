@@ -63,17 +63,15 @@ export class AppMenu {
                     { label: 'Prueba Nadador', icon: 'pi pi-book', routerLink: ['/pages/pruebaNadador'] }
                     ]},
                     
-                    { label: 'Tipo de pago', icon: 'pi pi-user-plus', routerLink: ['/pages/tipoPago'] },
-                    { label: 'Plan pago', icon: 'pi pi-book', routerLink: ['/pages/planPago'] },
-                    { label: 'Pago', icon: 'pi pi-book', routerLink: ['/pages/pago'] },
-                    { label: 'Pagar abono', icon: 'pi pi-book', routerLink: ['/pages/abonoPago'] },
-                    
+                    { label: 'Gestión de pago', icon: 'pi pi-dollar', items: [
+                    { label: 'Tipo de pago', icon: 'pi pi-tags', routerLink: ['/pages/tipoPago'] },
+                    { label: 'Plan pago', icon: 'pi pi-credit-card', routerLink: ['/pages/planPago'] },
+                    { label: 'Registró Pago', icon: 'pi pi-money-bill', routerLink: ['/pages/pago'] },
+                    { label: 'Pagar abono', icon: 'pi pi-money-bill', routerLink: ['/pages/abonoPago'] },
+                    ]},
+
+
                     { label: 'Asistencias', icon: 'pi pi-pen-to-square', routerLink: ['/pages/asistencia'] },
-                    
-                  
-                    
-                      
-                    { label: '-------', icon: 'pi pi-book', routerLink: ['/pages/torneoNado'] },
                    
                 ]
             },

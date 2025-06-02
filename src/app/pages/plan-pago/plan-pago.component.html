@@ -41,7 +41,7 @@
                 <th style="min-width: 12rem">Fecha inicio</th>
                 <th style="min-width: 12rem">Fecha fin</th>
                 <th style="min-width: 12rem">Fecha cobro</th>
-                <th style="min-width: 10rem">Acciones</th> 
+                <th style="min-width: 12rem">Acciones</th> 
                 </tr>
             </ng-template>
 
@@ -54,16 +54,16 @@
                 <td>{{ usuario.monto }}</td>
                 <td>{{ usuario.estado_funcional ? 'Activo' : 'Inactivo' }}</td>
                 <td>{{ usuario.fecha_inicio }}</td>
-                <td>{{ usuario.fecha_fin }}</td>
+                <td>{{ usuario.fecha_fin ?? '0000-00-00' }}</td>
                 <td>{{ usuario.fecha_cobro }}</td>
                 <td>
                     <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" 
                             (click)="edit(usuario)"></p-button>
-                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" 
+                    <p-button icon="pi pi-trash" severity="danger" class="mr-2"  [rounded]="true" [outlined]="true" 
                             (click)="showModalDelete(usuario.id)"></p-button>
+                    <p-button *ngIf="usuario.estado_funcional === 1" icon="pi pi-times"
+                            (click)="cancelarPlan(usuario)" [rounded]="true"[outlined]="true"></p-button>
 
-                    <p-button icon="pi pi-times" [rounded]="true" [outlined]="true" 
-                            (click)="cancelarPlan(usuario)"></p-button>
                 </td>
                 </tr>
             </ng-template>
@@ -147,7 +147,7 @@
                      
                 </div>
 
-                    <div class="col-span-6">
+                <!--     <div class="col-span-6">
                         <label for="fecha_fin" class="block font-bold mb-2">Fecha fin</label>
                         <p-datepicker 
                             [maxDate]="maxDate" formControlName="fecha_fin" inputId="fecha_fin" [showIcon]="true" [showButtonBar]="true" 
@@ -157,7 +157,7 @@
                             *ngIf="formSave.get('fecha_fin')?.invalid && (formSave.get('fecha_fin')?.dirty || formSave.get('fecha_fin')?.touched)"  severity="error"  variant="simple" size="small">
                             Fecha inicio es requerido
                         </p-message>
-                    </div>
+                    </div> -->
 
 
                     <div class="grid grid-cols-12 gap-4" formGroupName="fecha_cobro">
@@ -223,13 +223,14 @@
             <form [formGroup]="formUpdate" class="formulario">
                 <div class="flex flex-col gap-6">
 
-                    <div class="grid grid-cols-12 gap-4">
-                        <div class="col-span-6">
+                    <div class="col-span-6">
                             <label for="id_usuario" class="block font-bold mb-3">Usuario</label>   
                             <p-select 
                                 [options]="usuarios" formControlName="id_usuario" optionLabel="display" optionValue="id" [readonly]="true" [style]="{'background-color': '#e0e0e0'}" class="w-full md:w-70 ">
                             </p-select>
-                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">
                         
                         <div class="col-span-6">
                             <label for="id_tipo_pago" class="block font-bold mb-3">Tipo Pago</label>             
@@ -244,9 +245,7 @@
                                 </p-message>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <label for="monto" class="block font-bold mb-1">Monto</label>
                             <p-inputnumber 
@@ -257,7 +256,10 @@
                                 *ngIf="formUpdate.get('monto')?.errors?.['required'] && (formUpdate.get('monto')?.dirty || formUpdate.get('monto')?.touched)" severity="error" variant="simple" size="small">
                                 El campo monto es requerido
                             </p-message>
-                        </div>                
+                        </div> 
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">               
                     
                         <div class="col-span-6">
                             <label for="fecha_inicio" class="block font-bold mb-2">Fecha inicio</label>
@@ -270,14 +272,12 @@
                                 Fecha Nacimiento es requerido
                             </p-message>
                         </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-12 gap-4">
+
                         <div class="col-span-6">
                             <label for="fecha_fin" class="block font-bold mb-2">Fecha fin</label>
                             <p-datepicker 
-                                [maxDate]="maxDate" formControlName="fecha_fin" inputId="fecha_fin" [showIcon]="true" [showButtonBar]="true" 
-                                [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha_fin'" class="w-96" >
+                                formControlName="fecha_fin" inputId="fecha_fin" [showIcon]="true" [showButtonBar]="true" 
+                                [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'0000-00-00'" class="w-96" >
                             </p-datepicker>
                             <p-message 
                                 *ngIf="formUpdate.get('fecha_fin')?.invalid && (formUpdate.get('fecha_fin')?.dirty || formUpdate.get('fecha_fin')?.touched)"  severity="error"  variant="simple" size="small">
@@ -285,6 +285,8 @@
                             </p-message>
                         </div>                
                     </div>
+                    
+                    
 
 
                     <div class="grid grid-cols-12 gap-4" formGroupName="fecha_cobro">

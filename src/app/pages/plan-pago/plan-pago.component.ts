@@ -125,73 +125,70 @@ export class PlanPagoComponent implements OnInit{
               this.getTipoPago();
             }
 
-            // Método para confirmar la cancelación (con visualización del ID)
-confirmarCancelacion(plan: any) {
-    this.confirmationService.confirm({
-        message: `¿Estás seguro de cancelar el plan ID: ${plan.id}?`,
-        header: 'Confirmar cancelación',
-        icon: 'pi pi-exclamation-triangle',
-        acceptLabel: 'Sí, cancelar',
-        rejectLabel: 'No',
-        accept: () => {
-            this.cancelarPlan(plan);
-        }
-    });
-}
+            confirmarCancelacion(plan: any) {
+                this.confirmationService.confirm({
+                    message: `¿Estás seguro de cancelar el plan ID: ${plan.id}?`,
+                    header: 'Confirmar cancelación',
+                    icon: 'pi pi-exclamation-triangle',
+                    acceptLabel: 'Sí, cancelar',
+                    rejectLabel: 'No',
+                    accept: () => {
+                        this.cancelarPlan(plan);
+                    }
+                });
+            }
 
-// Método para cancelar el plan (con ID en mensajes)
-cancelarPlan(plan: any) {
-    const fechaActual = new Date();
-    const payload = {
-        fecha_fin: this.formatDate(fechaActual),
-        estado_funcional: 0
-    };
+            cancelarPlan(plan: any) {
+                const fechaActual = new Date();
+                const payload = {
+                    fecha_fin: this.formatDate(fechaActual),
+                    estado_funcional: 0
+                };
 
-    this.planPagoService.CancelarPlan(plan.id, payload).subscribe({
-        next: () => {
-            this.messageService.add({
-                severity: 'success',
-                summary: 'Éxito',
-                detail: `Plan ID: ${plan.id} cancelado correctamente (${this.formatDate(fechaActual)})`
-            });
-            this.getPlanPago();
-        },
-        error: (err) => {
-            console.error('Error al cancelar plan:', err);
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: `No se pudo cancelar el plan ID: ${plan.id}`
-            });
-        }
-    });
-}
+                this.planPagoService.CancelarPlan(plan.id, payload).subscribe({
+                    next: () => {
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Éxito',
+                            detail: `Plan ID: ${plan.id} cancelado correctamente (${this.formatDate(fechaActual)})`
+                        });
+                        this.getPlanPago();
+                    },
+                    error: (err) => {
+                        console.error('Error al cancelar plan:', err);
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: `No se pudo cancelar el plan ID: ${plan.id}`
+                        });
+                    }
+                });
+            }
 
-// Versión para diálogo de edición (con ID)
-cancelarPlanDesdeDialogo() {
-    const planId = this.formUpdate.value.id; // Asumiendo que el formulario tiene el ID
-    
-    this.confirmationService.confirm({
-        message: `¿Cancelar el plan ID: ${planId}? Se establecerá la fecha fin a hoy.`,
-        header: 'Confirmar cancelación',
-        icon: 'pi pi-exclamation-triangle',
-        acceptLabel: 'Sí, cancelar',
-        rejectLabel: 'No',
-        accept: () => {
-            const fechaActual = new Date();
-            this.formUpdate.patchValue({
-                fecha_fin: fechaActual,
-                estado_funcional: 0
-            });
-            
-            this.messageService.add({
-                severity: 'info',
-                summary: 'Cancelación pendiente',
-                detail: `Plan ID: ${planId} marcado para cancelación. Guarda los cambios.`
-            });
-        }
-    });
-}
+            cancelarPlanDesdeDialogo() {
+                const planId = this.formUpdate.value.id;
+                
+                this.confirmationService.confirm({
+                    message: `¿Cancelar el plan ID: ${planId}? Se establecerá la fecha fin a hoy.`,
+                    header: 'Confirmar cancelación',
+                    icon: 'pi pi-exclamation-triangle',
+                    acceptLabel: 'Sí, cancelar',
+                    rejectLabel: 'No',
+                    accept: () => {
+                        const fechaActual = new Date();
+                        this.formUpdate.patchValue({
+                            fecha_fin: fechaActual,
+                            estado_funcional: 0
+                        });
+                        
+                        this.messageService.add({
+                            severity: 'info',
+                            summary: 'Cancelación pendiente',
+                            detail: `Plan ID: ${planId} marcado para cancelación. Guarda los cambios.`
+                        });
+                    }
+                });
+            }
 
             getPlanPago() {
               this.planPagoService.getAllPlanPago().subscribe(
@@ -248,13 +245,13 @@ cancelarPlanDesdeDialogo() {
             }));
 
             diasSemana = [
-              { label: 'Lunes', value: 1 },
-              { label: 'Martes', value: 2 },
-              { label: 'Miércoles', value: 3 },
-              { label: 'Jueves', value: 4 },
-              { label: 'Viernes', value: 5 },
-              { label: 'Sábado', value: 6 },
-              { label: 'Domingo', value: 0 }
+                { label: 'Lunes', value: 'Lunes' },
+                { label: 'Martes', value: 'Martes' },
+                { label: 'Miercoles', value: 'Miercoles' },
+                { label: 'Jueves', value: 'Jueves' },
+                { label: 'Viernes', value: 'Viernes' },
+                { label: 'Sabado', value: 'Sabado' },
+                { label: 'Domingo', value: 'Domingo' }
             ];
 
             opcionDiario = [{ label: 'Diario', value: 'diario' }];
@@ -300,7 +297,7 @@ cancelarPlanDesdeDialogo() {
                       id_tipo_pago: this.formSave.value.id_tipo_pago,
                       monto: this.formSave.value.monto,
                       fecha_inicio: this.formatDate(this.formSave.value.fecha_inicio),
-                      fecha_fin: this.formatDate(this.formSave.value.fecha_fin),
+                     
                       fecha_cobro: this.formSave.value.fecha_cobro,
                       estado_funcional: presenteValue,
                       
@@ -325,7 +322,6 @@ cancelarPlanDesdeDialogo() {
               const tipo = this.tipoPago.find(tp => tp.id === id);
               return tipo ? tipo.nombre : 'Desconocido';
             }
-
       
             showSaveDialog() {
               this.formSave.reset();
@@ -366,95 +362,113 @@ cancelarPlanDesdeDialogo() {
             ];
       
             update() {
-              if (this.formUpdate.invalid) return;
+                if (this.formUpdate.invalid) return;
 
-              const formData = this.formUpdate.value;
-
-              const payload = {
-                id: this.pag.id,
-                id_usuario: formData.id_usuario,
-                id_tipo_pago: formData.id_tipo_pago,
-                monto: Number(formData.monto),
-                fecha_inicio: this.formatDate(formData.fecha_inicio),
-                fecha_fin: this.formatDate(formData.fecha_fin),
-                fecha_cobro: { 
-                  frecuencia: formData.fecha_cobro.frecuencia,
-                  dias: formData.fecha_cobro.dias.map(Number)
-                },
-                estado_funcional: formData.estado_funcional ? 1 : 0
-              };
-
-              console.log('Payload completo:', JSON.stringify(payload, null, 2));
-
-              this.planPagoService.updatePlanPago(this.pag.id, payload).subscribe({
-                next: () => {
-                  this.getPlanPago();
-                  this.visibleUpdate = false;
-                  this.saveMessageToast();
-                },
-                error: (err) => {
-                  console.error('Error del backend:', {
-                    request: payload,
-                    response: err.error
-                  });
-                  this.errorMessageToast();
-                }
-              });
-            }
-
-            
-            edit(planPagoId: any) {
-              this.idForUpdate = true;
-              this.pag = planPagoId;
-
-              console.log('Datos estructurados (this.pag):', JSON.parse(JSON.stringify(this.pag)));
-
-              if (this.pag) {
-                const parseLocalDate = (dateString: string) => {
-                  return dateString ? new Date(dateString + 'T00:00:00') : null;
+                const formData = this.formUpdate.value;
+                const formatDias = (frecuencia: string, dias: any[]) => {
+                    if (frecuencia === 'semanal') {
+                        const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+                        return dias.map(dia => {
+                            if (typeof dia === 'number') {
+                                return diasSemana[dia] || dia;
+                            }
+                            if (typeof dia === 'string' && diasSemana.includes(dia)) {
+                                return dia;
+                            }
+                            return dia;
+                        });
+                    }
+                    return dias;
                 };
 
-                // ✅ Parsear fecha_cobro si viene como string
-                let fechaCobroParsed: any = this.pag.fecha_cobro;
-                if (typeof fechaCobroParsed === 'string') {
-                  try {
-                    fechaCobroParsed = JSON.parse(fechaCobroParsed);
-                  } catch (e) {
-                    console.error('Error al parsear fecha_cobro:', e);
-                    fechaCobroParsed = { frecuencia: '', dias: [] };
-                  }
-                }
+                const payload = {
+                    id: this.pag.id,
+                    id_usuario: formData.id_usuario,
+                    id_tipo_pago: formData.id_tipo_pago,
+                    monto: Number(formData.monto),
+                    fecha_inicio: this.formatDate(formData.fecha_inicio),
+                    fecha_fin: formData.fecha_fin ? this.formatDate(formData.fecha_fin) : null,
+                    estado_funcional: formData.estado_funcional ? 1 : 0,
+                    fecha_cobro: {
+                        frecuencia: formData.fecha_cobro.frecuencia,
+                        dias: formData.fecha_cobro.frecuencia === 'diario'
+                            ? ['diario']
+                            : formatDias(formData.fecha_cobro.frecuencia, formData.fecha_cobro.dias)
+                    },
+                };
 
-                // Convertir los días si es diario
-                let diasValue = fechaCobroParsed?.dias;
-                if (fechaCobroParsed?.frecuencia === 'diario' && (!diasValue || !diasValue.includes('diario'))) {
-                  diasValue = ['diario'];
-                }
+                console.log('Payload completo:', JSON.stringify(payload, null, 2));
 
-                // Actualizar el formulario principal
-                this.formUpdate.patchValue({
-                  id_usuario: this.pag.id_usuario,
-                  id_tipo_pago: this.pag.id_tipo_pago,
-                  monto: this.pag.monto,
-                  estado_funcional: this.pag.estado_funcional === 1, // Convertir a boolean
-                  fecha_inicio: parseLocalDate(this.pag.fecha_inicio),
-                  fecha_fin: this.pag.fecha_fin ? new Date(this.pag.fecha_fin) : null,
+                this.planPagoService.updatePlanPago(this.pag.id, payload).subscribe({
+                    next: () => {
+                        this.getPlanPago();
+                        this.visibleUpdate = false;
+                        this.saveMessageToast();
+                    },
+                    error: (err) => {
+                        console.error('Error del backend:', {
+                            request: payload,
+                            response: err.error
+                        });
+                        this.errorMessageToast();
+                    }
                 });
+            }
+  
+            edit(planPagoId: any) {
+                this.idForUpdate = true;
+                this.pag = planPagoId;
 
-                // Actualizar el grupo fecha_cobro
-                const fechaCobroGroup = this.formUpdate.get('fecha_cobro') as FormGroup;
-                if (fechaCobroGroup) {
-                  fechaCobroGroup.patchValue({
-                    frecuencia: fechaCobroParsed?.frecuencia || '',
-                    dias: diasValue || []
-                  });
+                if (this.pag) {
+                    const parseLocalDate = (dateString: string) => {
+                        return dateString ? new Date(dateString + 'T00:00:00') : null;
+                    };
+                    const parseDias = (frecuencia: string, dias: any[]) => {
+                        if (frecuencia === 'semanal') {
+                            const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+                            return dias.map(dia => {
+                                if (typeof dia === 'number') {
+                                    return diasSemana[dia] || dia;
+                                }
+                                return dia;
+                            });
+                        }
+                        return dias;
+                    };
+
+                    let fechaCobroParsed: any = this.pag.fecha_cobro;
+                    if (typeof fechaCobroParsed === 'string') {
+                        try {
+                            fechaCobroParsed = JSON.parse(fechaCobroParsed);
+                        } catch (e) {
+                            console.error('Error al parsear fecha_cobro:', e);
+                            fechaCobroParsed = { frecuencia: '', dias: [] };
+                        }
+                    }
+                    if (fechaCobroParsed?.frecuencia === 'semanal' && Array.isArray(fechaCobroParsed.dias)) {
+                        fechaCobroParsed.dias = parseDias('semanal', fechaCobroParsed.dias);
+                    }
+                    this.formUpdate.patchValue({
+                        id_usuario: this.pag.id_usuario,
+                        id_tipo_pago: this.pag.id_tipo_pago,
+                        monto: this.pag.monto,
+                        estado_funcional: this.pag.estado_funcional === 1,
+                        fecha_inicio: parseLocalDate(this.pag.fecha_inicio),
+                        fecha_fin: this.pag.fecha_fin ? new Date(this.pag.fecha_fin) : null,
+                    });
+
+                    const fechaCobroGroup = this.formUpdate.get('fecha_cobro') as FormGroup;
+                    if (fechaCobroGroup) {
+                        fechaCobroGroup.patchValue({
+                            frecuencia: fechaCobroParsed?.frecuencia || '',
+                            dias: fechaCobroParsed?.dias || []
+                        });
+                    }
+
+                    this.cambiarOpcionesDias(fechaCobroParsed?.frecuencia);
                 }
 
-                // Cambiar opciones de días según frecuencia seleccionada
-                this.cambiarOpcionesDias(fechaCobroParsed?.frecuencia);
-              }
-
-              this.visibleUpdate = true;
+                this.visibleUpdate = true;
             }
 
             cambiarOpcionesDias(frecuencia: string) {
@@ -512,8 +526,7 @@ cancelarPlanDesdeDialogo() {
                 }
               });
             }
-               
-      
+                    
             showModalDelete(id: number) {
               this.idPago = id;
               this.visibleDelete = true
