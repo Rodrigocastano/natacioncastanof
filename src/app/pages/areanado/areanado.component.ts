@@ -121,7 +121,9 @@ export class AreanadoComponent implements OnInit  {
           next: () => {
             this.saveMessageToast();
             this.getAreaNado();
+            this.formSave.reset();
             this.visibleSave = false;
+            this.submitted = false;
           },
           error: (err) => {
             console.error('Error al guardar el área nado:', err);

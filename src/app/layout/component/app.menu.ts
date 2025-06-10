@@ -29,16 +29,14 @@ export class AppMenu {
                     { label: 'Grupo', icon: 'pi pi-sitemap', routerLink: ['/pages/grupo'] },
                     { label: 'Género', icon: 'pi pi-mars', routerLink: ['/pages/genero'] },
                     { label: 'Ciudad', icon: 'pi pi-building', routerLink: ['/pages/ciudad'] },
-                    { label: 'Usuario', icon: 'pi pi-user-plus', routerLink: ['/pages/usuario'] },
-                    { label: 'Entrenadores', icon: 'pi pi-user-plus', routerLink: ['/pages/entrenador'] }
+                    { label: 'Usuarios', icon: 'pi pi-user-plus', routerLink: ['/pages/usuario'] },
+                    { label: 'Entrenadores', icon: 'pi pi-user-plus', routerLink: ['/pages/entrenador'] },
+                    { label: 'Representantes', icon: 'pi pi-user-plus', routerLink: ['/pages/representante'] },
+                    { label: 'Representantes Nadador', icon: 'pi pi-users', routerLink: ['/pages/representantenadador'] },
                     ]},
-
-                    { label: 'Representante', icon: 'pi pi-user-plus', routerLink: ['/pages/representante'] },
-                    { label: 'Representante Nadador', icon: 'pi pi-users', routerLink: ['/pages/representantenadador'] },
-                   
                     
                     { label: 'Área médica', icon: 'pi pi-book', items: [
-                     { label: 'Médico', icon: 'pi pi-book', routerLink: ['/pages/medico'] },
+                    { label: 'Médico', icon: 'pi pi-book', routerLink: ['/pages/medico'] },
                     { label: 'Psicólogo', icon: 'pi pi-book', routerLink: ['/pages/psicologo'] },
                     ]},
 
@@ -66,7 +64,7 @@ export class AppMenu {
                     { label: 'Gestión de pago', icon: 'pi pi-dollar', items: [
                     { label: 'Tipo de pago', icon: 'pi pi-tags', routerLink: ['/pages/tipoPago'] },
                     { label: 'Plan pago', icon: 'pi pi-credit-card', routerLink: ['/pages/planPago'] },
-                    { label: 'Registró Pago', icon: 'pi pi-money-bill', routerLink: ['/pages/pago'] },
+                    { label: 'Registro Pago', icon: 'pi pi-money-bill', routerLink: ['/pages/pago'] },
                     { label: 'Pagar abono', icon: 'pi pi-money-bill', routerLink: ['/pages/abonoPago'] },
                     ]},
 

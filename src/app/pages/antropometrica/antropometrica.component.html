@@ -33,7 +33,6 @@
             <ng-template #header>
                 <tr>
                     <th style="min-width: 4rem"></th>
-                    <th style="min-width: 6rem">ID</th>
                     <th pSortableColumn="name" style="min-width:8rem">Identificación</th>
                     <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
@@ -47,7 +46,6 @@
                     <td>
                         <p-button type="button" pRipple [pRowToggler]="usuario" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
                     </td>
-                    <td>{{ usuario.id }}</td>
                     <td>{{ usuario.cedula }}</td>
                     <td>{{ usuario.nombre }}</td>
                     <td>{{ usuario.apellido }}</td>
@@ -270,10 +268,8 @@
                                         <p-button icon="pi pi-pencil" 
                                                 [rounded]="true" 
                                                 [outlined]="true"
-                                                severity="secondary"
                                                 styleClass="p-button-xs"
-                                                (click)="edit(medida)"/>
-                                        
+                                                (click)="edit(medida)"/>                                
                                         <p-button icon="pi pi-trash" 
                                                 [rounded]="true" 
                                                 [outlined]="true"
@@ -309,7 +305,7 @@
                 <div class="grid grid-cols-12 gap-4">     
                     <div class="col-span-6">
                         <label for="peso" class="block font-bold mb-1">Pesó</label>
-                        <p-inputnumber  formControlName="peso" id="peso" placeholder="Ingrese la medida" required autofocus class="w-full text-sm px-0 py-1" />             
+                        <p-inputnumber  formControlName="peso" id="peso" placeholder="Ingrese el pesó" required autofocus class="w-full text-sm px-0 py-1" />             
                         <p-message
                             *ngIf="formSave.get('peso')?.errors?.['required'] && (formSave.get('peso')?.dirty || formSave.get('peso')?.touched)" severity="error" variant="simple" size="small" >
                             Pesó es requerida
@@ -318,7 +314,7 @@
 
                      <div class="col-span-6">
                         <label for="talla" class="block font-bold mb-1">Talla</label>
-                        <p-inputnumber formControlName="talla"  id="talla" placeholder="Ingrese la medida" required autofocus class="w-full text-sm px-0 py-1" />             
+                        <p-inputnumber formControlName="talla"  id="talla" placeholder="Ingrese la talla" required autofocus class="w-full text-sm px-0 py-1" />             
                         <p-message
                             *ngIf="formSave.get('talla')?.errors?.['required'] && (formSave.get('talla')?.dirty || formSave.get('talla')?.touched)" severity="error" variant="simple" size="small" >
                             Talla es requerida
@@ -340,7 +336,7 @@
 
                 <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-6">
-                        <label for="pliegue_cutanio" class="block font-bold mb-1 ">Pliegue cutanio</label>
+                        <label for="pliegue_cutanio" class="block font-bold mb-1 ">Pliegue cutáneo</label>
                         <p-inputnumber formControlName="pliegue_cutanio" id="pliegue_cutanio" placeholder="Ingrese la medida"  class="w-full text-sm px-0 py-1" />             
                     </div>
 
@@ -364,7 +360,7 @@
 
                 <div class="col-span-12 flex justify-center">
                     <div class="col-span-6">
-                        <label for="fecha" class="block font-bold mb-2">Fecha inscripción</label>
+                        <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                         <p-datepicker 
                             [(ngModel)]="currentDate" [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" 
                             [showButtonBar]="true" [appendTo]="'body'"  dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96">
@@ -416,7 +412,7 @@
                             
                         <div class="col-span-6">
                             <label for="peso" class="block font-bold mb-1">Pesó</label>
-                            <p-inputnumber  formControlName="peso" id="peso" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-2" />             
+                            <p-inputnumber  formControlName="peso" id="peso" placeholder="Ingrese el peso" required class="w-full text-sm px-0 py-2" />             
                             <p-message
                                 *ngIf="formSave.get('peso')?.errors?.['required'] && (formSave.get('peso')?.dirty || formSave.get('peso')?.touched)" severity="error" variant="simple" size="small" >
                                 Pesó es requerida
@@ -427,7 +423,7 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <label for="talla" class="block font-bold mb-1">Talla</label>
-                            <p-inputnumber formControlName="talla"  id="talla" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-1" />             
+                            <p-inputnumber formControlName="talla"  id="talla" placeholder="Ingrese la talla" required class="w-full text-sm px-0 py-1" />             
                             <p-message
                                 *ngIf="formSave.get('talla')?.errors?.['required'] && (formSave.get('talla')?.dirty || formSave.get('talla')?.touched)" severity="error" variant="simple" size="small" >
                                 Talla es requerida
@@ -447,7 +443,7 @@
                         </div>
         
                         <div class="col-span-6">
-                            <label for="pliegue_cutanio" class="block font-bold mb-1 ">Pliegue cutanio</label>
+                            <label for="pliegue_cutanio" class="block font-bold mb-1 ">Pliegue cutáneo</label>
                             <p-inputnumber formControlName="pliegue_cutanio" id="pliegue_cutanio" placeholder="Ingrese la medida"  class="w-full text-sm px-0 py-1" />             
                         </div>
                     </div>
@@ -471,7 +467,7 @@
                         </div>
         
                         <div class="col-span-6">
-                        <label for="fecha" class="block font-bold mb-1">Fecha inscripción</label>
+                        <label for="fecha" class="block font-bold mb-1">Fecha registro</label>
                         <p-datepicker 
                             [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true"  class="w-96" 
                             [showButtonBar]="true" [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'">
@@ -553,7 +549,7 @@
                         </div>
         
                         <div class="col-span-6">
-                            <label for="pliegue_cutanio" class="block font-bold mb-1 ">Pliegue cutanio</label>
+                            <label for="pliegue_cutanio" class="block font-bold mb-1 ">Pliegue cutáneo</label>
                             <p-inputnumber formControlName="pliegue_cutanio" id="pliegue_cutanio" placeholder="Ingrese la medida"  class="w-full text-sm px-0 py-1" />             
                         </div>
                     </div>
@@ -577,7 +573,7 @@
                         </div>
         
                         <div class="col-span-6">
-                        <label for="fecha" class="block font-bold mb-1">Fecha inscripción</label>
+                        <label for="fecha" class="block font-bold mb-1">Fecha registro</label>
                         <p-datepicker 
                             [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                             [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >

@@ -121,6 +121,8 @@ export class CategoriatipoComponent implements OnInit  {
               next: () => {
                 this.saveMessageToast();
                 this.getCategoriaTipo();
+                this.formSave.reset();
+                this.submitted = false;
                 this.visibleSave = false;
               },
               error: (err) => {

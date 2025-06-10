@@ -25,7 +25,7 @@
             [showCurrentPageReport]="true" [rowsPerPageOptions]="[6, 12, 18]">
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registro de representnate</h5>
+                    <h5 class="m-0">Registro de representante</h5>
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search" />
                         <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
@@ -61,7 +61,7 @@
         </p-table>
     </div>
 
-    <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar Representante" [modal]="true">
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar representante" [modal]="true">
         
         <ng-template #content>
             <form [formGroup]="formSave" class="formulario">
@@ -69,7 +69,7 @@
             
                     <div class="col-span-6">
                         <label for="nombre" class="block font-bold mb-3">Nombre</label>
-                        <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese la nombre" required autofocus fluid />
+                        <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese el nombre" required autofocus fluid />
                         <p-message 
                             *ngIf="formSave.get('nombre')?.invalid && (formSave.get('nombre')?.dirty || formSave.get('nombre')?.touched)" severity="error" variant="simple"size="small">
                             Nombre es requerido
@@ -78,7 +78,7 @@
 
                     <div class="col-span-6">
                         <label for="apellido" class="block font-bold mb-3">Apellido</label>
-                        <input type="text" formControlName="apellido" pInputText id="apellido" placeholder="Ingrese la apellido"  required autofocus fluid />
+                        <input type="text" formControlName="apellido" pInputText id="apellido" placeholder="Ingrese el apellido"  required autofocus fluid />
                         <p-message 
                             *ngIf="formSave.get('apellido')?.invalid && (formSave.get('apellido')?.dirty || formSave.get('apellido')?.touched)" severity="error" variant="simple"size="small">
                             Apellido es requerido
@@ -100,7 +100,7 @@
 
                     <div class="col-span-6">
                         <label for="telefono" class="block font-bold mb-1">Teléfono</label>
-                        <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Ingrese el número" class="w-full text-sm px-0 py-2" />             
+                        <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Número de teléfono" class="w-full text-sm px-0 py-2" />             
                         <p-message
                         *ngIf="formSave.get('telefono')?.errors?.['required'] && (formSave.get('telefono')?.dirty || formSave.get('telefono')?.touched)" severity="error" variant="simple" size="small" >
                         Valido solo 10 número
@@ -131,7 +131,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar Representante" [modal]="true">
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar representante" [modal]="true">
         
         <ng-template #content>
             <form [formGroup]="formUpdate" class="formulario">
@@ -139,7 +139,7 @@
 
                     <div class="col-span-6">
                         <label for="nombre" class="block font-bold mb-3">Nombre</label>
-                        <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese la nombre"  required autofocus fluid />    
+                        <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese el nombre"  required autofocus fluid />    
                         <p-message 
                             *ngIf="formUpdate.get('nombre')?.invalid && (formUpdate.get('nombre')?.dirty || formUpdate.get('nombre')?.touched)" severity="error" variant="simple"size="small">
                             Nombre es requerido
@@ -148,7 +148,7 @@
 
                     <div class="col-span-6">
                         <label for="apellido" class="block font-bold mb-3">Apellido</label>
-                        <input type="text" formControlName="apellido" pInputText id="apellido" placeholder="Ingrese la apellido"  required autofocus fluid />
+                        <input type="text" formControlName="apellido" pInputText id="apellido" placeholder="Ingrese el apellido"  required autofocus fluid />
                         <p-message 
                             *ngIf="formUpdate.get('apellido')?.invalid && (formUpdate.get('apellido')?.dirty || formUpdate.get('apellido')?.touched)" severity="error" variant="simple"size="small">
                             Apellido es requerido
@@ -170,7 +170,7 @@
 
                     <div class="col-span-6">
                         <label for="telefono" class="block font-bold mb-1">Teléfono</label>
-                        <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Ingrese el número" class="w-full text-sm px-0 py-2" /> 
+                        <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Número de télefono" class="w-full text-sm px-0 py-2" /> 
                         <p-message
                             *ngIf="formUpdate.get('telefono')?.errors?.['required'] && (formUpdate.get('telefono')?.dirty || formUpdate.get('telefono')?.touched)" severity="error" variant="simple" size="small" >
                             Valido solo 10 número

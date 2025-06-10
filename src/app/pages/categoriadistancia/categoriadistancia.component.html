@@ -1,6 +1,6 @@
     <p-toolbar styleClass="mb-6">
         <ng-template #start>
-            <p-button label="Agregar nuevo Categodia distancia" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+            <p-button label="Agregar nueva categoría distancia" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
         </ng-template>
     </p-toolbar>
 
@@ -19,7 +19,7 @@
                 currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Categoria" [rowsPerPageOptions]="[6, 12, 18]">
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registró de Categoria Distancía</h5>
+                    <h5 class="m-0">Registro de categoría distancia</h5>
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search"></p-inputicon>
                         <input pInputText type="text"
@@ -56,26 +56,26 @@
         </p-table>
     </div>
 
-    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar Categoría Distancia" [modal]="true">
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar categoría distancia" [modal]="true">
         
         <ng-template #content>
             <form [formGroup]="formSave" class="formulario">
                 <div class="flex flex-col gap-6">
                     <div class="col-span-6">
                         <label for="distancia" class="block font-bold mb-1 ">Distancia</label>
-                        <p-inputnumber formControlName="distancia" id="distancia" placeholder="Ingrese la Distancia" class="w-full text-sm px-0 py-1" />             
+                        <p-inputnumber formControlName="distancia" id="distancia" placeholder="Ingrese la distancia" class="w-full text-sm px-0 py-1" />             
                     </div>
 
                     <div class="col-span-6">
-                        <label for="id_tipo_nado" class="block font-bold mb-3">Tipo Nado</label>             
+                        <label for="id_tipo_nado" class="block font-bold mb-3">Tipo nado</label>             
                         <p-select
-                            formControlName="id_tipo_nado" inputId="id_tipo_nado" optionLabel="displayTipo" optionValue="id" placeholder="Seleccione Tipo Nado"
+                            formControlName="id_tipo_nado" inputId="id_tipo_nado" optionLabel="displayTipo" optionValue="id" placeholder="Seleccione tipo nado"
                             [options]="tipoNado" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70" [appendTo]="'body'">
                         </p-select>
                         <div class="mt-2">
                             <p-message
                                 *ngIf="formSave.get('id_tipo_nado')?.invalid && (formSave.get('id_tipo_nado')?.dirty || formSave.get('id_tipo_nado')?.touched)" severity="error" variant="simple" size="small" >
-                                Tipo Nado es requerido
+                                Tipo nado es requerido
                             </p-message>
                         </div>
                     </div>
@@ -102,7 +102,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '400px' }" header="Agregar Categoria distancias" [modal]="true">
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '400px' }" header="Actualizar categoría distancia" [modal]="true">
         <ng-template #content>
             <form [formGroup]="formUpdate" class="formulario">
                 <div class="flex flex-col gap-6">
@@ -112,9 +112,9 @@
                     </div>
 
                     <div class="col-span-6">
-                        <label for="id_tipo_nado" class="block font-bold mb-3">Tipo Nado</label>             
+                        <label for="id_tipo_nado" class="block font-bold mb-3">Tipo nado</label>             
                         <p-select
-                            formControlName="id_tipo_nado" inputId="id_tipo_nado" optionLabel="displayTipo" optionValue="id" placeholder="Seleccione Tipo Nado"
+                            formControlName="id_tipo_nado" inputId="id_tipo_nado" optionLabel="displayTipo" optionValue="id" placeholder="Seleccione tipo nado"
                             [options]="tipoNado" [filter]="true"filterBy="displayTipo" [showClear]="true" class="w-full md:w-70" [appendTo]="'body'">
                         </p-select>
                         <div class="mt-2">
@@ -124,13 +124,6 @@
                             </p-message>
                         </div>
                     </div>
-
-
-
-                
-            
-    
-
                 </div>
         </form>
         </ng-template>

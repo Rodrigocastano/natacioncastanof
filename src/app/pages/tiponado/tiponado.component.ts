@@ -121,6 +121,8 @@ export class TiponadoComponent implements OnInit  {
               next: () => {
                 this.saveMessageToast();
                 this.getTipoNado();
+                this.formSave.reset();
+                this.submitted = false;
                 this.visibleSave = false;
               },
               error: (err) => {

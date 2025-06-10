@@ -1,6 +1,6 @@
     <p-toolbar styleClass="mb-6">
     <ng-template #start>
-        <p-button label="Agregar registró de pago" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+        <p-button label="Agregar registro de abono" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
     </ng-template>
     </p-toolbar>
 
@@ -21,7 +21,7 @@
 
         <ng-template #caption>
             <div class="flex items-center justify-between">
-                <h5 class="m-0">Registró de pago</h5>
+                <h5 class="m-0">Registro de abono</h5>
                 <p-iconfield>
                     <p-inputicon styleClass="pi pi-search"></p-inputicon>
                     <input pInputText type="text" placeholder="Buscar..."
@@ -34,8 +34,7 @@
         <ng-template #header>
             <tr>
                 <th style="min-width: 4rem"></th>
-                <th style="min-width: 6rem">ID</th>
-                <th pSortableColumn="name" style="min-width:8rem">Cédula</th>
+                <th pSortableColumn="name" style="min-width:8rem">Identificación</th>
                 <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
                 <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
                 <th pSortableColumn="price" style="min-width: 8rem">Genero</th>
@@ -50,7 +49,6 @@
                              [rounded]="true" [plain]="true" 
                              [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
                 </td>
-                <td>{{ usuario.id }}</td>
                 <td>{{ usuario.cedula }}</td>
                 <td>{{ usuario.nombre }}</td>
                 <td>{{ usuario.apellido }}</td>
@@ -94,13 +92,13 @@
     </p-table>
 </div>
 
-    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar nuevo pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar nuevo abono" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
         <ng-template #content>
             <form [formGroup]="formSave" class="formulario">
                 <div class="flex flex-col gap-6">
 
                         <div class="col-span-6">
-                            <label for="id_registro_pago" class="block font-bold mb-3"> pago</label>             
+                            <label for="id_registro_pago" class="block font-bold mb-3">Pago</label>             
                               <p-select
                                 [options]="pago" formControlName="id_registro_pago" optionLabel="displayPago" optionValue="id_registro_pago"
                                 placeholder="Seleccione un pago" [filter]="true" filterBy="displayPago" [showClear]="true" [appendTo]="'body'" class="w-full md:w-70">
@@ -116,7 +114,7 @@
                         <div class="col-span-6">
                             <label for="monto" class="block font-bold mb-1">Monto</label>
                             <p-inputnumber 
-                                formControlName="monto" id="monto" placeholder="Ingrese el monto" required mode="currency" currency="USD" locale="en-US" class="w-full text-sm px-0 py-2">
+                                formControlName="monto" id="monto" placeholder="Ingrese el abono a cancelar" required mode="currency" currency="USD" locale="en-US" class="w-full text-sm px-0 py-2">
                             </p-inputnumber>
                                     
                             <p-message
@@ -127,14 +125,14 @@
                     
                         <div class="col-span-12 flex justify-center" >
                             <div class="col-span-6">
-                                <label for="fecha" class="block font-bold mb-2">Fecha registró</label>
+                                <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                                 <p-datepicker 
                                     [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                                     [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
                                 </p-datepicker>
                                 <p-message 
                                     *ngIf="formSave.get('fecha')?.invalid && (formSave.get('fecha')?.dirty || formSave.get('fecha')?.touched)"  severity="error"  variant="simple" size="small">
-                                    Fecha registró es requerido
+                                    Fecha registro es requerido
                                 </p-message>
                             </div>
                         </div>
@@ -162,7 +160,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar registró de pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar registro del abono" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
         
         <ng-template #content>
             <form [formGroup]="formUpdate" class="formulario">
@@ -172,12 +170,12 @@
                             <label for="id_registro_pago"  class="block font-bold mb-3">Estado pago</label>             
                               <p-select
                                 [options]="pago" formControlName="id_registro_pago" optionLabel="displayPago" optionValue="id_registro_pago"
-                                placeholder="Seleccione un pago" [filter]="true" filterBy="displayPago" [showClear]="true" [appendTo]="'body'" class="w-full md:w-70">
+                                placeholder="Seleccione un estado de pago" [filter]="true" filterBy="displayPago" [showClear]="true" [appendTo]="'body'" class="w-full md:w-70">
                             </p-select>
                             <div class="mt-2">
                                 <p-message
                                     *ngIf="formUpdate.get('id_registro_pago')?.invalid && (formUpdate.get('id_registro_pago')?.dirty || formUpdate.get('id_registro_pago')?.touched)" severity="error" variant="simple" size="small" >
-                                    Estado Pago es requerido
+                                    Estado pago es requerido
                                 </p-message>
                             </div>
                         </div>
@@ -196,7 +194,7 @@
 
                     <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
-                            <label for="fecha" class="block font-bold mb-2">Fecha registró</label>
+                            <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                             <p-datepicker 
                                 [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                                 [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >

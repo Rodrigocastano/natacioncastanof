@@ -20,7 +20,7 @@
             
                 <ng-template #caption>
                     <div class="flex items-center justify-between">
-                        <h5 class="m-0">Registró de control médico</h5>
+                        <h5 class="m-0">Registro de control médico</h5>
                         <p-iconfield>
                             <p-inputicon styleClass="pi pi-search"></p-inputicon>
                             <input pInputText type="text" placeholder="Buscar..."
@@ -129,7 +129,7 @@
                         
                         <div class="col-span-12 flex justify-center" >
                             <div class="col-span-6">
-                                <label for="fecha" class="block font-bold mb-2">Fecha Inscripción</label>
+                                <label for="fecha" class="block font-bold mb-2">Fecha inscripción</label>
                                 <p-datepicker 
                                     [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                                     [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
@@ -199,14 +199,14 @@
                         
                         <div class="col-span-12 flex justify-center" >
                             <div class="col-span-6">
-                            <label for="fecha" class="block font-bold mb-2">Fecha Inscripción</label>
+                            <label for="fecha" class="block font-bold mb-2">Fecha inscripción</label>
                             <p-datepicker 
                                 [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" 
                                 [showButtonBar]="true" [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
                             </p-datepicker>
                             <p-message 
                                 *ngIf="formUpdate.get('fecha')?.invalid && (formUpdate.get('fecha')?.dirty || formUpdate.get('fecha')?.touched)"  severity="error"  variant="simple" size="small">
-                                Fecha Nacimiento es requerido
+                                Fecha es requerido
                             </p-message>
                             </div>
                         </div>

@@ -1,6 +1,6 @@
     <p-toolbar styleClass="mb-6">
     <ng-template #start>
-        <p-button label="Agregar registró de pago" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+        <p-button label="Agregar registro de pago" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
     </ng-template>
     </p-toolbar>
 
@@ -20,7 +20,7 @@
 
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registró de pago</h5>
+                    <h5 class="m-0">Registro planes de pago</h5>
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search"></p-inputicon>
                         <input pInputText type="text" placeholder="Buscar..."
@@ -32,30 +32,28 @@
 
             <ng-template #header>
                 <tr>
-                <th style="min-width: 6rem">ID</th>
-                <th pSortableColumn="nombre" style="min-width: 8rem">Nombre</th>
-                <th pSortableColumn="apellido" style="min-width: 8rem">Apellido</th>
-                <th pSortableColumn="price" style="min-width: 8rem">Tipo pago</th>
-                <th pSortableColumn="price" style="min-width: 8rem">Monto</th>
-                <th pSortableColumn="cedula" style="min-width: 10rem">Estado</th>
-                <th style="min-width: 12rem">Fecha inicio</th>
-                <th style="min-width: 12rem">Fecha fin</th>
-                <th style="min-width: 12rem">Fecha cobro</th>
+                <th style="min-width: 6rem">Identificación</th>
+                <th style="min-width: 8rem">Nombre</th>
+                <th style="min-width: 5rem">Monto</th>
+                <th style="min-width: 10rem">Fecha cobro</th>
+                <th style="min-width: 8rem">Fecha inicio</th>
+                <th style="min-width: 8rem">Fecha fin</th>
+                <th style="min-width: 6rem">Estado</th>
                 <th style="min-width: 12rem">Acciones</th> 
                 </tr>
             </ng-template>
 
             <ng-template #body let-usuario>
                 <tr>
-                <td>{{ usuario.id }}</td>
-                <td>{{ usuario.nombre }}</td>
-                <td>{{ usuario.apellido }}</td>
-                <td>{{ getNombreTipoPago(usuario.id_tipo_pago) }}</td>
+                <td>{{ usuario.cedula }}</td>
+                <td>{{ usuario.nombre }} {{ usuario.apellido }}</td>
                 <td>{{ usuario.monto }}</td>
-                <td>{{ usuario.estado_funcional ? 'Activo' : 'Inactivo' }}</td>
+                <td>{{ formatearFrecuencia(usuario.fecha_cobro) }}</td>
                 <td>{{ usuario.fecha_inicio }}</td>
-                <td>{{ usuario.fecha_fin ?? '0000-00-00' }}</td>
-                <td>{{ usuario.fecha_cobro }}</td>
+                <td>{{ usuario.fecha_fin ?? 'Aún activo' }}</td>
+                <td>{{ usuario.estado_funcional ? 'Activo' : 'Inactivo' }}</td>
+
+
                 <td>
                     <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" 
                             (click)="edit(usuario)"></p-button>
@@ -70,7 +68,7 @@
         </p-table>
     </div>
 
-    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar Nuevo pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar nuevo plan de pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
         <ng-template #content>
             <form [formGroup]="formSave" class="formulario">
                 <div class="flex flex-col gap-6">
@@ -134,7 +132,7 @@
                     </div>                
                    
                     <div class="col-span-6">
-                        <label for="fecha_inicio" class="block font-bold mb-2">Fecha Inicio</label>
+                        <label for="fecha_inicio" class="block font-bold mb-2">Fecha inicio</label>
                         <p-datepicker 
                             [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fecha_inicio" inputId="fecha_inicio" [showIcon]="true" [showButtonBar]="true" 
                             [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione fecha inicio'" class="w-96" >
@@ -217,7 +215,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar registró de pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar registro plan de pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
         
         <ng-template #content>
             <form [formGroup]="formUpdate" class="formulario">
@@ -233,7 +231,7 @@
                     <div class="grid grid-cols-12 gap-4">
                         
                         <div class="col-span-6">
-                            <label for="id_tipo_pago" class="block font-bold mb-3">Tipo Pago</label>             
+                            <label for="id_tipo_pago" class="block font-bold mb-3">Tipo pago</label>             
                             <p-select
                                 [options]="tipoPago" [appendTo]="'body'" formControlName="id_tipo_pago" inputId="id_tipo_pago" optionLabel="displayEstado" optionValue="id"
                                 placeholder="Seleccione el Tipo Pago" [filter]="true" filterBy="displayEstado" [showClear]="true" class="w-full md:w-70">

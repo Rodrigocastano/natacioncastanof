@@ -121,6 +121,8 @@ export class GrupoComponent implements OnInit  {
           next: () => {
             this.saveMessageToast();
             this.getGrupo();
+            this.formSave.reset();
+            this.submitted = false;
             this.visibleSave = false;
           },
           error: (err) => {

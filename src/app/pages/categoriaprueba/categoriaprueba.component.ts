@@ -120,6 +120,8 @@ export class CategoriapruebaComponent implements OnInit  {
               next: () => {
                 this.saveMessageToast();
                 this.getCategoriapruebaService();
+                this.formSave.reset();
+                this.submitted = false;
                 this.visibleSave = false;
               },
               error: (err) => {

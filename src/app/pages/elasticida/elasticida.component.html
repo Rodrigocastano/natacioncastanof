@@ -34,7 +34,6 @@
             <ng-template #header>
                 <tr>
                     <th style="min-width: 4rem"></th>
-                    <th style="min-width: 6rem">ID</th>
                     <th pSortableColumn="name" style="min-width:8rem">Identificación</th>
                     <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
@@ -48,7 +47,6 @@
                     <td>
                         <p-button type="button" pRipple [pRowToggler]="usuario" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
                     </td>
-                    <td>{{ usuario.id }}</td>
                     <td>{{ usuario.cedula }}</td>
                     <td>{{ usuario.nombre }}</td>
                     <td>{{ usuario.apellido }}</td>
@@ -118,7 +116,6 @@
                                                     <p-button icon="pi pi-pencil" 
                                                             [rounded]="true" 
                                                             [outlined]="true"
-                                                            severity="secondary"
                                                             styleClass="p-button-xs"
                                                             (click)="edit(medida)"/>
                                                     
@@ -230,7 +227,7 @@
 
                     <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
-                        <label for="fecha" class="block font-bold mb-2">Fecha inscripción</label>
+                        <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                         <p-datepicker 
                             [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                             [appendTo]="'body'"  dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
@@ -287,7 +284,7 @@
     
                     <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
-                            <label for="fecha" class="block font-bold mb-2">Fecha inscripción</label>
+                            <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                             <p-datepicker 
                                 [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                                 [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >

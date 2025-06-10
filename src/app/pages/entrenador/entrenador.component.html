@@ -25,7 +25,7 @@
 
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registró de entrenadores</h5>
+                    <h5 class="m-0">Registro de entrenadores</h5>
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search" />
                         <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
@@ -144,7 +144,7 @@
 
                         <div class="col-span-6">
                             <label for="telefono" class="block font-bold mb-1">Teléfono</label>
-                                <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Ingrese número de télefono"class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/>             
+                                <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Número de télefono"class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/>             
                             <p-message
                                 *ngIf="formSave.get('telefono')?.errors?.['required'] && (formSave.get('telefono')?.dirty || formSave.get('telefono')?.touched)" severity="error" variant="simple" size="small" >
                                 Valido solo 10 número

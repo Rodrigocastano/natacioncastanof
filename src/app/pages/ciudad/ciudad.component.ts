@@ -121,6 +121,8 @@ export class CiudadComponent implements OnInit  {
           next: () => {
             this.saveMessageToast();
             this.getCiudad();
+            this.formSave.reset();
+            this.submitted = false;
             this.visibleSave = false;
           },
           error: (err) => {

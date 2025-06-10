@@ -21,7 +21,7 @@
             [showCurrentPageReport]="true" [rowsPerPageOptions]="[6, 12, 18]">
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registró de prueba torneo</h5>
+                    <h5 class="m-0">Registro de prueba torneo</h5>
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search" />
                         <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
@@ -65,7 +65,7 @@
                 <div class="flex flex-col gap-6">
                     <div class="col-span-6">
                         <label for="nombre" class="block font-bold mb-3">Nombre</label>
-                        <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese la nombre" required fluid />
+                        <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese el nombre" required fluid />
                         <p-message 
                         *ngIf="formSave.get('nombre')?.invalid && (formSave.get('nombre')?.dirty || formSave.get('nombre')?.touched)" severity="error" variant="simple"size="small">
                         Nombre es requerido

@@ -34,7 +34,7 @@
 
             <ng-template #caption>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h5 style="margin: 0;">Registro de Usuarios</h5>
+            <h5 style="margin: 0;">Registro de usuarios</h5>
             <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
                 <input pInputText type="text" placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
@@ -48,7 +48,7 @@
             <th pSortableColumn="nombre" style="min-width: 8rem">Nombre</th>
             <th pSortableColumn="apellido" style="min-width: 8rem">Apellido</th>
             <th pSortableColumn="price" style="min-width: 8rem">Email</th>
-            <th pSortableColumn="price" style="min-width: 8rem">password</th>
+            <th pSortableColumn="price" style="min-width: 8rem">Password</th>
             <th pSortableColumn="cedula" style="min-width: 10rem">Identificación</th>
             <th style="min-width: 10rem">Teléfono</th>
             <th style="min-width: 8rem">Dirección</th>
@@ -107,7 +107,7 @@
                         </div>
                         <div class="col-span-6">
                             <label for="apellido" class="block font-bold mb-3">Apellido</label>
-                            <input type="text" formControlName="apellido" pInputText id="apellido" placeholder="Ingrese la apellido"  required  fluid />
+                            <input type="text" formControlName="apellido" pInputText id="apellido" placeholder="Ingrese el apellido"  required  fluid />
                             <p-message 
                                 *ngIf="formSaveUsuario.get('apellido')?.invalid && (formSaveUsuario.get('apellido')?.dirty || formSaveUsuario.get('apellido')?.touched)" severity="error" variant="simple"size="small">
                                 Apellido es requerido
@@ -155,7 +155,7 @@
 
                         <div class="col-span-6">
                             <label for="telefono" class="block font-bold mb-1">Teléfono</label>
-                            <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Ingrese número de teléfono" class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/>             
+                            <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Número de teléfono" class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/>             
                             <p-message
                                 *ngIf="formSaveUsuario.get('telefono')?.errors?.['required'] && (formSaveUsuario.get('telefono')?.dirty || formSaveUsuario.get('telefono')?.touched)" severity="error" variant="simple" size="small" >
                                 Teléfono valido 10 número
@@ -178,7 +178,7 @@
                         <div class="col-span-6">
                             <div class="col-span-6">
                                 <label for="id_genero" class="block font-bold mb-3">Género</label>
-                                <p-select [options]="genero" [appendTo]="'body'" formControlName="id_genero"  inputId="id_genero"  optionLabel="nombre" optionValue="id" placeholder="Seleccione el grupo" fluid />
+                                <p-select [options]="genero" [appendTo]="'body'" formControlName="id_genero"  inputId="id_genero"  optionLabel="nombre" optionValue="id" placeholder="Seleccione el género" fluid />
                                 <p-message 
                                     *ngIf="formSaveUsuario.get('id_genero')?.invalid && (formSaveUsuario.get('id_genero')?.dirty || formSaveUsuario.get('id_genero')?.touched)" severity="error" variant="simple"size="small">
                                     Grupo es requerido
@@ -194,7 +194,7 @@
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <div class="block font-bold mb-3">Fecha Inscripción</div>
+                            <div class="block font-bold mb-3">Fecha inscripción</div>
                             <p-datepicker [(ngModel)]="fechaActual"  [maxDate]="maxDate" formControlName="fechaInscripcion" inputId="fechaInscripcion" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
                             <p-message 
                                 *ngIf="formSaveUsuario.get('fechaInscripcion')?.invalid && (formSaveUsuario.get('fechaInscripcion')?.dirty || formSaveUsuario.get('fechaInscripcion')?.touched)" severity="error" variant="simple"size="small">
@@ -215,8 +215,8 @@
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <div class="block font-bold mb-3">Fecha Nacimiento</div>
-                            <p-datepicker [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
+                            <div class="block font-bold mb-3">Fecha nacimiento</div>
+                            <p-datepicker [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Fecha de nacimiento'"> </p-datepicker>
                             <p-message 
                                 *ngIf="formSaveUsuario.get('fechaNacimiento')?.invalid && (formSaveUsuario.get('fechaNacimiento')?.dirty || formSaveUsuario.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">
                                 Fecha Nacimiento es requerido
@@ -349,7 +349,7 @@
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <div class="block font-bold mb-3">Fecha Inscripción</div>
+                            <div class="block font-bold mb-3">Fecha inscripción</div>
                             <p-datepicker [maxDate]="maxDate" formControlName="fechaInscripcion" inputId="fechaInscripcion" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>  
                             <p-message 
                                 *ngIf="formUpdateUsuario.get('fechaInscripcion')?.invalid && (formUpdateUsuario.get('fechaInscripcion')?.dirty || formUpdateUsuario.get('fechaInscripcion')?.touched)" severity="error" variant="simple"size="small">
@@ -370,7 +370,7 @@
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <div class="block font-bold mb-3">Fecha Nacimiento</div>
+                            <div class="block font-bold mb-3">Fecha nacimiento</div>
                             <p-datepicker [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
                             <p-message 
                                 *ngIf="formUpdateUsuario.get('fechaNacimiento')?.invalid && (formUpdateUsuario.get('fechaNacimiento')?.dirty || formUpdateUsuario.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">

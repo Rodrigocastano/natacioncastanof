@@ -122,6 +122,8 @@ export class TipopagoComponent implements OnInit  {
               next: () => {
                 this.saveMessageToast();
                 this.getTipoPago();
+                this.formSave.reset();
+                this.submitted = false;
                 this.visibleSave = false;
               },
               error: (err) => {

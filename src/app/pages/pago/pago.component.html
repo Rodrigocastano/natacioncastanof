@@ -1,6 +1,6 @@
     <p-toolbar styleClass="mb-6">
     <ng-template #start>
-        <p-button label="Agregar registró de pago" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+        <p-button label="Agregar registro de pago" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
     </ng-template>
     </p-toolbar>
 
@@ -20,7 +20,7 @@
 
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registró de pago</h5>
+                    <h5 class="m-0">Registro de pago</h5>
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search"></p-inputicon>
                         <input pInputText type="text" placeholder="Buscar..."
@@ -33,8 +33,7 @@
             <ng-template #header>
                 <tr>
                     <th style="min-width: 4rem"></th>
-                    <th style="min-width: 6rem">ID</th>
-                    <th pSortableColumn="name" style="min-width:8rem">Cédula</th>
+                    <th pSortableColumn="name" style="min-width:8rem">Identificación</th>
                     <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Genero</th>
@@ -47,7 +46,6 @@
                     <td>
                         <p-button type="button" pRipple [pRowToggler]="usuario" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
                     </td>
-                    <td>{{ usuario.id }}</td>
                     <td>{{ usuario.cedula }}</td>
                     <td>{{ usuario.nombre }}</td>
                     <td>{{ usuario.apellido }}</td>
@@ -64,24 +62,20 @@
                             " dataKey="id">
                                 <ng-template #header>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Apellido</th>
-                                        <th pSortableColumn="price" style="min-width: 8rem">Estado pago</th>
-                                        <th pSortableColumn="price" style="min-width: 7rem">Tipo pago</th>
-                                        <th pSortableColumn="price" style="min-width: 5rem">Monto</th>
-                                        <th pSortableColumn="price" style="min-width: 10rem">Monto abonado</th>
-                                        <th pSortableColumn="price" style="min-width: 9rem">Fecha registró</th>
-                                        <th pSortableColumn="price" style="min-width: 11rem">Fecha vencimiento</th>
-                                        <th pSortableColumn="price" style="min-width: 8rem">Acciones</th>
+                                        <th style="min-width: 8rem">Nombre</th>
+                                        <th style="min-width: 8rem">Estado pago</th>
+                                        <th style="min-width: 7rem">Tipo pago</th>
+                                        <th style="min-width: 5rem">Monto</th>
+                                        <th style="min-width: 10rem">Monto abonado</th>
+                                        <th style="min-width: 9rem">Fecha registro</th>
+                                        <th style="min-width: 11rem">Fecha vencimiento</th>
+                                        <th style="min-width: 8rem">Acciones</th>
                                     </tr>
 
                                 </ng-template>
                                 <ng-template #body let-elast>
                                     <tr>
-                                        <td>{{ elast.id }}</td>
-                                        <td>{{ elast.nombre }}</td>
-                                        <td>{{ elast.apellido }}</td>
+                                        <td>{{ usuario.nombre }} {{ usuario.apellido }}</td>
                                         <td>{{ getNombreTipoPago(elast.id_tipo_pago) }}</td>
                                         <td>{{ getNombreEstadoPago(elast.id_estado_pago) }}</td>
                                         <td>{{ elast.monto }}</td>
@@ -125,12 +119,12 @@
                             <label for="id_tipo_pago" class="block font-bold mb-3">Tipo pago</label>             
                             <p-select
                                 [options]="tipoPago" [appendTo]="'body'" formControlName="id_tipo_pago" inputId="id_tipo_pago" optionLabel="displayEstado" optionValue="id"
-                                placeholder="Seleccione el Tipo Pago" [filter]="true" filterBy="displayEstado" [showClear]="true" class="w-full md:w-70">
+                                placeholder="Seleccione el tipo pago" [filter]="true" filterBy="displayEstado" [showClear]="true" class="w-full md:w-70">
                             </p-select>
                             <div class="mt-2">
                                 <p-message
                                     *ngIf="formSave.get('id_tipo_pago')?.invalid && (formSave.get('id_tipo_pago')?.dirty || formSave.get('id_tipo_pago')?.touched)" severity="error" variant="simple" size="small" >
-                                    Tipo Pago es requerido
+                                    Tipo pago es requerido
                                 </p-message>
                             </div>
                         </div>
@@ -139,12 +133,12 @@
                             <label for="id_estado_pago" class="block font-bold mb-3">Estado pago</label>             
                             <p-select
                                 [options]="estadoPago" [appendTo]="'body'" formControlName="id_estado_pago" inputId="id_estado_pago" optionLabel="displayTipo" optionValue="id"
-                                placeholder="Seleccione el Estado Pago" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
+                                placeholder="Seleccione el estado pago" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
                             </p-select>
                             <div class="mt-2">
                                 <p-message
                                     *ngIf="formSave.get('id_estado_pago')?.invalid && (formSave.get('id_estado_pago')?.dirty || formSave.get('id_estado_pago')?.touched)" severity="error" variant="simple" size="small" >
-                                    Estado Pago es requerido
+                                    Estado pago es requerido
                                 </p-message>
                             </div>
                         </div>
@@ -178,7 +172,7 @@
                     
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <label for="fecha" class="block font-bold mb-2">Fecha registró</label>
+                            <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                             <p-datepicker 
                                 [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                                 [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
@@ -225,7 +219,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar registró de pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar registro del pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
         
         <ng-template #content>
             <form [formGroup]="formUpdate" class="formulario">
@@ -242,7 +236,7 @@
                             <label for="id_tipo_pago" class="block font-bold mb-3">Tipo pago</label>             
                             <p-select
                                 [options]="tipoPago" [appendTo]="'body'" formControlName="id_tipo_pago" inputId="id_tipo_pago" optionLabel="displayEstado" optionValue="id"
-                                placeholder="Seleccione el Tipo pago" [filter]="true" filterBy="displayEstado" [showClear]="true" class="w-full md:w-70">
+                                placeholder="Seleccione el tipo pago" [filter]="true" filterBy="displayEstado" [showClear]="true" class="w-full md:w-70">
                             </p-select>
                             <div class="mt-2">
                                 <p-message
@@ -256,12 +250,12 @@
                             <label for="id_estado_pago"  class="block font-bold mb-3">Estado pago</label>             
                             <p-select
                                 [options]="estadoPago" [appendTo]="'body'" formControlName="id_estado_pago" inputId="id_estado_pago" optionLabel="displayTipo" optionValue="id" 
-                                placeholder="Seleccione el Estado pago" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
+                                placeholder="Seleccione el estado pago" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
                             </p-select>
                             <div class="mt-2">
                                 <p-message
                                     *ngIf="formUpdate.get('id_estado_pago')?.invalid && (formUpdate.get('id_estado_pago')?.dirty || formUpdate.get('id_estado_pago')?.touched)" severity="error" variant="simple" size="small" >
-                                    Estado Pago es requerido
+                                    Estado pago es requerido
                                 </p-message>
                             </div>
                         </div>
@@ -291,7 +285,7 @@
 
                     <div class="grid grid-cols-12 gap-4"> 
                         <div class="col-span-6">
-                            <label for="fecha" class="block font-bold mb-2">Fecha registró</label>
+                            <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                             <p-datepicker 
                                 [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                                 [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >

@@ -20,7 +20,7 @@
             
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registró de medidas nutricionales</h5>
+                    <h5 class="m-0">Registro de medidas nutricionales</h5>
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search"></p-inputicon>
                         <input pInputText type="text" placeholder="Buscar..."
@@ -33,7 +33,6 @@
             <ng-template #header>
                 <tr>
                     <th style="min-width: 4rem"></th>
-                    <th style="min-width: 6rem">ID</th>
                     <th pSortableColumn="name" style="min-width:8rem">Identificación</th>
                     <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
@@ -47,7 +46,6 @@
                     <td>
                         <p-button type="button" pRipple [pRowToggler]="usuario" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
                     </td>
-                    <td>{{ usuario.id }}</td>
                     <td>{{ usuario.cedula }}</td>
                     <td>{{ usuario.nombre }}</td>
                     <td>{{ usuario.apellido }}</td>
@@ -112,7 +110,7 @@
                                         
                                         <!-- Fila Calorías Consumidas -->
                                         <tr>
-                                            <td class="p-3 border">Calorías consumidas</td>
+                                            <td class="p-3 border">Calorías consumida</td>
                                             <td *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaNutricionales); let i = index" 
                                                 class="text-center p-3 border">
                                                 <div class="flex flex-col items-center">
@@ -143,7 +141,6 @@
                                                     <p-button icon="pi pi-pencil" 
                                                             [rounded]="true" 
                                                             [outlined]="true"
-                                                            severity="secondary"
                                                             styleClass="p-button-xs"
                                                             (click)="edit(medida)"/>
                                                     
@@ -201,7 +198,7 @@
 
                 <div class="col-span-12 flex justify-center">
                     <div class="col-span-6">
-                        <label for="fecha" class="block font-bold mb-2">Fecha inscripción</label>
+                        <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                         <p-datepicker 
                             [(ngModel)]="currentDate" [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" 
                             [showButtonBar]="true" [appendTo]="'body'"  dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96">
@@ -271,7 +268,7 @@
 
                     <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
-                        <label for="fecha" class="block font-bold mb-2">Fecha inscripción</label>
+                        <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                         <p-datepicker 
                             [(ngModel)]="fechaActual" [maxDate]="maxDate"formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                             [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
@@ -320,7 +317,7 @@
                     </div>
                      
                     <div class="col-span-6">
-                        <label for="caloria_consumida" class="block font-bold mb-2 ">Caloria consumida</label>
+                        <label for="caloria_consumida" class="block font-bold mb-2 ">Caloría consumida</label>
                         <p-inputnumber formControlName="caloria_consumida" id="caloria_consumida" placeholder="Ingrese la medida" required  class="w-full text-sm px-0 py-1" />             
                         <p-message
                             *ngIf="formUpdate.get('caloria_consumida')?.errors?.['required'] && (formUpdate.get('caloria_consumida')?.dirty || formUpdate.get('caloria_consumida')?.touched)" severity="error" variant="simple" size="small" >
@@ -329,7 +326,7 @@
                     </div>
 
                     <div class="col-span-6">
-                        <label for="proteina_consumida" class="block font-bold mb-2 ">Proteina consumida</label>
+                        <label for="proteina_consumida" class="block font-bold mb-2 ">Proteína consumida</label>
                         <p-inputnumber formControlName="proteina_consumida" id="proteina_consumida" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-1" />             
                         <p-message
                             *ngIf="formUpdate.get('proteina_consumida')?.errors?.['required'] && (formUpdate.get('proteina_consumida')?.dirty || formUpdate.get('medida_elasticida')?.touched)" severity="error" variant="simple" size="small" >
@@ -339,7 +336,7 @@
     
                     <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
-                            <label for="fecha" class="block font-bold mb-2">Fecha inscripción</label>
+                            <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                             <p-datepicker 
                                 [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                                 [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >

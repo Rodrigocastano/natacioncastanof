@@ -1,7 +1,21 @@
 <p-toolbar styleClass="mb-6">
-    <ng-template #start>
-        <p-button label="Agregar nueva ciudad" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
-    </ng-template>
+  <div class="w-full">
+    <div class="p-4 surface-card border-round shadow-2">
+      <h5 class="mt-0 mb-4">Agregar nuevo ciudad</h5>
+
+      <form [formGroup]="formSave" (ngSubmit)="store()">
+        <div class="flex align-items-center gap-3">
+            <div style="width: 900px;"> 
+                <input type="text" formControlName="nombre" pInputText id="nombre" placeholder="Ingrese el ciudad" class="w-full"[ngClass]="{'p-invalid': formSave.get('nombre')?.invalid && submitted}" />
+            </div>
+
+            <p-button
+                type="submit" icon="pi pi-plus" label="Agregar" severity="success" [loading]="loading" [disabled]="formSave.invalid">
+            </p-button>
+        </div>
+      </form>
+    </div>
+  </div>
 </p-toolbar>
 
 <p-toast />
@@ -21,7 +35,7 @@
         [showCurrentPageReport]="true" [rowsPerPageOptions]="[6, 12, 18]">
         <ng-template #caption>
             <div class="flex items-center justify-between">
-                <h5 class="m-0">Registró de ciudad</h5>
+                <h5 class="m-0">Registro de ciudad</h5>
                 <p-iconfield>
                     <p-inputicon styleClass="pi pi-search" />
                     <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
@@ -50,31 +64,6 @@
         
     </p-table>
 </div>
-
-<p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar ciudad" [modal]="true">
-    <ng-template #content>
-        <form [formGroup]="formSave" class="formulario">
-            <div class="flex flex-col gap-6">
-                <div class="col-span-6">
-                    <label for="nombre" class="block font-bold mb-3">Ciudad</label>
-                    <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese la ciudad" required fluid />
-                    <p-message 
-                    *ngIf="formSave.get('nombre')?.invalid && (formSave.get('nombre')?.dirty || formSave.get('nombre')?.touched)" severity="error" variant="simple"size="small">
-                    Ciudad es requerido
-                    </p-message>
-                </div>
-
-            </div>
-        </form>
-    </ng-template>
-
-    <ng-template #footer>
-        <form [formGroup]="formSave" class="formulario">
-            <p-button label="Cancel" icon="pi pi-times" text (click)="cancelSave()" />
-            <p-button label="Save" icon="pi pi-check" (click)="store()"/>
-        </form>
-    </ng-template>
-</p-dialog>
 
 <p-dialog [(visible)]="visibleDelete" header="Confirmación"  [style]="{ width: '350px' }" [modal]="true">
     <div class="flex items-center justify-center">

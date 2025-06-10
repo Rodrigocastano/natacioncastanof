@@ -103,32 +103,35 @@ export class GeneroComponent implements OnInit  {
     }
     }
 
-    store() {
-      this.submitted = true;
-    
-      if (this.formSave.invalid) {
-        this.errorMessageToast();
-        this.formSave.markAllAsTouched();
-        return;
+store() {
+  this.submitted = true;
+
+  if (this.formSave.invalid) {
+    this.errorMessageToast();
+    this.formSave.markAllAsTouched();
+    return;
+  }
+
+  if (this.formSave.valid) {
+    const newGenero: any = {
+      nombre: this.formSave.value.nombre,
+    };
+
+    this.generoService.createGenero(newGenero).subscribe({
+      next: () => {
+        this.saveMessageToast();
+        this.getCiudad();
+        this.formSave.reset();
+        this.submitted = false;
+        this.visibleSave = false;
+      },
+      error: (err) => {
+        console.error('Error al guardar el grupo:', err);
       }
-    
-      if (this.formSave.valid) {
-        const newGenero: any = {
-          nombre: this.formSave.value.nombre,
-        };
-    
-        this.generoService.createGenero(newGenero).subscribe({
-          next: () => {
-            this.saveMessageToast();
-            this.getCiudad();
-            this.visibleSave = false;
-          },
-          error: (err) => {
-            console.error('Error al guardar el grupo:', err);
-          }
-        });
-      }
-    }
+    });
+  }
+}
+
     
     cancelSave() {
       this.visibleSave = false;

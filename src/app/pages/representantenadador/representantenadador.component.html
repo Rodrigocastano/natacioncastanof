@@ -35,10 +35,10 @@
           <tr>
               <th style="min-width: 4rem"></th>
               <th style="min-width: 6rem">ID</th>
-              <th pSortableColumn="name" style="min-width:8rem">Nombre Representantes </th>
-              <th pSortableColumn="price" style="min-width: 8rem">Apellido Representantes </th>
-              <th pSortableColumn="price" style="min-width: 8rem">Cédula Representantes </th>
-              <th pSortableColumn="price" style="min-width: 6rem">Teléfono Representantes</th>
+              <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
+              <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
+              <th pSortableColumn="price" style="min-width: 8rem">Identificación</th>
+              <th pSortableColumn="price" style="min-width: 6rem">Teléfono</th>
           </tr>
       </ng-template>
 
@@ -93,7 +93,7 @@
     </p-table>
   </div>
 
-  <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar Representante al Nadador" [modal]="true" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }">
+  <p-dialog [(visible)]="visibleSave" [style]="{ width: '400px' }" header="Agregar representante al nadador" [modal]="true" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }">
 
     <form [formGroup]="formSave" class="formulario">
       <div class="flex flex-col gap-6">
@@ -146,7 +146,7 @@
       </ng-template>
   </p-dialog>
 
-  <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar Representante Nadador" [modal]="true" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }">
+  <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '400px' }" header="Actualizar representante del nadador" [modal]="true" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }">
     <form [formGroup]="formUpdate" class="formulario">
       <div class="flex flex-col gap-6">
         <div class="col-span-6">

@@ -1,6 +1,6 @@
     <p-toolbar styleClass="mb-6">
         <ng-template #start>
-            <p-button label="Agregar registró del tiempo nadador" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+            <p-button label="Agregar registro del tiempo nadador" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
         </ng-template>
     </p-toolbar>
 
@@ -21,7 +21,7 @@
 
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registró Tiempo del nadador</h5>
+                    <h5 class="m-0">Registro tiempo del nadador</h5>
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search"></p-inputicon>
                         <input pInputText type="text" placeholder="Buscar..."
@@ -34,7 +34,6 @@
             <ng-template #header>
                 <tr>
                     <th style="min-width: 4rem"></th>
-                    <th style="min-width: 6rem">ID</th>
                     <th pSortableColumn="name" style="min-width:8rem">Identificación</th>
                     <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
@@ -48,7 +47,6 @@
                     <td>
                         <p-button type="button" pRipple [pRowToggler]="usuario" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
                     </td>
-                    <td>{{ usuario.id }}</td>
                     <td>{{ usuario.cedula }}</td>
                     <td>{{ usuario.nombre }}</td>
                     <td>{{ usuario.apellido }}</td>
@@ -68,7 +66,7 @@
                                         <th>Nombre</th>
                                         <th>Apellido</th>
                                         <th>Tiempo</th>
-                                        <th>Categoría Distancia</th>
+                                        <th>Categoría distancia</th>
                                         <th>Fecha</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -96,7 +94,7 @@
         </p-table>
     </div>
 
-    <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar Tiempo de nadador" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar tiempo de nadador" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
         <ng-template #content>
             <form [formGroup]="formSave" class="formulario">
                 <div class="flex flex-col gap-6">
@@ -143,7 +141,7 @@
 
                     <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
-                        <label for="fecha" class="block font-bold mb-2">Fecha inscripción</label>
+                        <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                         <p-datepicker 
                             [(ngModel)]="fechaActual"  [maxDate]= "maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                             [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
@@ -177,7 +175,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar Torneo nado" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar torneo nado" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
 
         <ng-template #content>
             <form [formGroup]="formUpdate" class="formulario">
@@ -218,7 +216,7 @@
 
                     <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
-                        <label for="fecha" class="block font-bold mb-2">Fecha inscripción</label>
+                        <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                         <p-datepicker 
                             [maxDate]= "maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
                             [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >

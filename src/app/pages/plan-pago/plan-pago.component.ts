@@ -193,12 +193,31 @@ export class PlanPagoComponent implements OnInit{
             getPlanPago() {
               this.planPagoService.getAllPlanPago().subscribe(
                 data => {
+                  console.log('Datos recibidos del servicio:', data);
                   this.planPago = data
                   this.buscarOriginal = data; 
                   this.loading = false;
                 }
               );
             }     
+
+            formatearFrecuencia(fechaCobro: any): string {
+  if (!fechaCobro) return 'Sin frecuencia';
+
+  try {
+    const obj = typeof fechaCobro === 'string' ? JSON.parse(fechaCobro) : fechaCobro;
+    const frecuencia = obj.frecuencia ? this.capitalizar(obj.frecuencia) : 'Frecuencia desconocida';
+    const dias = obj.dias?.length ? obj.dias.join(', ') : '';
+    return dias ? `${frecuencia} (${dias})` : `${frecuencia}`;
+  } catch {
+    return 'Formato inválido';
+  }
+}
+
+capitalizar(texto: string): string {
+  return texto.charAt(0).toUpperCase() + texto.slice(1);
+}
+
 
             getUsuarios() {
               this.usuarioService.getAllUsuarios().subscribe(
