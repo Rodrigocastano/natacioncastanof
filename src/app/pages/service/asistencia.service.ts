@@ -16,6 +16,15 @@ export class AsistenciaService {
      getAllTodoAsistencias() {
       return this.http.get<any>(`${this.apisUrl}/indexTodaAsistencia`);
     }
+
+    createAsistenciasBatch(asistencias: Partial<Asistencia>[]): Observable<any> {
+  return this.http.post(`${this.apisUrl}/storeBatchAsistencia`, { asistencias });
+}
+
+      getUsuariosByGrupo(idGrupo: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apisUrl}/usuarioGrupo/${idGrupo}`);
+  }
+
  
     createAsistencia(sistencia: Asistencia): Observable<any> {
       return this.http.post(`${this.apisUrl}/storeAsistencia`, sistencia);

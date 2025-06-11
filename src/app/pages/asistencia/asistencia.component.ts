@@ -26,6 +26,11 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { formatDate } from '@angular/common';
 
+import { GeneroService } from '../service/genero.service';
+import { Grupo } from '../interfaces/grupo';
+import { GrupoService } from '../service/grupo.service';
+import { CheckboxModule } from 'primeng/checkbox';
+
 @Component({
   selector: 'app-asistencia',
   imports: [
@@ -47,7 +52,8 @@ import { formatDate } from '@angular/common';
     SelectModule,
     DialogModule,
     DropdownModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    CheckboxModule
   ],
   providers: [MessageService],
   templateUrl: './asistencia.component.html',
@@ -77,13 +83,21 @@ export class AsistenciaComponent implements OnInit{
   fechaActual: Date = new Date();
   loading: boolean = true;
 
-  
+grupos: any[] = [];
+selectedGrupo: number | null = null;
+usuariosParaAsistencia: any[] = [];
+fechaAsistencias: Date = new Date();
+filtroBusqueda: string = '';
+asistenciaFiltrada: any[] = [];
+
+
   
   constructor(
       private fb: FormBuilder,
       private asistenciaService: AsistenciaService,
       private usuarioService: UsuarioService,
-      private messageService: MessageService
+      private messageService: MessageService,
+      private gruposService: GrupoService,
     ) {
       this.formSave = this.fb.group({
         id_usuario: ['', [Validators.required]],
@@ -101,8 +115,89 @@ export class AsistenciaComponent implements OnInit{
     ngOnInit(): void {
       this.getAsistencia();
       this.getUsuarios();
+      this.loadGrupos();
     }
 
+
+
+get usuariosFiltrados() {
+  if (!this.filtroBusqueda || this.filtroBusqueda.trim() === '') {
+    return this.usuariosParaAsistencia;
+  }
+
+  const filtro = this.filtroBusqueda.trim().toLowerCase();
+  return this.usuariosParaAsistencia.filter(usuario => 
+    usuario.nombre.toLowerCase().includes(filtro) ||
+    usuario.apellido.toLowerCase().includes(filtro) ||
+    usuario.cedula.toLowerCase().includes(filtro)
+  );
+}
+
+
+    loadGrupos() {
+    this.gruposService.getAllGrupo().subscribe(grupos => {
+        this.grupos = grupos;
+    });
+}
+
+onGrupoChange() {
+    if (this.selectedGrupo) {
+        this.asistenciaService.getUsuariosByGrupo(this.selectedGrupo).subscribe(usuarios => {
+            this.usuariosParaAsistencia = usuarios.map(usuario => ({
+                ...usuario,
+                presente: true 
+            }));
+        });
+    }
+}
+
+showAsistenciaSection: boolean = false;
+
+toggleAsistenciaSection() {
+    this.showAsistenciaSection = !this.showAsistenciaSection;
+    if (!this.showAsistenciaSection) {
+        this.resetAsistenciaForm();
+    }
+}
+
+cancelAsistencia() {
+    this.showAsistenciaSection = false;
+    this.resetAsistenciaForm();
+}
+
+resetAsistenciaForm() {
+    this.selectedGrupo = null;
+    this.usuariosParaAsistencia = [];
+}
+
+
+saveAsistencias() {
+  const asistencias = this.usuariosParaAsistencia.map(usuario => ({
+    id_usuario: usuario.id,
+    fecha: formatDate(this.fechaAsistencias, 'yyyy-MM-dd', 'en'),
+    presente: usuario.presente ? 1 : 0,
+  }));
+
+  this.asistenciaService.createAsistenciasBatch(asistencias).subscribe({
+    next: () => {
+      this.messageService.add({ 
+        severity: 'success', 
+        summary: 'Éxito', 
+        detail: `${asistencias.length} asistencias guardadas` 
+      });
+      this.getAsistencia();
+      this.showAsistenciaSection = false;
+      /* this.visibleSave = false; */
+    },
+    error: (err) => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Error al guardar'
+      });
+    }
+  });
+}
     getAsistencia() {
       this.asistenciaService.getAllTodoAsistencias().subscribe(
         data => {
