@@ -227,85 +227,83 @@ export class AntropometricaComponent implements OnInit{
         this.visibleUserMeasureDialog = true;
     }
 
-    obtenerMedidasOrdenadas(measures: any[]): any[] {
-      return [...measures].sort((a, b) => {
-      return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
-      });
-    }
+  obtenerMedidasOrdenadas(measures: any[]): any[] {
+  return [...measures]
+    .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime())
+    .slice(-8);
+}
 
-    compararPeso(medidasOrdenadas: any[], index: number): string {
-      if (index === 0) return 'increase';
-      const actual = medidasOrdenadas[index].peso;
-      const anterior = medidasOrdenadas[index - 1].peso;
-      if (actual > anterior) return 'increase';
-      if (actual < anterior) return 'decrease';
-      return 'equal';
-    }
+compararPeso(medidasOrdenadas: any[], index: number): string {
+  if (index === 0) return '';
+  const actual = parseFloat(medidasOrdenadas[index].peso);
+  const anterior = parseFloat(medidasOrdenadas[index - 1].peso);
+  if (actual > anterior) return 'increase';
+  if (actual < anterior) return 'decrease';
+  return '';
+}
 
-    compararTalla(medidasOrdenadas: any[], index: number): string {
-      if (index === 0) return 'increase';
-      const actual = medidasOrdenadas[index].talla;
-      const anterior = medidasOrdenadas[index - 1].talla;
-      if (actual > anterior) return 'increase';
-      if (actual < anterior) return 'decrease';
-      return 'equal';
-    }
+compararTalla(medidasOrdenadas: any[], index: number): string {
+  if (index === 0) return '';
+  const actual = parseFloat(medidasOrdenadas[index].talla);
+  const anterior = parseFloat(medidasOrdenadas[index - 1].talla);
+  if (actual > anterior) return 'increase';
+  if (actual < anterior) return 'decrease';
+  return '';
+}
 
-    compararEnvergadura(medidasOrdenadas: any[], index: number): string {
-      if (index === 0) return 'increase';
-      const actual = medidasOrdenadas[index].envergadura;
-      const anterior = medidasOrdenadas[index - 1].envergadura;
-      if (actual > anterior) return 'increase';
-      if (actual < anterior) return 'decrease';
-      return 'equal';
-    }
+compararEnvergadura(medidasOrdenadas: any[], index: number): string {
+  if (index === 0) return '';
+  const actual = parseFloat(medidasOrdenadas[index].envergadura);
+  const anterior = parseFloat(medidasOrdenadas[index - 1].envergadura);
+  if (actual > anterior) return 'increase';
+  if (actual < anterior) return 'decrease';
+  return '';
+}
 
-    compararBraquial(medidasOrdenadas: any[], index: number): string {
-      if (index === 0) return 'increase';
-      const actual = medidasOrdenadas[index].circuferencia_braquial;
-      const anterior = medidasOrdenadas[index - 1].circuferencia_braquial;
-      if (actual > anterior) return 'increase';
-      if (actual < anterior) return 'decrease';
-      return 'equal';
-    }
+compararBraquial(medidasOrdenadas: any[], index: number): string {
+  if (index === 0) return '';
+  const actual = parseFloat(medidasOrdenadas[index].circuferencia_braquial);
+  const anterior = parseFloat(medidasOrdenadas[index - 1].circuferencia_braquial);
+  if (actual > anterior) return 'increase';
+  if (actual < anterior) return 'decrease';
+  return '';
+}
 
+compararCutanio(medidasOrdenadas: any[], index: number): string {
+  if (index === 0) return '';
+  const actual = parseFloat(medidasOrdenadas[index].pliegue_cutanio);
+  const anterior = parseFloat(medidasOrdenadas[index - 1].pliegue_cutanio);
+  if (actual > anterior) return 'increase';
+  if (actual < anterior) return 'decrease';
+  return '';
+}
 
-    compararCutanio(medidasOrdenadas: any[], index: number): string {
-      if (index === 0) return 'increase';
-      const actual = medidasOrdenadas[index].pliegue_cutanio;
-      const anterior = medidasOrdenadas[index - 1].pliegue_cutanio;
-      if (actual > anterior) return 'increase';
-      if (actual < anterior) return 'decrease';
-      return 'equal';
-    }
-    
-    compararCintura(medidasOrdenadas: any[], index: number): string {
-      if (index === 0) return 'increase';
-      const actual = medidasOrdenadas[index].perimetro_cintura;
-      const anterior = medidasOrdenadas[index - 1].perimetro_cintura;
-      if (actual > anterior) return 'increase';
-      if (actual < anterior) return 'decrease';
-      return 'equal';
-    }
+compararCintura(medidasOrdenadas: any[], index: number): string {
+  if (index === 0) return '';
+  const actual = parseFloat(medidasOrdenadas[index].perimetro_cintura);
+  const anterior = parseFloat(medidasOrdenadas[index - 1].perimetro_cintura);
+  if (actual > anterior) return 'increase';
+  if (actual < anterior) return 'decrease';
+  return '';
+}
 
-    compararCadera(medidasOrdenadas: any[], index: number): string {
-      if (index === 0) return 'increase';
-      const actual = medidasOrdenadas[index].perimetro_cadera;
-      const anterior = medidasOrdenadas[index - 1].perimetro_cadera;
-      if (actual > anterior) return 'increase';
-      if (actual < anterior) return 'decrease';
-      return 'equal';
-    }
+compararCadera(medidasOrdenadas: any[], index: number): string {
+  if (index === 0) return '';
+  const actual = parseFloat(medidasOrdenadas[index].perimetro_cadera);
+  const anterior = parseFloat(medidasOrdenadas[index - 1].perimetro_cadera);
+  if (actual > anterior) return 'increase';
+  if (actual < anterior) return 'decrease';
+  return '';
+}
 
-    compararSagital(medidasOrdenadas: any[], index: number): string {
-      if (index === 0) return 'increase';
-      const actual = medidasOrdenadas[index].diametro_sagital;
-      const anterior = medidasOrdenadas[index - 1].diametro_sagital;
-      if (actual > anterior) return 'increase';
-      if (actual < anterior) return 'decrease';
-      return 'equal';
-    }
-
+compararSagital(medidasOrdenadas: any[], index: number): string {
+  if (index === 0) return '';
+  const actual = parseFloat(medidasOrdenadas[index].diametro_sagital);
+  const anterior = parseFloat(medidasOrdenadas[index - 1].diametro_sagital);
+  if (actual > anterior) return 'increase';
+  if (actual < anterior) return 'decrease';
+  return '';
+}
 
     showSaveDialog() {
     this.formSave.reset();

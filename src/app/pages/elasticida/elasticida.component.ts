@@ -200,24 +200,25 @@ export class ElasticidaComponent implements OnInit{
         this.visibleUserMeasureDialog = true;
     }
 
-    obtenerMedidasOrdenadas(measures: any[]): any[] {
-      return [...measures].sort((a, b) => {
-        return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
-      });
-    }
+      obtenerMedidasOrdenadas(measures: any[]): any[] {
+        return [...measures]
+          .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime())
+          .slice(-8);
+      }
 
-    compararConAnterior(sortedMeasures: any[], currentIndex: number): string {
-      if (currentIndex === 0) return 'first';
-      
-      const current = parseFloat(sortedMeasures[currentIndex].medida_elasticida);
-      const previous = parseFloat(sortedMeasures[currentIndex - 1].medida_elasticida);
-      
-      if (current > previous) return 'increase';
-      if (current < previous) return 'decrease';
-      return 'equal';
-    }
+      compararConAnterior(sortedMeasures: any[], currentIndex: number): string {
 
-    showSaveDialog() {
+        if (currentIndex === 0) return '';
+        
+        const current = parseFloat(sortedMeasures[currentIndex].medida_elasticida);
+        const previous = parseFloat(sortedMeasures[currentIndex - 1].medida_elasticida);
+        
+        if (current > previous) return 'increase';
+        if (current < previous) return 'decrease';
+        return ''; 
+      }
+   
+      showSaveDialog() {
       this.formSave.reset();
       this.visibleSave = true;
     }

@@ -26,9 +26,12 @@ import { PruebatorneoComponent } from './pruebatorneo/pruebatorneo.component';
 import { PruebanadadorComponent } from './pruebanadador/pruebanadador.component';
 import { PlanPagoComponent } from './plan-pago/plan-pago.component';
 import { AbonopagoComponent } from './abonopago/abonopago.component';
+import { GraficasComponent } from './graficas/graficas.component';
+import { GraficasUsuarioComponent } from './graficas-usuario/graficas-usuario.component';
+import { AsistenciaUsuarioComponent } from './asistencia-usuario/asistencia-usuario.component';
 
 export default [
-    { path: 'usuario', component: UsuarioComponent },
+    { path: 'usuario', component: UsuarioComponent},
     { path: 'entrenador', component: EntrenadorComponent },
     { path: 'elasticida', component: ElasticidaComponent },
     { path: 'nutricionales', component: NutricionaleComponent },
@@ -54,5 +57,8 @@ export default [
     { path: 'pruebaNadador', component: PruebanadadorComponent },
     { path: 'planPago', component: PlanPagoComponent },
     { path: 'abonoPago', component: AbonopagoComponent },
+    { path: 'graficas', component: GraficasComponent },
+    { path: 'graficasUsuario', component: GraficasUsuarioComponent },
+    { path: 'asistenciaUsuario', component: AsistenciaUsuarioComponent },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

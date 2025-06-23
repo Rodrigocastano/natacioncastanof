@@ -73,38 +73,34 @@
                                     </thead>
                                     
                                     <tbody>
+
                                         <!-- Fila de Elasticidad -->
                                         <tr>
-                                            <td class="p-3 border text-center align-middle" rowspan="2">
-                                                <div class="flex justify-center items-center h-full">
-                                                    <p-button icon="pi pi-plus" 
-                                                            [rounded]="true" 
-                                                            [outlined]="true"
-                                                            severity="success"
-                                                            styleClass="p-button-sm"
-                                                            tooltip="Agregar nueva medida"
-                                                            (click)="prepareNewMedida(usuario)"/>
-                                                </div>
-                                            </td>
-                                            <td class="p-3 border">Elasticidad</td>
-                                            
-                                            <td *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaElasticidas); let i = index" 
-                                                class="text-center p-3 border">
-                                                <div class="flex flex-row items-center justify-center gap-2">
-                                                    <span class="font-medium">{{ medida.medida_elasticida | number:'1.2-2' }}kg</span>
-                                                    <ng-container *ngIf="i === 0">
-                                                        <i class="pi pi-arrow-right text-blue-500"></i>
-                                                    </ng-container>
-                                                    <ng-container *ngIf="i > 0">
-                                                        <i *ngIf="compararConAnterior(obtenerMedidasOrdenadas(usuario.medidaElasticidas), i) === 'increase'" 
-                                                        class="pi pi-arrow-up text-green-500"></i>
-                                                        <i *ngIf="compararConAnterior(obtenerMedidasOrdenadas(usuario.medidaElasticidas), i) === 'decrease'" 
-                                                        class="pi pi-arrow-down text-red-500"></i>
-                                                        <i *ngIf="compararConAnterior(obtenerMedidasOrdenadas(usuario.medidaElasticidas), i) === 'equal'" 
-                                                        class="pi pi-arrows-h text-orange-500"></i>
-                                                    </ng-container>
-                                                </div>
-                                            </td>
+                                        <td class="p-3 border text-center align-middle" rowspan="2">
+                                            <div class="flex justify-center items-center h-full">
+                                            <p-button icon="pi pi-plus" 
+                                                    [rounded]="true" 
+                                                    [outlined]="true"
+                                                    severity="success"
+                                                    styleClass="p-button-sm"
+                                                    tooltip="Agregar nueva medida"
+                                                    (click)="prepareNewMedida(usuario)"/>
+                                            </div>
+                                        </td>
+                                        <td class="p-3 border">Elasticidad</td>
+                                        
+                                        <td *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaElasticidas); let i = index" 
+                                            class="text-center p-3 border">
+                                            <div class="flex flex-row items-center justify-center gap-2">
+                                            <span class="font-medium">{{ medida.medida_elasticida | number:'1.2-2' }}kg</span>
+                                            <ng-container *ngIf="compararConAnterior(obtenerMedidasOrdenadas(usuario.medidaElasticidas), i) === 'increase'">
+                                                <i class="pi pi-arrow-up text-green-500"></i>
+                                            </ng-container>
+                                            <ng-container *ngIf="compararConAnterior(obtenerMedidasOrdenadas(usuario.medidaElasticidas), i) === 'decrease'">
+                                                <i class="pi pi-arrow-down text-red-500"></i>
+                                            </ng-container>
+                                            </div>
+                                        </td>
                                         </tr>
                                         
                                         <!-- Fila de Acciones -->

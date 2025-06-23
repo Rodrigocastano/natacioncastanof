@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders  } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Asistencia } from '../interfaces/asistencia'; 
 import { environment } from '../../../environments/environments';
@@ -13,7 +13,21 @@ export class AsistenciaService {
 
   constructor(private http: HttpClient) {}
 
-     getAllTodoAsistencias() {
+    private headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+      Accept: 'application/json'
+    });
+
+    obtenerMisAsistencias(): Observable<Asistencia[]> {
+      return this.http.get<Asistencia[]>(`${this.apisUrl}/verMisAsistencias`, { headers: this.headers });
+    }
+
+    guardarMisAsistencias(asistencias: Partial<Asistencia>[]): Observable<any> {
+      return this.http.post(`${this.apisUrl}/storeMisAsistencias`, { asistencias }, { headers: this.headers });
+    }
+
+
+    getAllTodoAsistencias() {
       return this.http.get<any>(`${this.apisUrl}/indexTodaAsistencia`);
     }
 

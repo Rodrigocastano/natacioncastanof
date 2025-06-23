@@ -59,101 +59,87 @@
                     <td colspan="7">
                         <div class="p-4">
                             <div class="overflow-x-auto">
+                               <!-- Tabla de Medidas Nutricionales -->
                                 <table class="w-full border-collapse">
-                                    <thead>
-                                        <tr class="bg-gray-100">
-                                            <th class="text-left p-3 border">Agregar</th>
-                                            <th class="text-left p-3 border">Medida</th>
-                                            <th *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaNutricionales)" 
-                                                class="text-center p-3 border">
-                                                {{ medida.fecha | date: 'dd-MM-yyyy' }}
-                                            </th>
-                                        </tr>
-                                    </thead>
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                    <th class="text-center p-3 border w-2">Agregar</th>
+                                    <th class="text-left p-3 border">Medida</th>
+                                    <th *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaNutricionales)" 
+                                        class="text-center p-3 border">
+                                        {{ medida.fecha | date: 'dd-MM-yyyy' }}
+                                    </th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    <!-- Fila Proteína Consumida -->
+                                    <tr>
+                                    <td class="p-3 border text-center align-middle" rowspan="3">
+                                        <div class="flex justify-center items-center h-full">
+                                        <p-button icon="pi pi-plus" 
+                                                [rounded]="true" 
+                                                [outlined]="true"
+                                                severity="success"
+                                                styleClass="p-button-sm"
+                                                tooltip="Agregar nueva medida"
+                                                (click)="prepareNewMedida(usuario)"/>
+                                        </div>
+                                    </td>
+                                    <td class="p-3 border">Proteína consumida</td>
+                                    <td *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaNutricionales); let i = index" 
+                                        class="text-center p-3 border">
+                                        <div class="flex flex-row items-center justify-center gap-2">
+                                        <span class="font-medium">{{ medida.proteina_consumida }}kg</span>
+                                        <ng-container *ngIf="compararProteinaAnterior(obtenerMedidasOrdenadas(usuario.medidaNutricionales), i) === 'increase'">
+                                            <i class="pi pi-arrow-up text-green-500"></i>
+                                        </ng-container>
+                                        <ng-container *ngIf="compararProteinaAnterior(obtenerMedidasOrdenadas(usuario.medidaNutricionales), i) === 'decrease'">
+                                            <i class="pi pi-arrow-down text-red-500"></i>
+                                        </ng-container>
+                                        </div>
+                                    </td>
+                                    </tr>
                                     
-                                    <tbody>
-                                        <!-- Fila Proteína Consumida -->
-                                        <tr>
-                                            <td class="p-3 border text-center align-middle" rowspan="3">
-                                                <div class="flex justify-center items-center h-full">
-                                                    <p-button icon="pi pi-plus" 
-                                                            [rounded]="true" 
-                                                            [outlined]="true"
-                                                            severity="success"
-                                                            styleClass="p-button-sm"
-                                                            tooltip="Agregar nueva medida"
-                                                            (click)="prepareNewMedida(usuario)"/>
-                                                </div>
-                                            </td>
-
-                                            <td class="p-3 border">Proteína consumida</td>
-                                            <td *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaNutricionales); let i = index" 
-                                                class="text-center p-3 border">
-                                                <div class="flex flex-col items-center">
-                                                    <span class="font-medium">{{ medida.proteina_consumida }}kg</span>
-                                                    <div class="mt-1">
-                                                        <ng-container *ngIf="i === 0">
-                                                            <i class="pi pi-arrow-right text-blue-500"></i>
-                                                        </ng-container>
-                                                        <ng-container *ngIf="i > 0">
-                                                            <i *ngIf="compararProteinaAnterior(obtenerMedidasOrdenadas(usuario.medidaNutricionales), i) === 'increase'" 
-                                                            class="pi pi-arrow-up text-green-500"></i>
-                                                            <i *ngIf="compararProteinaAnterior(obtenerMedidasOrdenadas(usuario.medidaNutricionales), i) === 'decrease'" 
-                                                            class="pi pi-arrow-down text-red-500"></i>
-                                                            <i *ngIf="compararProteinaAnterior(obtenerMedidasOrdenadas(usuario.medidaNutricionales), i) === 'equal'" 
-                                                            class="pi pi-arrows-h text-orange-500"></i>
-                                                        </ng-container>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                    <!-- Fila Calorías Consumidas -->
+                                    <tr>
+                                    <td class="p-3 border">Calorías consumida</td>
+                                    <td *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaNutricionales); let i = index" 
+                                        class="text-center p-3 border">
+                                        <div class="flex flex-row items-center justify-center gap-2">
+                                        <span class="font-medium">{{ medida.caloria_consumida }}kg</span>
+                                        <ng-container *ngIf="compararCaloriasAnterior(obtenerMedidasOrdenadas(usuario.medidaNutricionales), i) === 'increase'">
+                                            <i class="pi pi-arrow-up text-green-500"></i>
+                                        </ng-container>
+                                        <ng-container *ngIf="compararCaloriasAnterior(obtenerMedidasOrdenadas(usuario.medidaNutricionales), i) === 'decrease'">
+                                            <i class="pi pi-arrow-down text-red-500"></i>
+                                        </ng-container>
+                                        </div>
+                                    </td>
+                                    </tr>
+                                    
+                                    <!-- Fila de Acciones -->
+                                    <tr>
+                                    <td class="p-3 border font-bold text-lg">Acciones</td>
+                                    <td *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaNutricionales)" 
+                                        class="text-center p-3 border">
+                                        <div class="flex justify-center space-x-1">
+                                        <p-button icon="pi pi-pencil" 
+                                                [rounded]="true" 
+                                                [outlined]="true"
+                                                styleClass="p-button-xs"
+                                                (click)="edit(medida)"/>
                                         
-                                        <!-- Fila Calorías Consumidas -->
-                                        <tr>
-                                            <td class="p-3 border">Calorías consumida</td>
-                                            <td *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaNutricionales); let i = index" 
-                                                class="text-center p-3 border">
-                                                <div class="flex flex-col items-center">
-                                                    <span class="font-medium">{{ medida.caloria_consumida }}kcal</span>
-                                                    <div class="mt-1">
-                                                        <ng-container *ngIf="i === 0">
-                                                            <i class="pi pi-arrow-right text-blue-500"></i>
-                                                        </ng-container>
-                                                        <ng-container *ngIf="i > 0">
-                                                            <i *ngIf="compararCaloriasAnterior(obtenerMedidasOrdenadas(usuario.medidaNutricionales), i) === 'increase'" 
-                                                            class="pi pi-arrow-up text-green-500"></i>
-                                                            <i *ngIf="compararCaloriasAnterior(obtenerMedidasOrdenadas(usuario.medidaNutricionales), i) === 'decrease'" 
-                                                            class="pi pi-arrow-down text-red-500"></i>
-                                                            <i *ngIf="compararCaloriasAnterior(obtenerMedidasOrdenadas(usuario.medidaNutricionales), i) === 'equal'" 
-                                                            class="pi pi-arrows-h text-orange-500"></i>
-                                                        </ng-container>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        
-                                        <!-- Fila de Acciones -->
-                                        <tr>
-                                            <td class="p-3 border font-bold text-lg">Acciones</td>
-                                            <td *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaNutricionales)" 
-                                                class="text-center p-3 border">
-                                                <div class="flex justify-center space-x-1">
-                                                    <p-button icon="pi pi-pencil" 
-                                                            [rounded]="true" 
-                                                            [outlined]="true"
-                                                            styleClass="p-button-xs"
-                                                            (click)="edit(medida)"/>
-                                                    
-                                                    <p-button icon="pi pi-trash" 
-                                                            [rounded]="true" 
-                                                            [outlined]="true"
-                                                            severity="danger"
-                                                            styleClass="p-button-xs"
-                                                            (click)="showModalDelete(medida.id)"/>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
+                                        <p-button icon="pi pi-trash" 
+                                                [rounded]="true" 
+                                                [outlined]="true"
+                                                severity="danger"
+                                                styleClass="p-button-xs"
+                                                (click)="showModalDelete(medida.id)"/>
+                                        </div>
+                                    </td>
+                                    </tr>
+                                </tbody>
                                 </table>
                             </div>
                         </div>

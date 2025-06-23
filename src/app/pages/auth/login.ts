@@ -54,12 +54,11 @@ login(): void {
 
       if (token && user) {
         localStorage.setItem('token', token);
-
-        // Guardamos los datos del usuario en localStorage
         localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('rol', user.rol);
 
         this.saveMessageToast();
-        this.router.navigate(['/dashboard']);
+        this.router.navigate([this.getRedirectRoute(user.rol)]); 
       } else {
         console.error('Token o usuario no válidos:', response);
         this.errorMessageToast();
@@ -71,6 +70,19 @@ login(): void {
     },
   });
 }
+
+getRedirectRoute(rol: string): string {
+  switch (rol.toLowerCase()) {
+    case 'usuario':
+      return '/pages/graficasUsuario';
+    case 'administrador':
+    case 'entrenador':
+      return '/dashboard';
+    default:
+      return '/auth/login';
+  }
+}
+
 
   
 

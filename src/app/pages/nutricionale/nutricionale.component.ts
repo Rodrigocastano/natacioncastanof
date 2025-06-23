@@ -202,32 +202,36 @@ selectedUser: any;
         this.visibleUserMeasureDialog = true;
     }
 
-    obtenerMedidasOrdenadas(measures: any[]): any[] {
-      return [...measures].sort((a, b) => {
-        return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
-      });
-    }
-
-  compararProteinaAnterior(medidasOrdenadas: any[], index: number): string {
-    if (index === 0) return 'increase';
-    
-    const actual = medidasOrdenadas[index].proteina_consumida;
-    const anterior = medidasOrdenadas[index - 1].proteina_consumida;
-
-    if (actual > anterior) return 'increase';
-    if (actual < anterior) return 'decrease';
-    return 'equal';
-  }
+obtenerMedidasOrdenadas(measures: any[]): any[] {
+  // Ordenamos de más antiguo a más reciente y tomamos los últimos 8
+  return [...measures]
+    .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime())
+    .slice(-8);
+}
 
 compararCaloriasAnterior(medidasOrdenadas: any[], index: number): string {
-  if (index === 0) return 'increase';
+  // No mostrar flecha para el primer registro
+  if (index === 0) return '';
   
   const actual = medidasOrdenadas[index].caloria_consumida;
   const anterior = medidasOrdenadas[index - 1].caloria_consumida;
 
   if (actual > anterior) return 'increase';
   if (actual < anterior) return 'decrease';
-  return 'equal';
+  return ''; // No mostrar flecha si son iguales
+}
+
+// Nueva función para comparar proteína
+compararProteinaAnterior(medidasOrdenadas: any[], index: number): string {
+  // No mostrar flecha para el primer registro
+  if (index === 0) return '';
+  
+  const actual = parseFloat(medidasOrdenadas[index].proteina_consumida);
+  const anterior = parseFloat(medidasOrdenadas[index - 1].proteina_consumida);
+
+  if (actual > anterior) return 'increase';
+  if (actual < anterior) return 'decrease';
+  return ''; // No mostrar flecha si son iguales
 }
 
     showSaveDialog() {
