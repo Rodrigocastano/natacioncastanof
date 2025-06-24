@@ -33,7 +33,6 @@
             <ng-template #header>
                 <tr>
                     <th style="min-width: 4rem"></th>
-                    <th style="min-width: 6rem">ID</th>
                     <th pSortableColumn="name" style="min-width:8rem">Identificación</th>
                     <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
@@ -47,7 +46,6 @@
                     <td>
                         <p-button type="button" pRipple [pRowToggler]="usuario" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
                     </td>
-                    <td>{{ usuario.id }}</td>
                     <td>{{ usuario.cedula }}</td>
                     <td>{{ usuario.nombre }}</td>
                     <td>{{ usuario.apellido }}</td>
@@ -64,8 +62,7 @@
                                 <ng-template #header>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Apellido</th>
+                                        <th>Nombres</th>
                                         <th>Diagnostico</th>
                                         <th>Apto</th>
                                         <th>Fecha</th>
@@ -76,8 +73,7 @@
                                 <ng-template #body let-elast>
                                     <tr>
                                         <td>{{ elast.id }}</td>
-                                        <td>{{ elast.nombre }}</td>
-                                        <td>{{ elast.apellido }}</td>
+                                        <td>{{ elast.nombre }} {{ elast.apellido }}</td>
                                         <td>{{ elast.diagnostico }} </td>
                                         <td>{{ elast.apto ? 'Sí' : 'No' }}</td>
                                         <td>{{ elast.fecha }}</td>

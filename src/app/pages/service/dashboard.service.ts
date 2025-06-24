@@ -11,9 +11,7 @@ export class DashboardService {
 
   constructor(private http: HttpClient) {}
 
-     getAllAbonado() {
-      return this.http.get<any>(`${this.apisUrl}/pagosAbonado`);
-    }
+
 
     getAllCompleto() {
       return this.http.get<any>(`${this.apisUrl}/pagosCompleto`);

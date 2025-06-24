@@ -34,10 +34,9 @@
       <ng-template #header>
           <tr>
               <th style="min-width: 4rem"></th>
-              <th style="min-width: 6rem">ID</th>
+              <th pSortableColumn="price" style="min-width: 8rem">Identificación</th>
               <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
               <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
-              <th pSortableColumn="price" style="min-width: 8rem">Identificación</th>
               <th pSortableColumn="price" style="min-width: 6rem">Teléfono</th>
           </tr>
       </ng-template>
@@ -47,10 +46,9 @@
               <td>
                   <p-button type="button" pRipple [pRowToggler]="usuario" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
               </td>
-              <td>{{ usuario.id }}</td>
+              <td>{{ usuario.cedula }}</td>
               <td>{{ usuario.nombre }}</td>
               <td>{{ usuario.apellido }}</td>
-              <td>{{ usuario.cedula }}</td>
               <td>{{ usuario.telefono }}</td>
           </tr>
       </ng-template>

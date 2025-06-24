@@ -1,108 +1,84 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { DashboardService } from '../service/dashboard.service';
-import { Dashboards } from '../interfaces/dashboards';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TableModule } from 'primeng/table';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
 
+interface HistorialPago {
+  fecha: string;
+  monto: number;
+}
 
+interface UsuarioPago {
+  id_usuario: number;
+  nombre: string;
+  apellido: string;
+  mostrarHistorial: boolean;
+  historial: HistorialPago[];
+}
+
+interface GrupoPagos {
+  tipoPago: string;
+  pagos: UsuarioPago[];
+  mostrarTodos: boolean;
+}
 
 @Component({
-    selector: 'app-dashboard',
-    imports: [CommonModule, ProgressSpinnerModule],
-    templateUrl: '/dashboard.html'
-
+  selector: 'app-dashboard',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ProgressSpinnerModule,
+    TableModule,
+    DropdownModule,
+    FormsModule,
+    ButtonModule
+  ],
+  templateUrl: './dashboard.html'
 })
 export class Dashboard implements OnInit {
 
-    loading: boolean = true;
+  loadingPagosCompletos = true;
+  loadingPagosPendientes = true;
 
-    completo: any[] = [];
-    pendiente: any[] = [];
-    abonado: any[] = [];
+  pagados: GrupoPagos[] = [];
+  pendientes: GrupoPagos[] = [];
 
-    visibleCompleto = 5;
-    visiblePendiente = 5;
-    visibleAbonado = 5;
-  
-    verMas(tipo: string) {
-      if (tipo === 'completo') this.visibleCompleto += 5;
-      if (tipo === 'pendiente') this.visiblePendiente += 5;
-      if (tipo === 'abonado') this.visibleAbonado += 5;
-    }
+  constructor(private dashboardService: DashboardService) {}
 
-    verMenos(tipo: string) {
-        if (tipo === 'completo' && this.visibleCompleto > 5) this.visibleCompleto -= 5;
-        if (tipo === 'pendiente' && this.visiblePendiente > 5) this.visiblePendiente -= 5;
-        if (tipo === 'abonado' && this.visibleAbonado > 5) this.visibleAbonado -= 5;
-    }
+  ngOnInit(): void {
+    this.cargarPagosCompletos();
+    this.cargarPagosPendientes();
+  }
 
-    agrupadosCompleto: any[] = [];
-    agrupadosAbonado: any[] = [];
-    agrupadosPendiente: any[] = [];
-
-  
-
-    constructor(
-        private fb: FormBuilder,
-        private dashboardService: DashboardService,
-      ){}
-
-
-      ngOnInit(): void {
-        this.getAbonado();
-        this.getCompleto();
-        this.getPendiente();
-        
-
+  cargarPagosCompletos() {
+    this.loadingPagosCompletos = true;
+    this.dashboardService.getAllCompleto().subscribe({
+      next: (data) => {
+        this.pagados = data.data;
+        this.loadingPagosCompletos = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar pagos completos', err);
+        this.loadingPagosCompletos = false;
       }
+    });
+  }
 
-      getCompleto() {
-        this.dashboardService.getAllCompleto().subscribe(data => {
-          this.completo = data.data;
-          this.agrupadosCompleto = this.agruparPagosPorUsuario(this.completo);
-          this.loading = false;
-        });
+  cargarPagosPendientes() {
+    this.loadingPagosPendientes = true;
+    this.dashboardService.getAllPendiente().subscribe({
+      next: (data) => {
+        this.pendientes = data.data;
+        this.loadingPagosPendientes = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar pagos pendientes', err);
+        this.loadingPagosPendientes = false;
       }
-      
-      getAbonado() {
-        this.dashboardService.getAllAbonado().subscribe(data => {
-          this.abonado = data.data;
-          this.agrupadosAbonado = this.agruparPagosPorUsuario(this.abonado);
-          this.loading = false;
-        });
-      }
-      
-      getPendiente() {
-        this.dashboardService.getAllPendiente().subscribe(data => {
-          this.pendiente = data.data;
-          this.agrupadosPendiente = this.agruparPagosPorUsuario(this.pendiente);
-          this.loading = false;
-        });
-      }
-      
-
-
-      agruparPagosPorUsuario(pagos: any[]): any[] {
-        const mapa = new Map<string, any[]>();
-      
-        pagos.forEach(pago => {
-          const clave = `${pago.nombre}_${pago.apellido}`; // o usa pago.usuario_id si tienes
-          if (!mapa.has(clave)) {
-            mapa.set(clave, []);
-          }
-          mapa.get(clave)!.push(pago);
-        });
-      
-        return Array.from(mapa.entries()).map(([clave, pagos]) => ({
-          usuario: clave,
-          pagos,
-          mostrarTodos: false
-        }));
-      }
-      
-      
-
-
+    });
+  }
 }
-

@@ -11,4 +11,5 @@ export interface Pago {
     nombre?: string;
     apellido?: string
     cedula?: string
+    tipo_pago?: string;
 }

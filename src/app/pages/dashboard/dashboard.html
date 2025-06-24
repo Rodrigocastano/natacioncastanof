@@ -1,239 +1,209 @@
+<div class="flex flex-col md:flex-row flex-wrap gap-6 justify-center items-stretch">
 
+    <!-- CARD: Pagos Pendientes -->
+    <div class="card p-6 bg-white rounded-lg shadow-md flex-1 min-w-[400px] max-w-4xl flex flex-col h-full">
+      <h2 class="text-xl font-extrabold mb-4 text-red-700 tracking-wide">Pagos Pendientes</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 text-gray-800 dark:text-white">
-        <div 
-        *ngIf="loading" style="display: flex; justify-content: center; align-items: center; height: 300px;">
-        <p-progressSpinner 
-            [style]="{ width: '50px', height: '50px' }" styleClass="p-text-primary">
-        </p-progressSpinner>
+      <div class="flex justify-center" *ngIf="loadingPagosPendientes">
+        <p-progressSpinner styleClass="text-red-600" [style]="{ width: '40px', height: '40px' }"></p-progressSpinner>
+      </div>
+
+      <div *ngIf="!loadingPagosPendientes && pendientes.length === 0"
+          class="text-center py-4 text-gray-400 text-sm italic border border-dashed border-gray-300 rounded-md">
+        No se encontraron pagos pendientes.
+      </div>
+
+      <!-- Tabla de pendientes -->
+      <p-table *ngIf="!loadingPagosPendientes && pendientes.length"
+              class="flex-1"
+              [value]="pendientes"
+              styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines mb-0"
+              [responsiveLayout]="'stack'" [breakpoint]="'960px'">
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="text-left">Tipo de Pago</th>
+            <th></th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-grupo>
+          <tr [class.bg-red-50]="grupo.mostrarTodos">
+            <td class="text-left font-medium text-red-700">{{ grupo.tipoPago }}</td>
+            <td class="flex justify-end">
+              <p-button icon="pi pi-eye" [text]="true" severity="danger"
+                        (click)="grupo.mostrarTodos = !grupo.mostrarTodos"
+                        [label]="grupo.mostrarTodos ? 'Ocultar' : 'Ver usuarios'"
+                        class="text-sm"></p-button>
+            </td>
+          </tr>
+
+          <tr *ngIf="grupo.mostrarTodos">
+            <td colspan="2" class="p-0">
+              <p-table [value]="grupo.pagos"
+                      styleClass="p-datatable-sm p-datatable-gridlines mb-0"
+                      [responsiveLayout]="'stack'" [breakpoint]="'960px'">
+
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Identificación</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th class="text-center">Acción</th>
+                  </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-pago>
+                  <tr>
+                    <td>{{ pago.cedula }}</td>
+                    <td>{{ pago.nombre }}</td>
+                    <td>{{ pago.apellido }}</td>
+                    <td class="text-center">
+                      <p-button icon="pi pi-eye" [text]="true"
+                                (click)="pago.mostrarHistorial = !pago.mostrarHistorial"
+                                [label]="pago.mostrarHistorial ? 'Ocultar' : 'Registros'"
+                                class="text-sm px-2"></p-button>
+                    </td>
+                  </tr>
+
+                  <tr *ngIf="pago.mostrarHistorial">
+                    <td colspan="4" class="p-0">
+                      <p-table [value]="pago.historial"
+                              styleClass="p-datatable-sm p-datatable-striped mb-0"
+                              [responsiveLayout]="'stack'" [breakpoint]="'960px'">
+
+                        <ng-template pTemplate="header">
+                          <tr>
+                            <th>Fecha</th>
+                            <th>Monto</th>
+                            <th>Abonado</th>
+                            <th class="text-center">Estado</th>
+                          </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="body" let-h>
+                          <tr>
+                            <td>{{ h.fecha | date:'mediumDate' }}</td>
+                            <td>{{ h.monto | currency }}</td>
+                            <td>{{ h.monto_abonado | currency }}</td>
+                            <td class="text-center">
+                              <i *ngIf="h.pagado" class="pi pi-times-circle text-red-500"></i>
+                              <i *ngIf="!h.pagado" class="pi pi-times-circle text-red-500"></i>
+                            </td>
+                          </tr>
+                        </ng-template>
+                      </p-table>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </div>
-    
-        <div *ngIf="!loading">
-            <!-- Columna: Pagos Completos -->
-            <div>
-                <h2 class="text-center text-xl font-bold mb-4 text-green-700">Pagos Completos</h2>
-                <div *ngFor="let grupo of agrupadosCompleto | slice:0:visibleCompleto" class="mb-6">
-                    <div class="card p-6 shadow-lg rounded-lg text-left bg-white dark:bg-gray-800">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="text-green-700 font-semibold text-lg">
-                                <i class="pi pi-check-circle mr-2"></i>Pago Completado
-                            </div>
-                        </div>
-                
-                        <div class="space-y-2 text-gray-800 dark:text-gray-200">
-                            <div class="flex justify-between">
-                                <span class="font-medium">Usuario:</span>
-                                <span>{{ grupo.pagos[0].nombre }} {{ grupo.pagos[0].apellido }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="font-medium">Monto:</span>
-                                <span class="text-green-600 font-semibold">${{ grupo.pagos[0].monto }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="font-medium">Tipo de Pago:</span>
-                                <span class="capitalize">{{ grupo.pagos[0].tipo_pago }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="font-medium">Fecha:</span>
-                                <span>{{ grupo.pagos[0].fecha | date: 'longDate' }}</span>
-                            </div>
-                        </div>
-                    </div>
-            
-                    <div *ngIf="grupo.mostrarTodos">
-                        <div *ngFor="let pago of grupo.pagos.slice(1)" class="card p-4 mt-2 border border-green-400 rounded-lg bg-white dark:bg-gray-700 shadow-md">
-                            <div class="flex items-center justify-between text-sm text-gray-800 dark:text-gray-200">
-                                <div class="flex items-center">
-                                    <i class="pi pi-money-bill-alt text-green-600 mr-2"></i>
-                                    <span><strong>${{ pago.monto }}</strong></span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="pi pi-calendar text-gray-600 dark:text-gray-300 mr-2"></i>
-                                    <span>{{ pago.fecha | date:'longDate' }}</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="pi pi-tag text-yellow-600 mr-2"></i>
-                                    <span class="capitalize">{{ pago.tipo_pago }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-        
-                    <div class="text-center mt-2">
-                        <button (click)="grupo.mostrarTodos = !grupo.mostrarTodos" class="text-green-700 font-medium hover:underline">
-                        {{ grupo.mostrarTodos ? 'Ocultar listado' : 'Ver listado' }}
-                        </button>
-                    </div>
-                </div>
 
-                <div class="text-center" *ngIf="agrupadosCompleto.length > visibleCompleto">
-                    <button (click)="verMas('completo')" class="text-green-700 dark:text-green-400 font-medium hover:underline">
-                        Ver más
-                    </button>
-                </div>
+    <!-- CARD: Pagos Completos -->
+    <div class="card p-6 bg-white rounded-lg shadow-md flex-1 min-w-[400px] max-w-4xl flex flex-col h-full">
+      <h2 class="text-xl font-extrabold mb-4 text-green-700 tracking-wide">Pagos Completos</h2>
 
-                <div class="text-center" *ngIf="visibleCompleto > 5">
-                    <button (click)="verMenos('completo')" class="text-green-700 dark:text-green-400 font-medium hover:underline">
-                        Ver menos
-                    </button>
-                </div>
-            </div>
-        </div>
+      <div class="flex justify-center" *ngIf="loadingPagosCompletos">
+        <p-progressSpinner styleClass="text-green-600" [style]="{ width: '40px', height: '40px' }"></p-progressSpinner>
+      </div>
 
-        <div 
-    *ngIf="loading" style="display: flex; justify-content: center; align-items: center; height: 300px;">
-    <p-progressSpinner 
-        [style]="{ width: '50px', height: '50px' }" styleClass="p-text-primary">
-    </p-progressSpinner>
+      <div *ngIf="!loadingPagosCompletos && pagados.length === 0"
+          class="text-center py-4 text-gray-400 text-sm italic border border-dashed border-gray-300 rounded-md">
+        No se encontraron pagos completos.
+      </div>
+
+      <!-- Tabla de completos -->
+      <p-table *ngIf="!loadingPagosCompletos && pagados.length"
+              class="flex-1"
+              [value]="pagados"
+              styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines mb-0"
+              [responsiveLayout]="'stack'" [breakpoint]="'960px'">
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="text-left">Tipo de Pago</th>
+            <th></th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-grupo>
+          <tr [class.bg-green-50]="grupo.mostrarTodos">
+            <td class="text-left font-medium text-green-700">{{ grupo.tipoPago }}</td>
+            <td class="flex justify-end">
+              <p-button icon="pi pi-eye" [text]="true" severity="success"
+                        (click)="grupo.mostrarTodos = !grupo.mostrarTodos"
+                        [label]="grupo.mostrarTodos ? 'Ocultar' : 'Ver usuarios'"
+                        class="text-sm"></p-button>
+            </td>
+          </tr>
+
+          <tr *ngIf="grupo.mostrarTodos">
+            <td colspan="2" class="p-0">
+              <p-table [value]="grupo.pagos"
+                      styleClass="p-datatable-sm p-datatable-gridlines mb-0"
+                      [responsiveLayout]="'stack'" [breakpoint]="'960px'">
+
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Identificación</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th class="text-center">Acción</th>
+                  </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-pago>
+                  <tr>
+                    <td>{{ pago.cedula }}</td>
+                    <td>{{ pago.nombre }}</td>
+                    <td>{{ pago.apellido }}</td>
+                    <td class="text-center">
+                      <p-button icon="pi pi-eye" [text]="true"
+                                (click)="pago.mostrarHistorial = !pago.mostrarHistorial"
+                                [label]="pago.mostrarHistorial ? 'Ocultar' : 'Registros'"
+                                class="text-sm px-2"></p-button>
+                    </td>
+                  </tr>
+
+                  <tr *ngIf="pago.mostrarHistorial">
+                    <td colspan="4" class="p-0">
+                      <p-table [value]="pago.historial"
+                              styleClass="p-datatable-sm p-datatable-striped mb-0"
+                              [responsiveLayout]="'stack'" [breakpoint]="'960px'">
+
+                        <ng-template pTemplate="header">
+                          <tr>
+                            <th>Fecha</th>
+                            <th>Monto</th>
+                            <th>Abonado</th>
+                            <th class="text-center">Estado</th>
+                          </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="body" let-h>
+                          <tr>
+                            <td>{{ h.fecha | date:'mediumDate' }}</td>
+                            <td>{{ h.monto | currency }}</td>
+                            <td>{{ h.monto_abonado | currency }}</td>
+                            <td class="text-center">
+                              <i *ngIf="h.pagado" class="pi pi-verified text-green-500"></i>
+                              <i *ngIf="!h.pagado" class="pi pi-verified text-green-500"></i>
+                            </td>
+                          </tr>
+                        </ng-template>
+                      </p-table>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
 </div>
-
-        <div *ngIf="!loading">
-            <!-- Adaptación para Pagos Pendientes -->
-            <div>
-                <h2 class="text-center text-xl font-bold mb-4 text-yellow-600">Pagos Pendientes</h2>
-                <div *ngFor="let grupo of agrupadosPendiente | slice:0:visiblePendiente" class="mb-6">
-                    <div class="card p-6 shadow-lg rounded-lg text-left bg-white dark:bg-gray-800">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="text-yellow-600 font-semibold text-lg">
-                                <i class="pi pi-clock mr-2"></i>Pago Pendiente
-                            </div>
-                        </div>
-                
-                        <div class="space-y-2 text-gray-800 dark:text-gray-200">
-                            <div class="flex justify-between">
-                                <span class="font-medium">Usuario:</span>
-                                <span>{{ grupo.pagos[0].nombre }} {{ grupo.pagos[0].apellido }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="font-medium">Monto:</span>
-                                <span class="text-yellow-600 font-semibold">${{ grupo.pagos[0].monto }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="font-medium">Tipo de Pago:</span>
-                                <span class="capitalize">{{ grupo.pagos[0].tipo_pago }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="font-medium">Fecha:</span>
-                                <span>{{ grupo.pagos[0].fecha | date: 'longDate' }}</span>
-                            </div>
-                        </div>
-                    </div>
-                
-                    <div *ngIf="grupo.mostrarTodos">
-                        <div *ngFor="let pago of grupo.pagos.slice(1)" class="card p-4 mt-2 border border-green-400 rounded-lg bg-white dark:bg-gray-700 shadow-md">
-                            <div class="flex items-center justify-between text-sm text-gray-800 dark:text-gray-200">
-                                <div class="flex items-center">
-                                    <i class="pi pi-money-bill-alt text-green-600 mr-2"></i>
-                                    <span><strong>${{ pago.monto }}</strong></span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="pi pi-calendar text-gray-600 dark:text-gray-300 mr-2"></i>
-                                    <span>{{ pago.fecha | date:'longDate' }}</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="pi pi-tag text-yellow-600 mr-2"></i>
-                                    <span class="capitalize">{{ pago.tipo_pago }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                
-                    <div class="text-center mt-2">
-                        <button (click)="grupo.mostrarTodos = !grupo.mostrarTodos" class="text-yellow-600 font-medium hover:underline">
-                        {{ grupo.mostrarTodos ? 'Ocultar listado' : 'Ver listado' }}
-                        </button>
-                    </div>
-                </div>
-            
-                <div class="text-center" *ngIf="agrupadosPendiente.length > visiblePendiente">
-                    <button (click)="verMas('pendiente')" class="text-yellow-600 dark:text-yellow-400 font-medium hover:underline">
-                        Ver más
-                    </button>
-                </div>
-                <div class="text-center" *ngIf="visiblePendiente > 5">
-                    <button (click)="verMenos('pendiente')" class="text-yellow-600 dark:text-yellow-400 font-medium hover:underline">
-                        Ver menos
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div 
-        *ngIf="loading" style="display: flex; justify-content: center; align-items: center; height: 300px;">
-        <p-progressSpinner 
-            [style]="{ width: '50px', height: '50px' }" styleClass="p-text-primary">
-        </p-progressSpinner>
-    </div>
-    
-        <div *ngIf="!loading">
-            <!-- Adaptación para Pagos Abonados -->
-            <div>
-                <h2 class="text-center text-xl font-bold mb-4 text-blue-600">Pagos Abonados</h2>
-                <div *ngFor="let grupo of agrupadosAbonado | slice:0:visibleAbonado" class="mb-6">
-                    <div class="card p-6 shadow-lg rounded-lg text-left bg-white dark:bg-gray-800">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="text-blue-600 font-semibold text-lg">
-                                <i class="pi pi-credit-card mr-2"></i>Pago Abonado
-                            </div>
-                        </div>
-                
-                        <div class="space-y-2 text-gray-800 dark:text-gray-200">
-                            <div class="flex justify-between">
-                                <span class="font-medium">Usuario:</span>
-                                <span>{{ grupo.pagos[0].nombre }} {{ grupo.pagos[0].apellido }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="font-medium">Monto:</span>
-                                <span class="text-blue-600 font-semibold">${{ grupo.pagos[0].monto }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="font-medium">Tipo de Pago:</span>
-                                <span class="capitalize">{{ grupo.pagos[0].tipo_pago }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="font-medium">Fecha:</span>
-                                <span>{{ grupo.pagos[0].fecha | date: 'longDate' }}</span>
-                            </div>
-                        </div>
-                    </div>
-                
-                    <div *ngIf="grupo.mostrarTodos">
-                        <div *ngFor="let pago of grupo.pagos.slice(1)" class="card p-4 mt-2 border border-green-400 rounded-lg bg-white dark:bg-gray-700 shadow-md">
-                            <div class="flex items-center justify-between text-sm text-gray-800 dark:text-gray-200">
-                                <div class="flex items-center">
-                                    <i class="pi pi-money-bill-alt text-green-600 mr-2"></i>
-                                    <span><strong>${{ pago.monto }}</strong></span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="pi pi-calendar text-gray-600 dark:text-gray-300 mr-2"></i>
-                                    <span>{{ pago.fecha | date:'longDate' }}</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="pi pi-tag text-yellow-600 mr-2"></i>
-                                    <span class="capitalize">{{ pago.tipo_pago }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                
-                    <div class="text-center mt-2">
-                        <button (click)="grupo.mostrarTodos = !grupo.mostrarTodos" class="text-blue-600 font-medium hover:underline">
-                        {{ grupo.mostrarTodos ? 'Ocultar listado' : 'Ver listado' }}
-                        </button>
-                    </div>
-                </div>
-            
-                <div class="text-center" *ngIf="agrupadosAbonado.length > visibleAbonado">
-                    <button (click)="verMas('abonado')" class="text-blue-600 dark:text-blue-400 font-medium hover:underline">
-                        Ver más
-                    </button>
-                </div>
-                <div class="text-center" *ngIf="visibleAbonado > 5">
-                    <button (click)="verMenos('abonado')" class="text-blue-600 dark:text-blue-400 font-medium hover:underline">
-                        Ver menos
-                    </button>
-                </div>
-            </div>
-        </div>
-
-    </div>
