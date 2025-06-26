@@ -144,32 +144,34 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-12 gap-4">
-                        <div class="col-span-6">
+                    <div class="grid grid-cols-12 gap-4 w-full">
+                        <div class="col-span-12 md:col-span-6">
                             <label for="monto" class="block font-bold mb-1">Monto</label>
                             <p-inputnumber 
-                                formControlName="monto" id="monto" placeholder="Ingrese el monto" required mode="currency" currency="USD" locale="en-US" class="w-full text-sm px-0 py-2">
+                            formControlName="monto" 
+                            id="monto" 
+                            placeholder="Ingrese el monto" 
+                            mode="currency" 
+                            currency="USD" 
+                            locale="en-US" 
+                            class="w-full">
                             </p-inputnumber>
-                                    
-                            <p-message
-                                *ngIf="formUpdate.get('monto')?.errors?.['required'] && (formUpdate.get('monto')?.dirty || formUpdate.get('monto')?.touched)" severity="error" variant="simple" size="small">
-                                El campo monto es requerido
-                            </p-message>
                         </div>
-                    
-                        <div class="col-span-6">
+
+                        <div class="col-span-12 md:col-span-6">
                             <label for="monto_abonado" class="block font-bold mb-1">Monto abonado</label>
                             <p-inputnumber 
-                                formControlName="monto_abonado" id="monto_abonado" placeholder="Ingrese el monto abonado" required mode="currency" currency="USD" locale="en-US" class="w-full text-sm px-0 py-2">
+                            formControlName="monto_abonado" 
+                            id="monto_abonado" 
+                            placeholder="Ingrese el monto abonado" 
+                            mode="currency" 
+                            currency="USD" 
+                            locale="en-US" 
+                            class="w-full">
                             </p-inputnumber>
-                                    
-                            <p-message
-                                *ngIf="formUpdate.get('monto_abonado')?.errors?.['required'] && (formUpdate.get('monto_abonado')?.dirty || formUpdate.get('monto_abonado')?.touched)" severity="error" variant="simple" size="small">
-                                El campo monto abonado es requerido
-                            </p-message>
-                        </div> 
+                        </div>
                     </div>
-                    
+
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
@@ -202,13 +204,13 @@
 
         <ng-template #footer>
             <form [formGroup]="formSave" class="formulario">
-            <p-button label="Cancel" icon="pi pi-times" text (click)="cancelSave()"  />
-            <p-button label="Save" icon="pi pi-check" (click)="store()" />
+            <p-button label="Cancelar" icon="pi pi-times" text (click)="cancelSave()"  />
+            <p-button label="Guardar" icon="pi pi-check" (click)="store()" />
         </form>
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleDelete" header="Confirm fación"  [style]="{ width: '350px' }" [modal]="true">
+    <p-dialog [(visible)]="visibleDelete" header="Confirmafación"  [style]="{ width: '350px' }" [modal]="true">
         <div class="flex items-center justify-center">
             <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
             <span>¿Estás seguro que deseas eliminar este registro?</span>
@@ -261,27 +263,67 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-12 gap-4"> 
-                        <div class="col-span-6">
-                            <label for="monto" class="block font-bold mb-1">Monto</label>
-                            <p-inputnumber 
-                                formControlName="monto" id="monto" placeholder="Ingrese el monto" required mode="currency" currency="USD" locale="en-US" class="w-full text-sm px-0 py-2">
-                            </p-inputnumber>
-                                    
+                    <div class="grid grid-cols-12 gap-4">
+                        <!-- Campo Monto -->
+                        <div class="col-span-12 md:col-span-6">
+                            <label for="monto" class="block font-bold mb-3">Monto</label>
+                            <p-inputNumber
+                            formControlName="monto"
+                            id="monto"
+                            placeholder="Ingrese el monto"
+                            mode="currency"
+                            currency="USD"
+                            locale="en-US"
+                            required
+                            class="w-full"
+                            [ngClass]="{
+                                'p-invalid': formUpdate.get('monto')?.invalid &&
+                                            (formUpdate.get('monto')?.dirty || formUpdate.get('monto')?.touched)
+                            }"
+                            ></p-inputNumber>
+
+                            <div class="mt-2">
                             <p-message
-                                *ngIf="formUpdate.get('monto')?.errors?.['required'] && (formUpdate.get('monto')?.dirty || formUpdate.get('monto')?.touched)" severity="error" variant="simple" size="small">
-                                El campo monto es requerido
-                            </p-message>
-                        </div>
-                        
-                        <div class="col-span-6">
-                            <label for="monto_abonado" class="block font-bold mb-1">Monto abonado</label>
-                            <p-inputnumber 
-                                [readonly]="true" formControlName="monto_abonado" id="monto_abonado" placeholder="Ingrese el monto abonado" required mode="currency" currency="USD" locale="en-US" class="w-full text-sm px-0 py-2">
-                            </p-inputnumber>
+                                *ngIf="formUpdate.get('monto')?.invalid &&
+                                    (formUpdate.get('monto')?.dirty || formUpdate.get('monto')?.touched)"
+                                severity="error"
+                                variant="simple"
+                                size="small"
+                                text="El campo monto es requerido"
+                            ></p-message>
+                            </div>
                         </div>
 
+                        <!-- Campo Monto Abonado -->
+                        <div class="col-span-12 md:col-span-6">
+                            <label for="monto_abonado" class="block font-bold mb-3">Monto abonado</label>
+                            <p-inputNumber
+                            formControlName="monto_abonado"
+                            id="monto_abonado"
+                            placeholder="Ingrese el monto abonado"
+                            mode="currency"
+                            currency="USD"
+                            locale="en-US"
+                            [readonly]="true"
+                            required
+                            class="w-full"
+                            ></p-inputNumber>
+
+                            <div class="mt-2">
+                            <p-message
+                                *ngIf="formUpdate.get('monto_abonado')?.invalid &&
+                                    (formUpdate.get('monto_abonado')?.dirty || formUpdate.get('monto_abonado')?.touched)"
+                                severity="error"
+                                variant="simple"
+                                size="small"
+                                text="El campo monto abonado es requerido"
+                            ></p-message>
+                            </div>
+                        </div>
                     </div>
+
+
+
 
                     <div class="grid grid-cols-12 gap-4"> 
                         <div class="col-span-6">
@@ -315,7 +357,7 @@
     
         <ng-template #footer>
             <form [formGroup]="formUpdate" class="formulario">
-                <p-button label="Cancel" icon="pi pi-times" text (click)="canceUpdate()"  />
+                <p-button label="Cancelar" icon="pi pi-times" text (click)="canceUpdate()"  />
                 <p-button label="Guardar" icon="pi pi-check" (click)="update()" />
         </form>
         </ng-template>

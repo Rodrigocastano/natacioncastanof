@@ -18,31 +18,42 @@ import { ToastModule } from 'primeng/toast';
     providers: [ConfirmationService, MessageService],
     template: ` 
     <div class="layout-topbar">
-        <div class="layout-topbar-logo-container">
-            <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
+        <div class="layout-topbar flex items-center w-full px-4 py-2">
+
+            <div class="layout-topbar-logo-container flex items-center gap-2">
+                <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
                 <i class="pi pi-bars"></i>
-            </button>
-            <a class="layout-topbar-logo">
+                </button>
+                <a class="layout-topbar-logo font-bold text-lg">
                 <span style="white-space: nowrap;">NATACIÓN CASTAÑO</span>
-            </a>
+                </a>
+            </div>
+
+
+        <div class="flex-grow"></div>
+
+
+        <div class="layout-config-menu flex items-center gap-4">
+            <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
+            <i
+                [ngClass]="{
+                'pi': true,
+                'pi-moon': layoutService.isDarkTheme(),
+                'pi-sun': !layoutService.isDarkTheme()
+                }"
+            ></i>
+            </button>
+
+            <button type="button" class="layout-topbar-action" (click)="abrirPerfil()">
+            <i class="pi pi-user"></i>
+            <span class="hidden lg:inline">Profile</span>
+            </button>
+
         </div>
 
-        <div class="layout-topbar-actions">
-            <div class="layout-config-menu">
-                <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
-                    <i [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
-                </button>
-             
-            </div>
 
-            <div class="layout-topbar-menu hidden lg:block">
-                <div class="layout-topbar-menu-content">
-                    <button type="button" class="layout-topbar-action"  (click)="abrirPerfil()">
-                        <i class="pi pi-user"></i>
-                        <span>Profile</span>
-                    </button>
-                </div>
-            </div>
+
+
 
             <p-confirmpopup />
             <p-toast />

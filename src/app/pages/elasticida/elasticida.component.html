@@ -149,7 +149,7 @@
                 </div>
                 
                 <div class="col-span-6">
-                    <label for="medida_elasticida" class="block font-bold mb-2">Medida Elasticida</label>
+                    <label for="medida_elasticida" class="block font-bold mb-2">Medida elasticida</label>
                     <p-inputnumber formControlName="medida_elasticida" id="medida_elasticida" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-1" />             
                     <p-message
                         *ngIf="formSave.get('medida_elasticida')?.errors?.['required'] && (formSave.get('medida_elasticida')?.dirty || formSave.get('medida_elasticida')?.touched)" severity="error" variant="simple" size="small" >
@@ -160,7 +160,7 @@
 
                 <div class="col-span-12 flex justify-center">
                     <div class="col-span-6">
-                        <label for="fecha" class="block font-bold mb-2">Fecha Inscripción</label>
+                        <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                         <p-datepicker 
                             [(ngModel)]="currentDate" [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" 
                             [showButtonBar]="true" [appendTo]="'body'"  dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96">
@@ -240,8 +240,8 @@
 
         <ng-template #footer>
             <form [formGroup]="formSave" class="formulario">
-                <p-button label="Cancel" icon="pi pi-times" text (click)="cancelSave()"  />
-                <p-button label="Save" icon="pi pi-check" (click)="store()" />
+                <p-button label="Cancelar" icon="pi pi-times" text (click)="cancelSave()"  />
+                <p-button label="Guardar" icon="pi pi-check" (click)="store()" />
             </form>
         </ng-template>
 
@@ -297,7 +297,7 @@
     
         <ng-template #footer>
             <form [formGroup]="formUpdate" class="formulario">
-            <p-button label="Cancel" icon="pi pi-times" text (click)="canceUpdate()"  />
+            <p-button label="Cancelar" icon="pi pi-times" text (click)="canceUpdate()"  />
             <p-button label="Guardar" icon="pi pi-check" (click)="update()" />
         </form>
         </ng-template>

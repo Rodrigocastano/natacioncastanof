@@ -20,7 +20,7 @@
             
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registro de medidas nutricionales</h5>
+                    <h5 class="m-0">Registro nutricionales</h5>
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search"></p-inputicon>
                         <input pInputText type="text" placeholder="Buscar..."
@@ -271,8 +271,8 @@
 
         <ng-template #footer>
             <form [formGroup]="formSave" class="formulario">
-                <p-button label="Cancel" icon="pi pi-times" text (click)="cancelSave()"  />
-                <p-button label="Save" icon="pi pi-check" (click)="store()" />
+                <p-button label="Cancelar" icon="pi pi-times" text (click)="cancelSave()"  />
+                <p-button label="Guardar" icon="pi pi-check" (click)="store()" />
             </form>
         </ng-template>
 
@@ -340,7 +340,7 @@
     
         <ng-template #footer>
             <form [formGroup]="formUpdate" class="formulario">
-            <p-button label="Cancel" icon="pi pi-times" text (click)="canceUpdate()"  />
+            <p-button label="Cancelar" icon="pi pi-times" text (click)="canceUpdate()"  />
             <p-button label="Guardar" icon="pi pi-check" (click)="update()" />
         </form>
         </ng-template>

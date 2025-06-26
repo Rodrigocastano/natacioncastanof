@@ -90,7 +90,7 @@
                     </div>
 
                     <div class="col-span-6">
-                        <label for="id_tipo_pago" class="block font-bold mb-3">Tipo Pago</label>             
+                        <label for="id_tipo_pago" class="block font-bold mb-3">Tipo pago</label>             
                         <p-select
                             [options]="tipoPago" [appendTo]="'body'" formControlName="id_tipo_pago" inputId="id_tipo_pago" optionLabel="displayEstado" optionValue="id"
                             placeholder="Seleccione el Tipo Pago" [filter]="true" filterBy="displayEstado" [showClear]="true" class="w-full md:w-70">
@@ -198,8 +198,8 @@
 
         <ng-template #footer>
             <form [formGroup]="formSave" class="formulario">
-            <p-button label="Cancel" icon="pi pi-times" text (click)="cancelSave()"  />
-            <p-button label="Save" icon="pi pi-check" (click)="store()" />
+            <p-button label="Cancelar" icon="pi pi-times" text (click)="cancelSave()"  />
+            <p-button label="Guardar" icon="pi pi-check" (click)="store()" />
         </form>
         </ng-template>
     </p-dialog>
@@ -337,7 +337,7 @@
     
         <ng-template #footer>
             <form [formGroup]="formUpdate" class="formulario">
-                <p-button label="Cancel" icon="pi pi-times" text (click)="canceUpdate()"  />
+                <p-button label="Cancelar" icon="pi pi-times" text (click)="canceUpdate()"  />
                 <p-button label="Guardar" icon="pi pi-check" (click)="update()" />
         </form>
         </ng-template>

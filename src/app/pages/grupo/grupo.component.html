@@ -27,68 +27,47 @@
 </div>
 
 <div *ngIf="!loading">
+  <div style="overflow-x:auto;">
     <p-table
         #dt [value]="grupo" [rows]="6" [paginator]="true"
         [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
-        [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true" dataKey="id"
+        [rowHover]="true" dataKey="id"
         currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Grupo"
-        [showCurrentPageReport]="true" [rowsPerPageOptions]="[6, 12, 18]">
-        <ng-template #caption>
-            <div class="flex items-center justify-between">
-                <h5 class="m-0">Registro de grupo</h5>
-                <p-iconfield>
-                    <p-inputicon styleClass="pi pi-search" />
-                    <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
-                </p-iconfield>
-            </div>
-        </ng-template>
+        [showCurrentPageReport]="true" [paginatorDropdownAppendTo]="'body'" [rowsPerPageOptions]="[6, 12, 18]">
 
-        <ng-template #header>
-            <tr>
-                <th style="min-width: 6rem">ID</th>
-                <th pSortableColumn="name" style="min-width:8rem">Grupo</th>
-                <th pSortableColumn="inventoryStatus" style="min-width: 10rem">Acciones</th>          
-            </tr>
-        </ng-template>
+      <ng-template #caption>
+          <div class="flex items-center justify-between">
+              <h5 class="m-0 text-base md:text-lg font-semibold">Registro de grupo</h5>
+              <p-iconfield>
+                  <p-inputicon styleClass="pi pi-search" />
+                  <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
+              </p-iconfield>
+          </div>
+      </ng-template>
 
-        <ng-template #body let-usuario>
-            <tr>
-                <td>{{ usuario.id }}</td>
-                <td>{{ usuario.nombre }}</td>
-                <td>
-                    <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(usuario.id)"/>
-                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(usuario.id)" />
-                </td>
-            </tr>
-        </ng-template>
-        
+      <ng-template #header>
+  <tr>
+    <th style="min-width: 6rem; text-align: left;">ID</th>
+    <th pSortableColumn="name" style="min-width:8rem; text-align: center;">Grupo</th>
+    <th pSortableColumn="inventoryStatus" style="min-width: 10rem; text-align: right;">Acciones</th>          
+  </tr>
+</ng-template>
+
+<ng-template #body let-usuario>
+  <tr>
+    <td style="text-align: left;">{{ usuario.id }}</td>
+    <td style="text-align: center;">{{ usuario.nombre }}</td>
+    <td style="text-align: right;">
+      <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(usuario.id)"/>
+      <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(usuario.id)" />
+    </td>
+  </tr>
+</ng-template>
+
+
     </p-table>
+  </div>
 </div>
-
-<!-- <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar grupo" [modal]="true">
-    <ng-template #content>
-        <form [formGroup]="formSave" class="formulario">
-            <div class="flex flex-col gap-6">
-                <div class="col-span-6">
-                    <label for="nombre" class="block font-bold mb-3">Grupo</label>
-                    <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese el grupo" required fluid />
-                    <p-message 
-                    *ngIf="formSave.get('nombre')?.invalid && (formSave.get('nombre')?.dirty || formSave.get('nombre')?.touched)" severity="error" variant="simple"size="small">
-                    Grupo es requerido
-                    </p-message>
-                </div>
-
-            </div>
-        </form>
-    </ng-template>
-
-    <ng-template #footer>
-        <form [formGroup]="formSave" class="formulario">
-            <p-button label="Cancel" icon="pi pi-times" text (click)="cancelSave()" />
-            <p-button label="Save" icon="pi pi-check" (click)="store()"/>
-        </form>
-    </ng-template>
-</p-dialog> -->
 
 <p-dialog [(visible)]="visibleDelete" header="Confirmación"  [style]="{ width: '350px' }" [modal]="true">
     <div class="flex items-center justify-center">
@@ -101,7 +80,7 @@
     </ng-template>
 </p-dialog>
 
-<p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar grupo" [modal]="true">  
+<p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar grupo" [modal]="true">  
     <ng-template #content>
         <form [formGroup]="formUpdate" class="formulario">
             <div class="flex flex-col gap-6"> 
@@ -120,8 +99,8 @@
 
     <ng-template #footer>
         <form [formGroup]="formUpdate" class="formulario">
-            <p-button label="Cancel" icon="pi pi-times" text (click)="cancelUpdate()" />
-            <p-button label="Save" icon="pi pi-check" (click)="update()" />
+            <p-button label="Cancelar" icon="pi pi-times" text (click)="cancelUpdate()" />
+            <p-button label="Guardar" icon="pi pi-check" (click)="update()" />
         </form>
     </ng-template>
 

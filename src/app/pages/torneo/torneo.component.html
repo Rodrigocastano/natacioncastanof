@@ -69,7 +69,7 @@
                     </div>
 
                     <div class="col-span-6">
-                        <label for="id_area_nado" class="block font-bold mb-3">Área Nado</label>             
+                        <label for="id_area_nado" class="block font-bold mb-3">Área nado</label>             
                         <p-select
                             [options]="areanado" formControlName="id_area_nado" inputId="id_area_nado" optionLabel="displayArea"optionValue="id"
                             placeholder="Seleccione un área nado" [filter]="true" filterBy="displayArea" [showClear]="true" class="w-full md:w-70">
@@ -101,8 +101,8 @@
 
         <ng-template #footer>
             <form [formGroup]="formSave" class="formulario">
-                <p-button label="Cancel" icon="pi pi-times" text (click)="cancelSave()" />
-                <p-button label="Save" icon="pi pi-check" (click)="store()"/>
+                <p-button label="Cancelar" icon="pi pi-times" text (click)="cancelSave()" />
+                <p-button label="Guardar" icon="pi pi-check" (click)="store()"/>
             </form>
         </ng-template>
     </p-dialog>
@@ -110,7 +110,7 @@
     <p-dialog [(visible)]="visibleDelete" header="Confirmación"  [style]="{ width: '350px' }" [modal]="true">
         <div class="flex items-center justify-center">
             <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
-            <span>¿Estás seguro que deseas eliminar esta Torneo?</span>
+            <span>¿Estás seguro que deseas eliminar este torneo?</span>
         </div>
         <ng-template #footer>
             <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDelete = false" text severity="secondary" (click)="cancelMessageToast()" />
@@ -132,7 +132,7 @@
                     </div>
 
                      <div class="col-span-6">
-                        <label for="id_area_nado" class="block font-bold mb-3">Área Nado</label>             
+                        <label for="id_area_nado" class="block font-bold mb-3">Área nado</label>             
                         <p-select
                             [options]="areanado" formControlName="id_area_nado" inputId="id_area_nado" optionLabel="displayArea" optionValue="id"
                             placeholder="Seleccione un área nado" [filter]="true" filterBy="displayArea" [showClear]="true" class="w-full md:w-70">
@@ -164,8 +164,8 @@
 
         <ng-template #footer>
             <form [formGroup]="formUpdate" class="formulario">
-                <p-button label="Cancel" icon="pi pi-times" text (click)="cancelUpdate()" />
-                <p-button label="Save" icon="pi pi-check" (click)="update()" />
+                <p-button label="Cancelar" icon="pi pi-times" text (click)="cancelUpdate()" />
+                <p-button label="Guardar" icon="pi pi-check" (click)="update()" />
             </form>
         </ng-template>
 
