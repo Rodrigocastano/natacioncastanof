@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import 'jspdf-autotable';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -22,7 +21,8 @@ import { CategoriapruebaService } from '../service/categoriaprueba.service';
 
 @Component({
   selector: 'app-categoriaprueba',
-   imports: [
+  standalone: true,
+  imports: [
     CommonModule,
     ButtonModule,
     ToolbarModule,
@@ -44,23 +44,19 @@ import { CategoriapruebaService } from '../service/categoriaprueba.service';
   providers: [MessageService],
   templateUrl: './categoriaprueba.component.html',
 })
-export class CategoriapruebaComponent implements OnInit  {
+export class CategoriapruebaComponent implements OnInit {
 
   formSave!: FormGroup;
-  visibleSave: boolean = false;
+  formUpdate!: FormGroup;
   categoriaPrueba: CategoriaPrueba[] = [];
   idCategoriaPrueba: number = 0;
   visibleDelete: boolean = false;
-  formUpdate!: FormGroup;
-  Categoria: any
-  idForUpdate: number = 0;
-  visibleUpdate: boolean = false;
   filtro: string = '';
   buscadorFiltrados: CategoriaPrueba[] = [];
   submitted: boolean = false;
-
-  maxDate: Date = new Date();
   loading: boolean = true;
+  editing: boolean = false;
+  idForUpdate: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -69,9 +65,8 @@ export class CategoriapruebaComponent implements OnInit  {
   ) {
     this.formSave = this.fb.group({
       nombre: ['', Validators.required]
-
     });
-    this.formUpdate = fb.group({
+    this.formUpdate = this.fb.group({
       nombre: ['', Validators.required]
     });
   }
@@ -80,10 +75,10 @@ export class CategoriapruebaComponent implements OnInit  {
     this.getCategoriapruebaService();
   }
 
-   getCategoriapruebaService() {
+  getCategoriapruebaService() {
     this.categoriapruebaService.getAllCategoriaPrueba().subscribe(
       data => {
-        this.categoriaPrueba = data
+        this.categoriaPrueba = data;
         this.buscadorFiltrados = [...data];
         this.loading = false;
       }
@@ -92,133 +87,112 @@ export class CategoriapruebaComponent implements OnInit  {
 
   buscador() {
     const termino = this.filtro.toLowerCase().trim();
+    this.categoriaPrueba = termino === '' 
+      ? [...this.buscadorFiltrados] 
+      : this.buscadorFiltrados.filter(a => a.nombre?.toLowerCase().includes(termino));
+  }
+
+  store() {
+    this.submitted = true;
   
-    if (termino === '') {
-    this.categoriaPrueba = [...this.buscadorFiltrados];
-    } else {
-    this.categoriaPrueba = this.buscadorFiltrados.filter(user =>
-      user.nombre?.toLowerCase().includes(termino)
-    );
+    if (this.formSave.invalid) {
+      this.errorMessageToast();
+      return;
     }
+  
+    const newCategoria: any = {
+      nombre: this.formSave.value.nombre,
+    };
+
+    this.categoriapruebaService.createCategoriaPrueba(newCategoria).subscribe({
+      next: () => {
+        this.saveMessageToast();
+        this.getCategoriapruebaService();
+        this.formSave.reset();
+        this.submitted = false;
+      },
+      error: (err) => {
+        console.error('Error al guardar la categoría de prueba:', err);
+        this.errorMessageToast();
+      }
+    });
+  }
+
+  edit(categoria: CategoriaPrueba) {
+    this.editing = true;
+    this.idForUpdate = categoria.id;
+    this.formUpdate.patchValue({
+      nombre: categoria.nombre
+    });
+  }
+
+  cancelEdit() {
+    this.editing = false;
+    this.formUpdate.reset();
+    this.cancelMessageToast();
+  }
+
+  update() {
+    this.submitted = true;
+    
+    if (this.formUpdate.invalid) {
+      this.errorMessageToast();
+      return;
     }
 
-     store() {
-          this.submitted = true;
-        
-          if (this.formSave.invalid) {
-            this.errorMessageToast();
-            this.formSave.markAllAsTouched();
-            return;
-          }
-        
-          if (this.formSave.valid) {
-            const newCategoria: any = {
-              nombre: this.formSave.value.nombre,
-            };
-        
-            this.categoriapruebaService.createCategoriaPrueba(newCategoria).subscribe({
-              next: () => {
-                this.saveMessageToast();
-                this.getCategoriapruebaService();
-                this.formSave.reset();
-                this.submitted = false;
-                this.visibleSave = false;
-              },
-              error: (err) => {
-                console.error('Error al guardar la categoria de prueba:', err);
-              }
-            });
-          }
-        }
-        
-        cancelSave() {
-          this.visibleSave = false;
-          this.cancelMessageToast();
-        }
-        
-        showSaveDialog() {
-          this.formSave.reset();
-          this.visibleSave = true;
-        }
-        
-        saveMessageToast() {
-          this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Guardado correctamente' });
-        }
-        
-        EliminadoMessageToasts() {
-          this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Eliminado correctamente' });
-        }
-        
-        cancelMessageToast() {
-          this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Cancelado!...' });
-        }
-           
-        errorMessageToast() {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al guardar la datos.' });
-        }
-    
-        update() {
-          if (this.formUpdate.invalid) {
-            this.errorMessageToast(); 
-            this.formUpdate.markAllAsTouched();
-            return;
-          }
-      
-          if (this.formUpdate.valid) {
-            const updateAreaNado: CategoriaPrueba = {
-              id: this.idForUpdate,
-              nombre: this.formUpdate.value.nombre,
-            };
-      
-            this.categoriapruebaService.updateCategoriaPrueba(this.idForUpdate, updateAreaNado).subscribe({
-              next: (res) => {
-                this.saveMessageToast(); 
-                this.getCategoriapruebaService();
-                this.visibleUpdate = false;
-                this.idForUpdate = 0;
-              },
-              error: (err) => {
-                this.errorMessageToast(); 
-                console.error('Error actualizando la categoría de prueba:', err);
-              }
-            });
-          }
-        }
-          
-        edit(id: number) {
-        
-          this.idForUpdate = id;
-          this.Categoria = this.categoriaPrueba.find(e => e.id == id);
-          if (this.Categoria) {
-            this.formUpdate.controls['nombre'].setValue(this.Categoria?.nombre)
-    
-          }
-          this.visibleUpdate = true;
-        }
-        
-        cancelUpdate() {
-          this.visibleUpdate = false;
-          this.cancelMessageToast();
-        }
-    
-        delete() {
-          this.categoriapruebaService.deleteCategoriaPrueba(this.idCategoriaPrueba).subscribe({
-            next: () => {
-              this.visibleDelete = false;
-              this.getCategoriapruebaService()
-              this.idCategoriaPrueba = 0
-              this.EliminadoMessageToasts(); 
-            },
-            error: (err) => {
-              console.error('Error al eliminar:', err);
-              this.errorMessageToast();
-            }
-          });
-        }
-                  
-        showModalDelete(id: number) {
-          this.idCategoriaPrueba = id;
-          this.visibleDelete = true
-        }    
+    const updateCategoria: CategoriaPrueba = {
+      id: this.idForUpdate,
+      nombre: this.formUpdate.value.nombre,
+    };
 
+    this.categoriapruebaService.updateCategoriaPrueba(this.idForUpdate, updateCategoria).subscribe({
+      next: () => {
+        this.saveMessageToast();
+        this.getCategoriapruebaService();
+        this.editing = false;
+        this.formUpdate.reset();
+        this.submitted = false;
+      },
+      error: (err) => {
+        console.error('Error actualizando categoría de prueba:', err);
+        this.errorMessageToast();
+      }
+    });
+  }
+
+  delete() {
+    this.categoriapruebaService.deleteCategoriaPrueba(this.idCategoriaPrueba).subscribe({
+      next: () => {
+        this.visibleDelete = false;
+        this.getCategoriapruebaService();
+        this.EliminadoMessageToasts();
+      },
+      error: (err) => {
+        console.error('Error al eliminar:', err);
+        this.errorMessageToast();
+      }
+    });
+  }
+
+  showModalDelete(id: number) {
+    this.idCategoriaPrueba = id;
+    this.visibleDelete = true;
+  }
+
+  // Mensajes Toast
+  saveMessageToast() {
+    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'La categoría de prueba se guardó correctamente' });
+  }
+
+  EliminadoMessageToasts() {
+    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'La categoría de prueba se eliminó correctamente' });
+  }
+
+  cancelMessageToast() {
+    this.messageService.add({ severity: 'info', summary: 'Información', detail: 'Operación cancelada' });
+  }
+
+  errorMessageToast() {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al procesar la categoría de prueba' });
+  }
 }

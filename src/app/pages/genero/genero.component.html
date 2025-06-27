@@ -1,17 +1,43 @@
 <p-toolbar styleClass="mb-6">
   <div class="w-full">
     <div class="p-4 surface-card border-round shadow-2">
-      <h5 class="mt-0 mb-4">Agregar nuevo género</h5>
+      <h5 class="mt-0 mb-4">{{ editing ? 'Editar género' : 'Agregar nuevo género' }}</h5>
 
-      <form [formGroup]="formSave" (ngSubmit)="store()">
+      <form [formGroup]="editing ? formUpdate : formSave" (ngSubmit)="editing ? update() : store()">
         <div class="flex align-items-center gap-3">
             <div style="width: 900px;"> 
-                <input type="text" formControlName="nombre" pInputText id="nombre" placeholder="Ingrese el género" class="w-full"[ngClass]="{'p-invalid': formSave.get('nombre')?.invalid && submitted}" />
+                <input type="text" 
+                  [formControlName]="'nombre'" 
+                  pInputText 
+                  id="nombre" 
+                  [placeholder]="editing ? 'Edite el género' : 'Ingrese el género'" 
+                  class="w-full"
+                  [ngClass]="{'p-invalid': (editing ? formUpdate.get('nombre')?.invalid : formSave.get('nombre')?.invalid) && submitted}" />
+                <small *ngIf="(editing ? formUpdate.get('nombre')?.invalid : formSave.get('nombre')?.invalid) && submitted" 
+                       class="p-error block">
+                  {{ editing ? 'Debe editar el género' : 'Debe ingresar un género' }}
+                </small>
             </div>
 
-            <p-button
-                type="submit" icon="pi pi-plus" label="Agregar" severity="success" [loading]="loading" [disabled]="formSave.invalid">
-            </p-button>
+            <div class="flex gap-2">
+              <p-button
+                  type="submit" 
+                  [icon]="editing ? 'pi pi-check' : 'pi pi-plus'" 
+                  [label]="editing ? 'Actualizar' : 'Agregar'" 
+                  severity="success" 
+                  [loading]="loading" 
+                  [disabled]="editing ? formUpdate.invalid : formSave.invalid">
+              </p-button>
+              
+              <p-button *ngIf="editing"
+                  type="button" 
+                  icon="pi pi-times" 
+                  label="Cancelar" 
+                  severity="secondary" 
+                  [outlined]="true"
+                  (click)="cancelEdit()">
+              </p-button>
+            </div>
         </div>
       </form>
     </div>
@@ -19,18 +45,15 @@
 </p-toolbar>
 
 <p-toast />
-<div 
-    *ngIf="loading" style="display: flex; justify-content: center; align-items: center; height: 300px;">
-    <p-progressSpinner 
-        [style]="{ width: '50px', height: '50px' }" styleClass="p-text-primary">
-    </p-progressSpinner>
+<div *ngIf="loading" style="display: flex; justify-content: center; align-items: center; height: 300px;">
+    <p-progressSpinner [style]="{ width: '50px', height: '50px' }" styleClass="p-text-primary"></p-progressSpinner>
 </div>
 
 <div *ngIf="!loading">
   <div style="overflow-x:auto;">
     <p-table
         #dt [value]="genero" [rows]="6" [paginator]="true"
-        [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+        [globalFilterFields]="['nombre']"
         [rowHover]="true" dataKey="id"
         currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Género"
         [showCurrentPageReport]="true" [paginatorDropdownAppendTo]="'body'" [rowsPerPageOptions]="[6, 12, 18]">
@@ -46,30 +69,28 @@
       </ng-template>
 
       <ng-template #header>
-          <tr>
-              <th style="min-width: 6rem; text-align: left;">ID</th>
-              <th pSortableColumn="name" style="width: 150px; text-align: center;">Género</th>
-              <th pSortableColumn="inventoryStatus" style="min-width: 10rem; text-align: right;">Acciones</th>          
-          </tr>
+        <tr>
+          <th style="min-width: 6rem; text-align: left;">ID</th>
+          <th pSortableColumn="nombre" style="width: 150px; text-align: center;">Género</th>
+          <th style="min-width: 10rem; text-align: right;">Acciones</th>          
+        </tr>
       </ng-template>
 
-      <ng-template #body let-usuario>
-          <tr>
-              <td style="text-align: left;">{{ usuario.id }}</td>
-              <td style="width: 150px; text-align: center;">{{ usuario.nombre }}</td>
-              <td style="text-align: right;">
-                  <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(usuario.id)"/>
-                  <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(usuario.id)" />
-              </td>
-          </tr>
+      <ng-template #body let-genero>
+        <tr>
+          <td style="text-align: left;">{{ genero.id }}</td>
+          <td style="width: 150px; text-align: center;">{{ genero.nombre }}</td>
+          <td style="text-align: right;">
+            <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(genero)"/>
+            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(genero.id)" />
+          </td>
+        </tr>
       </ng-template>
-
     </p-table>
   </div>
 </div>
 
-
-<p-dialog [(visible)]="visibleDelete" header="Confirmación"  [style]="{ width: '350px' }" [modal]="true">
+<p-dialog [(visible)]="visibleDelete" header="Confirmación" [style]="{ width: '350px' }" [modal]="true">
     <div class="flex items-center justify-center">
         <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
         <span>¿Estás seguro que deseas eliminar este género?</span>
@@ -78,30 +99,4 @@
         <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDelete = false" text severity="secondary" (click)="cancelMessageToast()" />
         <p-button label="Eliminar" icon="pi pi-check" (click)="delete()" severity="danger" outlined/>
     </ng-template>
-</p-dialog>
-
-<p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar género" [modal]="true">  
-    <ng-template #content>
-        <form [formGroup]="formUpdate" class="formulario">
-            <div class="flex flex-col gap-6"> 
-                <div class="col-span-6">
-                    <label for="nombre" class="block font-bold mb-3">Género</label>
-                    <input type="text" formControlName="nombre"  pInputText id="nombre" placeholder="Ingrese el genero"  required fluid />    
-                    <p-message 
-                        *ngIf="formUpdate.get('nombre')?.invalid && (formUpdate.get('nombre')?.dirty || formUpdate.get('nombre')?.touched)" severity="error" variant="simple"size="small">
-                        Género es requerido
-                    </p-message>
-                </div>
-                    
-            </div>
-        </form>
-    </ng-template>
-
-    <ng-template #footer>
-        <form [formGroup]="formUpdate" class="formulario">
-            <p-button label="Cancelar" icon="pi pi-times" text (click)="cancelUpdate()" />
-            <p-button label="Guardar" icon="pi pi-check" (click)="update()" />
-        </form>
-    </ng-template>
-
 </p-dialog>

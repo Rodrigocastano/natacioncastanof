@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import 'jspdf-autotable';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -22,7 +21,8 @@ import { TiponadoService } from '../service/tiponado.service';
 
 @Component({
   selector: 'app-tiponado',
-   imports: [
+  standalone: true,
+  imports: [
     CommonModule,
     ButtonModule,
     ToolbarModule,
@@ -44,23 +44,19 @@ import { TiponadoService } from '../service/tiponado.service';
   providers: [MessageService],
   templateUrl: './tiponado.component.html',
 })
-export class TiponadoComponent implements OnInit  {
+export class TiponadoComponent implements OnInit {
 
   formSave!: FormGroup;
-  visibleSave: boolean = false;
+  formUpdate!: FormGroup;
   tipoNado: TipoNado[] = [];
   idTipoNado: number = 0;
   visibleDelete: boolean = false;
-  formUpdate!: FormGroup;
-  tipo: any
-  idForUpdate: number = 0;
-  visibleUpdate: boolean = false;
   filtro: string = '';
   buscadorFiltrados: TipoNado[] = [];
   submitted: boolean = false;
-
-  maxDate: Date = new Date();
   loading: boolean = true;
+  editing: boolean = false;
+  idForUpdate: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -69,10 +65,8 @@ export class TiponadoComponent implements OnInit  {
   ) {
     this.formSave = this.fb.group({
       nombre: ['', Validators.required]
-
-      
     });
-    this.formUpdate = fb.group({
+    this.formUpdate = this.fb.group({
       nombre: ['', Validators.required]
     });
   }
@@ -81,10 +75,10 @@ export class TiponadoComponent implements OnInit  {
     this.getTipoNado();
   }
 
-   getTipoNado() {
+  getTipoNado() {
     this.tiponadoService.getAllTipoNado().subscribe(
       data => {
-        this.tipoNado = data
+        this.tipoNado = data;
         this.buscadorFiltrados = [...data];
         this.loading = false;
       }
@@ -93,133 +87,112 @@ export class TiponadoComponent implements OnInit  {
 
   buscador() {
     const termino = this.filtro.toLowerCase().trim();
+    this.tipoNado = termino === '' 
+      ? [...this.buscadorFiltrados] 
+      : this.buscadorFiltrados.filter(t => t.nombre?.toLowerCase().includes(termino));
+  }
+
+  store() {
+    this.submitted = true;
   
-    if (termino === '') {
-    this.tipoNado = [...this.buscadorFiltrados];
-    } else {
-    this.tipoNado = this.buscadorFiltrados.filter(user =>
-      user.nombre?.toLowerCase().includes(termino)
-    );
+    if (this.formSave.invalid) {
+      this.errorMessageToast();
+      return;
     }
+  
+    const newTipoNado: any = {
+      nombre: this.formSave.value.nombre,
+    };
+
+    this.tiponadoService.createTipoNado(newTipoNado).subscribe({
+      next: () => {
+        this.saveMessageToast();
+        this.getTipoNado();
+        this.formSave.reset();
+        this.submitted = false;
+      },
+      error: (err) => {
+        console.error('Error al guardar el tipo de nado:', err);
+        this.errorMessageToast();
+      }
+    });
+  }
+
+  edit(tipo: TipoNado) {
+    this.editing = true;
+    this.idForUpdate = tipo.id;
+    this.formUpdate.patchValue({
+      nombre: tipo.nombre
+    });
+  }
+
+  cancelEdit() {
+    this.editing = false;
+    this.formUpdate.reset();
+    this.cancelMessageToast();
+  }
+
+  update() {
+    this.submitted = true;
+    
+    if (this.formUpdate.invalid) {
+      this.errorMessageToast();
+      return;
     }
 
-     store() {
-          this.submitted = true;
-        
-          if (this.formSave.invalid) {
-            this.errorMessageToast();
-            this.formSave.markAllAsTouched();
-            return;
-          }
-        
-          if (this.formSave.valid) {
-            const newGenero: any = {
-              nombre: this.formSave.value.nombre,
-            };
-        
-            this.tiponadoService.createTipoNado(newGenero).subscribe({
-              next: () => {
-                this.saveMessageToast();
-                this.getTipoNado();
-                this.formSave.reset();
-                this.submitted = false;
-                this.visibleSave = false;
-              },
-              error: (err) => {
-                console.error('Error al guardar el tipo de nado:', err);
-              }
-            });
-          }
-        }
-        
-        cancelSave() {
-          this.visibleSave = false;
-          this.cancelMessageToast();
-        }
-        
-        showSaveDialog() {
-          this.formSave.reset();
-          this.visibleSave = true;
-        }
-        
-        saveMessageToast() {
-          this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Guardado correctamente' });
-        }
-        
-        EliminadoMessageToasts() {
-          this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Eliminado correctamente' });
-        }
-        
-        cancelMessageToast() {
-          this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Cancelado!...' });
-        }
-           
-        errorMessageToast() {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al guardar la datos.' });
-        }
-    
-        update() {
-          if (this.formUpdate.invalid) {
-            this.errorMessageToast(); 
-            this.formUpdate.markAllAsTouched();
-            return;
-          }
-      
-          if (this.formUpdate.valid) {
-            const updateGenero: TipoNado = {
-              id: this.idForUpdate,
-              nombre: this.formUpdate.value.nombre,
-            };
-      
-            this.tiponadoService.updateTipoNado(this.idForUpdate, updateGenero).subscribe({
-              next: (res) => {
-                this.saveMessageToast(); 
-                this.getTipoNado();
-                this.visibleUpdate = false;
-                this.idForUpdate = 0;
-              },
-              error: (err) => {
-                this.errorMessageToast(); 
-                console.error('Error actualizando tipo de nado:', err);
-              }
-            });
-          }
-        }
-          
-        edit(id: number) {
-        
-          this.idForUpdate = id;
-          this.tipo = this.tipoNado.find(e => e.id == id);
-          if (this.tipo) {
-            this.formUpdate.controls['nombre'].setValue(this.tipo?.nombre)
-    
-          }
-          this.visibleUpdate = true;
-        }
-        
-        cancelUpdate() {
-          this.visibleUpdate = false;
-          this.cancelMessageToast();
-        }
-    
-        delete() {
-          this.tiponadoService.deleteTipoNado(this.idTipoNado).subscribe({
-            next: () => {
-              this.visibleDelete = false;
-              this.getTipoNado()
-              this.idTipoNado = 0
-              this.EliminadoMessageToasts(); 
-            },
-            error: (err) => {
-              console.error('Error al eliminar:', err);
-              this.errorMessageToast();
-            }
-          });
-        }
-                  
-        showModalDelete(id: number) {
-          this.idTipoNado = id;
-          this.visibleDelete = true
-        }  
-         
+    const updateTipoNado: TipoNado = {
+      id: this.idForUpdate,
+      nombre: this.formUpdate.value.nombre,
+    };
+
+    this.tiponadoService.updateTipoNado(this.idForUpdate, updateTipoNado).subscribe({
+      next: () => {
+        this.saveMessageToast();
+        this.getTipoNado();
+        this.editing = false;
+        this.formUpdate.reset();
+        this.submitted = false;
+      },
+      error: (err) => {
+        console.error('Error actualizando tipo de nado:', err);
+        this.errorMessageToast();
       }
+    });
+  }
+
+  delete() {
+    this.tiponadoService.deleteTipoNado(this.idTipoNado).subscribe({
+      next: () => {
+        this.visibleDelete = false;
+        this.getTipoNado();
+        this.EliminadoMessageToasts();
+      },
+      error: (err) => {
+        console.error('Error al eliminar:', err);
+        this.errorMessageToast();
+      }
+    });
+  }
+
+  showModalDelete(id: number) {
+    this.idTipoNado = id;
+    this.visibleDelete = true;
+  }
+
+  // Mensajes Toast
+  saveMessageToast() {
+    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'El tipo de nado se guardó correctamente' });
+  }
+
+  EliminadoMessageToasts() {
+    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'El tipo de nado se eliminó correctamente' });
+  }
+
+  cancelMessageToast() {
+    this.messageService.add({ severity: 'info', summary: 'Información', detail: 'Operación cancelada' });
+  }
+
+  errorMessageToast() {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ocurrió un problema al procesar el tipo de nado' });
+  }
+}

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import 'jspdf-autotable';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -22,6 +21,7 @@ import { CategoriatipoService } from '../service/categoriatipo.service';
 
 @Component({
   selector: 'app-categoriatipo',
+  standalone: true,
   imports: [
     CommonModule,
     ButtonModule,
@@ -44,23 +44,19 @@ import { CategoriatipoService } from '../service/categoriatipo.service';
   providers: [MessageService],
   templateUrl: './categoriatipo.component.html',
 })
-export class CategoriatipoComponent implements OnInit  {
+export class CategoriatipoComponent implements OnInit {
 
   formSave!: FormGroup;
-  visibleSave: boolean = false;
+  formUpdate!: FormGroup;
   categoriaTipo: CategoriaTipo[] = [];
   idCategoriaTipo: number = 0;
   visibleDelete: boolean = false;
-  formUpdate!: FormGroup;
-  categoria: any
-  idForUpdate: number = 0;
-  visibleUpdate: boolean = false;
   filtro: string = '';
   buscadorFiltrados: CategoriaTipo[] = [];
   submitted: boolean = false;
-
-  maxDate: Date = new Date();
   loading: boolean = true;
+  editing: boolean = false;
+  idForUpdate: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -69,10 +65,8 @@ export class CategoriatipoComponent implements OnInit  {
   ) {
     this.formSave = this.fb.group({
       nombre: ['', Validators.required]
-
-      
     });
-    this.formUpdate = fb.group({
+    this.formUpdate = this.fb.group({
       nombre: ['', Validators.required]
     });
   }
@@ -81,10 +75,10 @@ export class CategoriatipoComponent implements OnInit  {
     this.getCategoriaTipo();
   }
 
-   getCategoriaTipo() {
+  getCategoriaTipo() {
     this.categoriatipoService.getAllCategoriaTipo().subscribe(
       data => {
-        this.categoriaTipo = data
+        this.categoriaTipo = data;
         this.buscadorFiltrados = [...data];
         this.loading = false;
       }
@@ -93,135 +87,112 @@ export class CategoriatipoComponent implements OnInit  {
 
   buscador() {
     const termino = this.filtro.toLowerCase().trim();
+    this.categoriaTipo = termino === '' 
+      ? [...this.buscadorFiltrados] 
+      : this.buscadorFiltrados.filter(a => a.nombre?.toLowerCase().includes(termino));
+  }
+
+  store() {
+    this.submitted = true;
   
-    if (termino === '') {
-    this.categoriaTipo = [...this.buscadorFiltrados];
-    } else {
-    this.categoriaTipo = this.buscadorFiltrados.filter(user =>
-      user.nombre?.toLowerCase().includes(termino)
-    );
+    if (this.formSave.invalid) {
+      this.errorMessageToast();
+      return;
     }
+  
+    const newCategoria: any = {
+      nombre: this.formSave.value.nombre,
+    };
+
+    this.categoriatipoService.createCategoriaTipo(newCategoria).subscribe({
+      next: () => {
+        this.saveMessageToast();
+        this.getCategoriaTipo();
+        this.formSave.reset();
+        this.submitted = false;
+      },
+      error: (err) => {
+        console.error('Error al guardar el tipo de categoría:', err);
+        this.errorMessageToast();
+      }
+    });
+  }
+
+  edit(tipo: CategoriaTipo) {
+    this.editing = true;
+    this.idForUpdate = tipo.id;
+    this.formUpdate.patchValue({
+      nombre: tipo.nombre
+    });
+  }
+
+  cancelEdit() {
+    this.editing = false;
+    this.formUpdate.reset();
+    this.cancelMessageToast();
+  }
+
+  update() {
+    this.submitted = true;
+    
+    if (this.formUpdate.invalid) {
+      this.errorMessageToast();
+      return;
     }
 
-    store() {
-          this.submitted = true;
-        
-          if (this.formSave.invalid) {
-            this.errorMessageToast();
-            this.formSave.markAllAsTouched();
-            return;
-          }
-        
-          if (this.formSave.valid) {
-            const newCategoria: any = {
-              nombre: this.formSave.value.nombre,
-            };
-        
-            this.categoriatipoService.createCategoriaTipo(newCategoria).subscribe({
-              next: () => {
-                this.saveMessageToast();
-                this.getCategoriaTipo();
-                this.formSave.reset();
-                this.submitted = false;
-                this.visibleSave = false;
-              },
-              error: (err) => {
-                console.error('Error al guardar el tipo de categoría:', err);
-              }
-            });
-          }
-        }
-        
-        cancelSave() {
-          this.visibleSave = false;
-          this.cancelMessageToast();
-        }
-        
-        showSaveDialog() {
-          this.formSave.reset();
-          this.visibleSave = true;
-        }
-        
-        saveMessageToast() {
-          this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Guardado correctamente' });
-        }
-        
-        EliminadoMessageToasts() {
-          this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Eliminado correctamente' });
-        }
-        
-        cancelMessageToast() {
-          this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Cancelado!...' });
-        }
-           
-        errorMessageToast() {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al guardar la datos.' });
-        }
-    
-        update() {
-          if (this.formUpdate.invalid) {
-            this.errorMessageToast(); 
-            this.formUpdate.markAllAsTouched();
-            return;
-          }
-      
-          if (this.formUpdate.valid) {
-            const updateCategoria: CategoriaTipo = {
-              id: this.idForUpdate,
-              nombre: this.formUpdate.value.nombre,
-            };
-      
-            this.categoriatipoService.updateCategoriaTipo(this.idForUpdate, updateCategoria).subscribe({
-              next: (res) => {
-                this.saveMessageToast(); 
-                this.getCategoriaTipo();
-                this.visibleUpdate = false;
-                this.idForUpdate = 0;
-              },
-              error: (err) => {
-                this.errorMessageToast(); 
-                console.error('Error actualizando tipo de categoria:', err);
-              }
-            });
-          }
-        }
-          
-        edit(id: number) {
-        
-          this.idForUpdate = id;
-          this.categoria = this.categoriaTipo.find(e => e.id == id);
-          if (this.categoria) {
-            this.formUpdate.controls['nombre'].setValue(this.categoria?.nombre)
-    
-          }
-          this.visibleUpdate = true;
-        }
-        
-        cancelUpdate() {
-          this.visibleUpdate = false;
-          this.cancelMessageToast();
-        }
-    
-        delete() {
-          this.categoriatipoService.deleteCategoriaTipo(this.idCategoriaTipo).subscribe({
-            next: () => {
-              this.visibleDelete = false;
-              this.getCategoriaTipo()
-              this.idCategoriaTipo = 0
-              this.EliminadoMessageToasts(); 
-            },
-            error: (err) => {
-              console.error('Error al eliminar:', err);
-              this.errorMessageToast();
-            }
-          });
-        }
-                  
-        showModalDelete(id: number) {
-          this.idCategoriaTipo = id;
-          this.visibleDelete = true
-        }  
-    
-            
+    const updateCategoria: CategoriaTipo = {
+      id: this.idForUpdate,
+      nombre: this.formUpdate.value.nombre,
+    };
+
+    this.categoriatipoService.updateCategoriaTipo(this.idForUpdate, updateCategoria).subscribe({
+      next: () => {
+        this.saveMessageToast();
+        this.getCategoriaTipo();
+        this.editing = false;
+        this.formUpdate.reset();
+        this.submitted = false;
+      },
+      error: (err) => {
+        console.error('Error actualizando tipo de categoría:', err);
+        this.errorMessageToast();
       }
-    
+    });
+  }
+
+  delete() {
+    this.categoriatipoService.deleteCategoriaTipo(this.idCategoriaTipo).subscribe({
+      next: () => {
+        this.visibleDelete = false;
+        this.getCategoriaTipo();
+        this.EliminadoMessageToasts();
+      },
+      error: (err) => {
+        console.error('Error al eliminar:', err);
+        this.errorMessageToast();
+      }
+    });
+  }
+
+  showModalDelete(id: number) {
+    this.idCategoriaTipo = id;
+    this.visibleDelete = true;
+  }
+
+  // Mensajes Toast
+  saveMessageToast() {
+    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'El tipo de categoría se guardó correctamente' });
+  }
+
+  EliminadoMessageToasts() {
+    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'El tipo de categoría se eliminó correctamente' });
+  }
+
+  cancelMessageToast() {
+    this.messageService.add({ severity: 'info', summary: 'Información', detail: 'Operación cancelada' });
+  }
+
+  errorMessageToast() {
+    this.messageService.add({ severity: 'error', summary: 'Hubo un problema al procesar el tipo de categoría' });
+  }
+}

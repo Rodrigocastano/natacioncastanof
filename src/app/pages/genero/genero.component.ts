@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import 'jspdf-autotable';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -22,6 +21,7 @@ import { GeneroService } from '../service/genero.service';
 
 @Component({
   selector: 'app-genero',
+  standalone: true,
   imports: [
     CommonModule,
     ButtonModule,
@@ -44,23 +44,19 @@ import { GeneroService } from '../service/genero.service';
   providers: [MessageService],
   templateUrl: './genero.component.html',
 })
-export class GeneroComponent implements OnInit  {
+export class GeneroComponent implements OnInit {
 
   formSave!: FormGroup;
-  visibleSave: boolean = false;
+  formUpdate!: FormGroup;
   genero: Genero[] = [];
   idGenero: number = 0;
   visibleDelete: boolean = false;
-  formUpdate!: FormGroup;
-  gene: any
-  idForUpdate: number = 0;
-  visibleUpdate: boolean = false;
   filtro: string = '';
   buscadorFiltrados: Genero[] = [];
   submitted: boolean = false;
-
-  maxDate: Date = new Date();
   loading: boolean = true;
+  editing: boolean = false;
+  idForUpdate: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -69,22 +65,20 @@ export class GeneroComponent implements OnInit  {
   ) {
     this.formSave = this.fb.group({
       nombre: ['', Validators.required]
-
-      
     });
-    this.formUpdate = fb.group({
+    this.formUpdate = this.fb.group({
       nombre: ['', Validators.required]
     });
   }
 
   ngOnInit(): void {
-    this.getCiudad();
+    this.getGenero();
   }
 
-   getCiudad() {
+  getGenero() {
     this.generoService.getAllGenero().subscribe(
       data => {
-        this.genero = data
+        this.genero = data;
         this.buscadorFiltrados = [...data];
         this.loading = false;
       }
@@ -93,26 +87,19 @@ export class GeneroComponent implements OnInit  {
 
   buscador() {
     const termino = this.filtro.toLowerCase().trim();
-  
-    if (termino === '') {
-    this.genero = [...this.buscadorFiltrados];
-    } else {
-    this.genero = this.buscadorFiltrados.filter(user =>
-      user.nombre?.toLowerCase().includes(termino)
-    );
-    }
-    }
-
-store() {
-  this.submitted = true;
-
-  if (this.formSave.invalid) {
-    this.errorMessageToast();
-    this.formSave.markAllAsTouched();
-    return;
+    this.genero = termino === '' 
+      ? [...this.buscadorFiltrados] 
+      : this.buscadorFiltrados.filter(g => g.nombre?.toLowerCase().includes(termino));
   }
 
-  if (this.formSave.valid) {
+  store() {
+    this.submitted = true;
+  
+    if (this.formSave.invalid) {
+      this.errorMessageToast();
+      return;
+    }
+  
     const newGenero: any = {
       nombre: this.formSave.value.nombre,
     };
@@ -120,107 +107,92 @@ store() {
     this.generoService.createGenero(newGenero).subscribe({
       next: () => {
         this.saveMessageToast();
-        this.getCiudad();
+        this.getGenero();
         this.formSave.reset();
         this.submitted = false;
-        this.visibleSave = false;
       },
       error: (err) => {
-        console.error('Error al guardar el grupo:', err);
+        console.error('Error al guardar el género:', err);
+        this.errorMessageToast();
       }
     });
   }
-}
 
-    
-    cancelSave() {
-      this.visibleSave = false;
-      this.cancelMessageToast();
-    }
-    
-    showSaveDialog() {
-      this.formSave.reset();
-      this.visibleSave = true;
-    }
-    
-    saveMessageToast() {
-      this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Guardado correctamente' });
-    }
-    
-    EliminadoMessageToasts() {
-      this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Eliminado correctamente' });
-    }
-    
-    cancelMessageToast() {
-      this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Cancelado!...' });
-    }
-       
-    errorMessageToast() {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al guardar la datos.' });
-    }
-
-    update() {
-      if (this.formUpdate.invalid) {
-        this.errorMessageToast(); 
-        this.formUpdate.markAllAsTouched();
-        return;
-      }
-  
-      if (this.formUpdate.valid) {
-        const updateGenero: Genero = {
-          id: this.idForUpdate,
-          nombre: this.formUpdate.value.nombre,
-        };
-  
-        this.generoService.updateGenero(this.idForUpdate, updateGenero).subscribe({
-          next: (res) => {
-            this.saveMessageToast(); 
-            this.getCiudad();
-            this.visibleUpdate = false;
-            this.idForUpdate = 0;
-          },
-          error: (err) => {
-            this.errorMessageToast(); 
-            console.error('Error actualizando torneo:', err);
-          }
-        });
-      }
-    }
-      
-    edit(id: number) {
-    
-      this.idForUpdate = id;
-      this.gene = this.genero.find(e => e.id == id);
-      if (this.gene) {
-        this.formUpdate.controls['nombre'].setValue(this.gene?.nombre)
-
-      }
-      this.visibleUpdate = true;
-    }
-    
-    cancelUpdate() {
-      this.visibleUpdate = false;
-      this.cancelMessageToast();
-    }
-
-    delete() {
-      this.generoService.deleteGenero(this.idGenero).subscribe({
-        next: () => {
-          this.visibleDelete = false;
-          this.getCiudad()
-          this.idGenero = 0
-          this.EliminadoMessageToasts(); 
-        },
-        error: (err) => {
-          console.error('Error al eliminar:', err);
-          this.errorMessageToast();
-        }
-      });
-    }
-              
-    showModalDelete(id: number) {
-      this.idGenero = id;
-      this.visibleDelete = true
-    }  
-     
+  edit(genero: Genero) {
+    this.editing = true;
+    this.idForUpdate = genero.id;
+    this.formUpdate.patchValue({
+      nombre: genero.nombre
+    });
   }
+
+  cancelEdit() {
+    this.editing = false;
+    this.formUpdate.reset();
+    this.cancelMessageToast();
+  }
+
+  update() {
+    this.submitted = true;
+    
+    if (this.formUpdate.invalid) {
+      this.errorMessageToast();
+      return;
+    }
+
+    const updateGenero: Genero = {
+      id: this.idForUpdate,
+      nombre: this.formUpdate.value.nombre,
+    };
+
+    this.generoService.updateGenero(this.idForUpdate, updateGenero).subscribe({
+      next: () => {
+        this.saveMessageToast();
+        this.getGenero();
+        this.editing = false;
+        this.formUpdate.reset();
+        this.submitted = false;
+      },
+      error: (err) => {
+        console.error('Error actualizando género:', err);
+        this.errorMessageToast();
+      }
+    });
+  }
+
+  delete() {
+    this.generoService.deleteGenero(this.idGenero).subscribe({
+      next: () => {
+        this.visibleDelete = false;
+        this.getGenero();
+        this.EliminadoMessageToasts();
+      },
+      error: (err) => {
+        console.error('Error al eliminar:', err);
+        this.errorMessageToast();
+      }
+    });
+  }
+
+  showModalDelete(id: number) {
+    this.idGenero = id;
+    this.visibleDelete = true;
+  }
+
+  // Mensajes Toast
+  saveMessageToast() {
+    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'El género se guardó correctamente' });
+  }
+
+  EliminadoMessageToasts() {
+    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'El género se eliminó correctamente' });
+  }
+
+  cancelMessageToast() {
+    this.messageService.add({ severity: 'info', summary: 'Información', detail: 'Operación cancelada' });
+  }
+
+  errorMessageToast() {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al procesar el género' });
+  }
+}
