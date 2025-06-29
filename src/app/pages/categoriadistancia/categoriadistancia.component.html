@@ -12,51 +12,78 @@
         </p-progressSpinner>
     </div>
 
-    <div *ngIf="!loading">
-        <p-table [value]="categoriaDistancia"            
-                [rows]="6" #dt [paginator]="true" [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
-                [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true" dataKey="id" [showCurrentPageReport]="true" 
-                currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Categoria" [rowsPerPageOptions]="[6, 12, 18]">
-            <ng-template #caption>
-                <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registro de categoría distancia</h5>
-                    <p-iconfield>
-                        <p-inputicon styleClass="pi pi-search"></p-inputicon>
-                        <input pInputText type="text"
-                               placeholder="Buscar..."
-                               [(ngModel)]="terminoBusqueda"
-                               (input)="filtrarBusqueda()" />
-                      </p-iconfield>
-                      
-                </div>
-            </ng-template>
+<div *ngIf="!loading">
+  <div style="overflow-x:auto;">
+    <p-table
+      [value]="categoriaDistancia"
+      [rows]="6"
+      #dt
+      [paginator]="true"
+      [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+      [rowHover]="true"
+      dataKey="id"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Categoria"
+      [rowsPerPageOptions]="[6, 12, 18]"
+      [scrollable]="true"
+      scrollHeight="flex"
+      scrollDirection="horizontal"
+      [tableStyle]="{'min-width': '600px'}"
+    >
+      <ng-template #caption>
+        <div class="flex items-center justify-between">
+          <h5 class="m-0 text-base md:text-lg font-semibold">Categoría distancia</h5>
+          <p-iconfield>
+            <p-inputicon styleClass="pi pi-search"></p-inputicon>
+            <input
+              pInputText
+              type="text"
+              placeholder="Buscar..."
+              [(ngModel)]="terminoBusqueda"
+              (input)="filtrarBusqueda()"
+            />
+          </p-iconfield>
+        </div>
+      </ng-template>
 
-            <ng-template #header>
-                <tr>
-                    <th style="min-width: 6rem">ID</th>
-                    <th pSortableColumn="price" style="min-width: 7rem">Tipo Nado</th>
-                    <th pSortableColumn="name" style="min-width:8rem">Distancia</th>
-                    <th pSortableColumn="inventoryStatus" style="min-width: 10rem">Acciones</th>
-                
-                
-                </tr>
-            </ng-template>
+      <ng-template #header>
+        <tr>
+          <th style="min-width: 6rem; text-align: left;">ID</th>
+          <th pSortableColumn="price" style="min-width: 7rem; text-align: left;">Tipo Nado</th>
+          <th pSortableColumn="name" style="min-width: 8rem; text-align: left;">Distancia</th>
+          <th style="width: 110px; text-align: center; white-space: nowrap;">Acciones</th>
+        </tr>
+      </ng-template>
 
-            <ng-template #body let-usuario>
-                <tr>
-                    <td>{{ usuario.id }}</td>
-                    <td>{{ getNombreTipo(usuario.id_tipo_nado) }}</td>
-                    <td>{{ usuario.distancia }} mt</td>
-                    <td>
-                        <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(usuario.id)"/>
-                        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(usuario.id)" />
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </div>
+      <ng-template #body let-usuario>
+        <tr>
+          <td style="text-align: left;">{{ usuario.id }}</td>
+          <td style="text-align: left;">{{ getNombreTipo(usuario.id_tipo_nado) }}</td>
+          <td style="text-align: left;">{{ usuario.distancia }} mt</td>
+          <td style="text-align: center; white-space: nowrap;">
+            <p-button
+              icon="pi pi-pencil"
+              class="mr-2"
+              [rounded]="true"
+              [outlined]="true"
+              (click)="edit(usuario.id)"
+            ></p-button>
+            <p-button
+              icon="pi pi-trash"
+              severity="danger"
+              [rounded]="true"
+              [outlined]="true"
+              (click)="showModalDelete(usuario.id)"
+            ></p-button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
 
-    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar categoría distancia" [modal]="true">
+
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar categoría distancia" [modal]="true">
         
         <ng-template #content>
             <form [formGroup]="formSave" class="formulario">
@@ -102,7 +129,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '400px' }" header="Actualizar categoría distancia" [modal]="true">
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar categoría distancia" [modal]="true">
         <ng-template #content>
             <form [formGroup]="formUpdate" class="formulario">
                 <div class="flex flex-col gap-6">

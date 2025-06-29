@@ -187,6 +187,19 @@ export class UsuarioComponent implements OnInit  {
         return age;
     }
 
+
+    soloNumeros(event: any): boolean {
+      const input = event.target as HTMLInputElement;
+      const newValue = input.value.replace(/[^0-9]/g, '');
+      this.formSaveUsuario.get(event.target.id)?.setValue(newValue, { emitEvent: false });
+      if (newValue.length > 10) {
+        this.formSaveUsuario.get(event.target.id)?.setValue(newValue.slice(0, 10), { emitEvent: false });
+        input.value = newValue.slice(0, 10);
+      }
+      
+      return false;
+    }
+
    store() {
   this.submitted = true;
   this.formSaveUsuario.get('edad')?.enable();
@@ -228,7 +241,7 @@ export class UsuarioComponent implements OnInit  {
         this.visibleSave = false;
       },
        error: (err) => {
-      if (err.status === 409 && err.error.message === 'Cédula duplicada') {
+      if (err.status === 409 && err.error.message === 'Identificación duplicada') {
         this.errorCedulaMessageToast();
       } else if (err.status === 422 && err.error.message.includes('email')) {
             this.errorCorreoMessageToast();
@@ -253,18 +266,13 @@ export class UsuarioComponent implements OnInit  {
       this.visibleSave = true;
     }
 
-    soloNumeros(event: KeyboardEvent) {
-      const charCode = event.charCode;
-      if (charCode < 48 || charCode > 57) {
-        event.preventDefault();
-      }
-    }
+
 
     errorCedulaMessageToast() {
       this.messageService.add({
         severity: 'error',
-        summary: 'Cédula duplicada',
-        detail: 'Ya existe un usuario registrado con esta cédula.'
+        summary: 'Identificación duplicada',
+        detail: 'Ya existe un usuario registrado con esta identificación.'
       });
     }
 

@@ -73,14 +73,14 @@ export class RepresentanteComponent implements OnInit  {
     this.formSave = this.fb.group({
       nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
       apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-      cedula: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-      telefono: ['', [Validators.pattern(/^$|^\d{10}$/)]],
+      cedula: ['', [Validators.required, Validators.pattern('^[0-9]{10}$') , Validators.minLength(10), Validators.maxLength(10)]],
+      telefono: ['', [Validators.pattern(/^$|^\d{10}$/), Validators.minLength(10), Validators.maxLength(10)]],
     });
     this.formUpdate = fb.group({
       nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
       apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-      cedula: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-      telefono: ['', [Validators.pattern(/^$|^\d{10}$/)]],
+      cedula: ['', [Validators.required, Validators.pattern('^[0-9]{10}$') , Validators.minLength(10), Validators.maxLength(10)]],
+      telefono: ['', [Validators.pattern(/^$|^\d{10}$/) , Validators.minLength(10), Validators.maxLength(10)]],
     });
   }
 
@@ -98,6 +98,17 @@ export class RepresentanteComponent implements OnInit  {
       }
     );
   }
+
+soloNumeros(event: any): boolean {
+  const input = event.target as HTMLInputElement;
+  const newValue = input.value.replace(/[^0-9]/g, '');
+  this.formSave.get(event.target.id)?.setValue(newValue, { emitEvent: false });
+  if (newValue.length > 10) {
+    this.formSave.get(event.target.id)?.setValue(newValue.slice(0, 10), { emitEvent: false });
+    input.value = newValue.slice(0, 10);
+  }
+  return false; 
+}
 
   store() {
     this.submitted = true;

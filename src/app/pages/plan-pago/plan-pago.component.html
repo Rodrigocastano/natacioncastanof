@@ -20,7 +20,7 @@
 
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registro planes de pago</h5>
+                    <h5 class="m-0 text-base md:text-lg font-semibold">Planes de pago</h5>
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search"></p-inputicon>
                         <input pInputText type="text" placeholder="Buscar..."
@@ -59,14 +59,25 @@
                             (click)="edit(usuario)"></p-button>
                     <p-button icon="pi pi-trash" severity="danger" class="mr-2"  [rounded]="true" [outlined]="true" 
                             (click)="showModalDelete(usuario.id)"></p-button>
-                    <p-button *ngIf="usuario.estado_funcional === 1" icon="pi pi-times"
-                            (click)="cancelarPlan(usuario)" [rounded]="true"[outlined]="true"></p-button>
+                   <p-button *ngIf="usuario.estado_funcional === 1" icon="pi pi-times"
+          (click)="confirmCancel(usuario)" [rounded]="true" [outlined]="true"></p-button>
 
                 </td>
                 </tr>
             </ng-template>
         </p-table>
     </div>
+
+    <p-dialog [(visible)]="visibleCancelDialog" [style]="{ width: '350px' }" header="Confirmar cancelación" [modal]="true">
+        <div class="flex align-items-center">
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+            <span>¿Está seguro que desea cancelar este plan?</span>
+        </div>
+        <ng-template pTemplate="footer">
+            <p-button label="No" icon="pi pi-times" (click)="visibleCancelDialog = false" text></p-button>
+            <p-button label="Sí" icon="pi pi-check" (click)="cancelarPlan()" severity="danger" autoFocus></p-button>
+        </ng-template>
+    </p-dialog>
 
     <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar nuevo plan de pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
         <ng-template #content>
@@ -119,14 +130,20 @@
                     </div> -->
 
                 <div class="grid grid-cols-12 gap-4">
-                    <div class="col-span-6">
-                        <label for="monto" class="block font-bold mb-1">Monto</label>
-                        <p-inputnumber 
-                            formControlName="monto" id="monto" placeholder="Ingrese el monto" required mode="currency" currency="USD" locale="en-US" class="w-full text-sm px-0 py-2">
-                        </p-inputnumber>
+                     <div class="col-span-12 md:col-span-6">
+                            <label for="monto" class="block font-bold mb-1">Monto</label>
+                            <p-inputnumber 
+                            formControlName="monto" 
+                            id="monto" 
+                            placeholder="Ingrese el monto" 
+                            mode="currency" 
+                            currency="USD" 
+                            locale="en-US" 
+                            class="w-full">
+                            </p-inputnumber>
                                 
                         <p-message
-                            *ngIf="formUpdate.get('monto')?.errors?.['required'] && (formUpdate.get('monto')?.dirty || formUpdate.get('monto')?.touched)" severity="error" variant="simple" size="small">
+                            *ngIf="formSave.get('monto')?.errors?.['required'] && (formSave.get('monto')?.dirty || formSave.get('monto')?.touched)" severity="error" variant="simple" size="small">
                             El campo monto es requerido
                         </p-message>
                     </div>                
@@ -144,18 +161,6 @@
                     </div>
                      
                 </div>
-
-                <!--     <div class="col-span-6">
-                        <label for="fecha_fin" class="block font-bold mb-2">Fecha fin</label>
-                        <p-datepicker 
-                            [maxDate]="maxDate" formControlName="fecha_fin" inputId="fecha_fin" [showIcon]="true" [showButtonBar]="true" 
-                            [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione fecha fin'" class="w-96" >
-                        </p-datepicker>
-                        <p-message 
-                            *ngIf="formSave.get('fecha_fin')?.invalid && (formSave.get('fecha_fin')?.dirty || formSave.get('fecha_fin')?.touched)"  severity="error"  variant="simple" size="small">
-                            Fecha inicio es requerido
-                        </p-message>
-                    </div> -->
 
 
                     <div class="grid grid-cols-12 gap-4" formGroupName="fecha_cobro">
@@ -204,7 +209,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleDelete" header="Confirm fación"  [style]="{ width: '350px' }" [modal]="true">
+    <p-dialog [(visible)]="visibleDelete" header="Confirmafación"  [style]="{ width: '350px' }" [modal]="true">
         <div class="flex items-center justify-center">
             <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
             <span>¿Estás seguro que deseas eliminar este registro?</span>
@@ -244,10 +249,16 @@
                             </div>
                         </div>
 
-                        <div class="col-span-6">
+                         <div class="col-span-12 md:col-span-6">
                             <label for="monto" class="block font-bold mb-1">Monto</label>
                             <p-inputnumber 
-                                formControlName="monto" id="monto" placeholder="Ingrese el monto" required mode="currency" currency="USD" locale="en-US" class="w-full text-sm px-0 py-2">
+                            formControlName="monto" 
+                            id="monto" 
+                            placeholder="Ingrese el monto" 
+                            mode="currency" 
+                            currency="USD" 
+                            locale="en-US" 
+                            class="w-full">
                             </p-inputnumber>
                                     
                             <p-message

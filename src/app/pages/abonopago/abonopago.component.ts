@@ -77,6 +77,7 @@ export class AbonopagoComponent implements OnInit{
 
       terminoBusqueda: string = '';
       buscarOriginal: AbonoPago[] = [];
+      pagosParaEditar: Pago[] = [];
 
       constructor(
         private fb: FormBuilder,
@@ -264,23 +265,29 @@ export class AbonopagoComponent implements OnInit{
         }
       }
 
-      edit(elasticId: any) {
-        console.log('datos', elasticId)
-        this.idForUpdate = true;
-        this.abonoPa = elasticId
-        if (this.abonoPa) {
-          const parseLocalDate = (dateString: string) => {
-          return dateString ? new Date(dateString + 'T00:00:00') : null;
-        };
-          this.formUpdate.controls['id_registro_pago'].setValue(this.abonoPa?.id_registro_pago)
-          this.formUpdate.controls['monto'].setValue(this.abonoPa?.monto) 
-          this.formUpdate.controls['fecha'].setValue(
-          parseLocalDate(this.abonoPa.fecha)
-        );
-        }
-        this.visibleUpdate = true;
-        
-      }
+
+      
+      // En la función edit()
+edit(elasticId: any) {
+  this.idForUpdate = true;
+  this.abonoPa = elasticId;
+
+  if (this.abonoPa) {
+    const pagoRelacionado = this.pago.find(p => p.id_registro_pago === this.abonoPa.id_registro_pago);
+    // Crea un arreglo con solo ese pago
+    this.pagosParaEditar = pagoRelacionado ? [pagoRelacionado] : [];
+
+    this.formUpdate.patchValue({
+      id_registro_pago: this.abonoPa.id_registro_pago,
+      monto: this.abonoPa.monto,
+      fecha: new Date(this.abonoPa.fecha)
+    });
+  }
+  this.visibleUpdate = true;
+}
+
+
+
 
       canceUpdate() {
         this.visibleUpdate = false;

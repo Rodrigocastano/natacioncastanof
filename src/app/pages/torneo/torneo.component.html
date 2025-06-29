@@ -12,48 +12,77 @@
         </p-progressSpinner>
     </div>
 
-    <div *ngIf="!loading">
-        <p-table
-            #dt [value]="torneo" [rows]="6" [paginator]="true"
-            [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
-            [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true" dataKey="id"
-            currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Torneo"
-            [showCurrentPageReport]="true" [rowsPerPageOptions]="[6, 12, 18]">
-            <ng-template #caption>
-                <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registro de torneo</h5>
-                    <p-iconfield>
-                        <p-inputicon styleClass="pi pi-search" />
-                        <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
-                    </p-iconfield>
-                </div>
-            </ng-template>
+<div *ngIf="!loading">
+  <div style="overflow-x:auto;">
+    <p-table
+      #dt
+      [value]="torneo"
+      [rows]="6"
+      [paginator]="true"
+      [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+      [rowHover]="true"
+      dataKey="id"
+      currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Torneo"
+      [showCurrentPageReport]="true"
+      [rowsPerPageOptions]="[6, 12, 18]"
+      [scrollable]="true"
+      scrollDirection="horizontal"
+      [tableStyle]="{ 'min-width': '700px' }"
+    >
+      <ng-template #caption>
+        <div class="flex items-center justify-between">
+          <h5 class="m-0 text-base md:text-lg font-semibold">Registro de torneo</h5>
+          <p-iconfield>
+            <p-inputicon styleClass="pi pi-search"></p-inputicon>
+            <input
+              pInputText
+              type="text"
+              placeholder="Buscar..."
+              [(ngModel)]="filtro"
+              (input)="buscador()"
+            />
+          </p-iconfield>
+        </div>
+      </ng-template>
 
-            <ng-template #header>
-                <tr>
-                    <th style="min-width: 6rem">ID</th>
-                    <th style="min-width:8rem">Nombre</th>
-                    <th style="min-width:8rem">Área de Nado</th>
-                    <th style="min-width: 12rem">Fecha</th>
-                    <th style="min-width: 10rem">Acciones</th>          
-                </tr>
-            </ng-template>
+      <ng-template #header>
+        <tr>
+          <th style="min-width: 6rem; text-align: left;">ID</th>
+          <th style="min-width: 8rem; text-align: left;">Nombre</th>
+          <th style="min-width: 8rem; text-align: left;">Área de Nado</th>
+          <th style="min-width: 12rem; text-align: left;">Fecha</th>
+          <th style="width: 110px; text-align: center; white-space: nowrap;">Acciones</th>
+        </tr>
+      </ng-template>
 
-            <ng-template #body let-usuario>
-                <tr>
-                    <td>{{ usuario.id }}</td>
-                    <td>{{ usuario.nombre }}</td>
-                    <td>{{ getNombreAreaNado(usuario.id_area_nado) }}</td>
-                    <td>{{ usuario.fecha }}</td>
-                    <td>
-                        <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(usuario.id)"/>
-                        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(usuario.id)" />
-                    </td>
-                </tr>
-            </ng-template>
-            
-        </p-table>
-    </div>
+      <ng-template #body let-usuario>
+        <tr>
+          <td style="text-align: left;">{{ usuario.id }}</td>
+          <td style="text-align: left;">{{ usuario.nombre }}</td>
+          <td style="text-align: left;">{{ getNombreAreaNado(usuario.id_area_nado) }}</td>
+          <td style="text-align: left;">{{ usuario.fecha }}</td>
+          <td style="text-align: center; white-space: nowrap;">
+            <p-button
+              icon="pi pi-pencil"
+              class="mr-2"
+              [rounded]="true"
+              [outlined]="true"
+              (click)="edit(usuario.id)"
+            ></p-button>
+            <p-button
+              icon="pi pi-trash"
+              severity="danger"
+              [rounded]="true"
+              [outlined]="true"
+              (click)="showModalDelete(usuario.id)"
+            ></p-button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
 
     <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar torneo" [modal]="true">
         <ng-template #content>
@@ -72,7 +101,7 @@
                         <label for="id_area_nado" class="block font-bold mb-3">Área nado</label>             
                         <p-select
                             [options]="areanado" formControlName="id_area_nado" inputId="id_area_nado" optionLabel="displayArea"optionValue="id"
-                            placeholder="Seleccione un área nado" [filter]="true" filterBy="displayArea" [showClear]="true" class="w-full md:w-70">
+                            placeholder="Seleccione un área nado" [filter]="true" filterBy="displayArea" [showClear]="true" [appendTo]="'body'"  class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message
@@ -135,7 +164,7 @@
                         <label for="id_area_nado" class="block font-bold mb-3">Área nado</label>             
                         <p-select
                             [options]="areanado" formControlName="id_area_nado" inputId="id_area_nado" optionLabel="displayArea" optionValue="id"
-                            placeholder="Seleccione un área nado" [filter]="true" filterBy="displayArea" [showClear]="true" class="w-full md:w-70">
+                            placeholder="Seleccione un área nado" [appendTo]="'body'" [filter]="true" filterBy="displayArea" [showClear]="true" class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message

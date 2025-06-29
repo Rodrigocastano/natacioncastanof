@@ -169,6 +169,24 @@ export class EntrenadorComponent implements OnInit  {
       });
     }
 
+    soloNumeros(event: any): boolean {
+  // Obtiene el valor actual del input
+  const input = event.target as HTMLInputElement;
+  // Elimina cualquier carácter no numérico
+  const newValue = input.value.replace(/[^0-9]/g, '');
+  
+  // Actualiza el valor en el formulario
+  this.formSave.get(event.target.id)?.setValue(newValue, { emitEvent: false });
+  
+  // Limita a 10 caracteres
+  if (newValue.length > 10) {
+    this.formSave.get(event.target.id)?.setValue(newValue.slice(0, 10), { emitEvent: false });
+    input.value = newValue.slice(0, 10);
+  }
+  
+  return false; // Previene el comportamiento por defecto
+}
+
     calculateAge(birthDate: Date): number {
         const today = new Date();
         const birthDateObj = new Date(birthDate);
@@ -187,12 +205,12 @@ export class EntrenadorComponent implements OnInit  {
       return adjustedDate.toISOString().split('T')[0];
     }
 
-    soloNumeros(event: KeyboardEvent) {
+   /*  soloNumeros(event: KeyboardEvent) {
       const charCode = event.charCode;
       if (charCode < 48 || charCode > 57) {
         event.preventDefault();
       }
-    }
+    } */
 
     store() {
       this.submitted = true;
@@ -235,7 +253,7 @@ export class EntrenadorComponent implements OnInit  {
             this.visibleSave = false;
           },
           error: (err) => {
-            if (err.status === 409 && err.error.message === 'Cédula duplicada') {
+            if (err.status === 409 && err.error.message === 'Identificación duplicada') {
               this.errorCedulaMessageToast();
             } 
             else if (err.status === 422 && err.error.message.includes('email')) {
@@ -249,21 +267,7 @@ export class EntrenadorComponent implements OnInit  {
       }
     }
   
-    errorCedulaMessageToast() {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Cédula duplicada',
-        detail: 'Ya existe un entrenador registrado con esta cédula.'
-      });
-    }
-  
-    errorCorreoMessageToast() {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Correo duplicado',
-        detail: 'Ya existe un entrenador registrado con este correo.'
-      });
-    }
+
   
     cancelSave() {
       this.visibleSave = false;
@@ -289,6 +293,14 @@ export class EntrenadorComponent implements OnInit  {
         
     errorMessageToast() {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al guardar la datos.' });
+    }
+
+      errorCedulaMessageToast() {
+      this.messageService.add({ severity: 'error', summary: 'Identificación duplicada', detail: 'Ya existe un entrenador registrado con esta identificación.'});
+    }
+  
+    errorCorreoMessageToast() {
+      this.messageService.add({ severity: 'error', summary: 'Correo duplicado', detail: 'Ya existe un entrenador registrado con este correo.'});
     }
 
     getNombreGrupo(id: number): string {

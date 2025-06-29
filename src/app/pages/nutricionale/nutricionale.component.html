@@ -20,7 +20,7 @@
             
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registro nutricionales</h5>
+                    <h5 class="m-0 text-base md:text-lg font-semibold"> Nutricionales</h5>
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search"></p-inputicon>
                         <input pInputText type="text" placeholder="Buscar..."
@@ -62,7 +62,8 @@
                                <!-- Tabla de Medidas Nutricionales -->
                                 <table class="w-full border-collapse">
                                 <thead>
-                                    <tr class="bg-gray-100">
+                                    
+                                    <tr class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white">
                                     <th class="text-center p-3 border w-2">Agregar</th>
                                     <th class="text-left p-3 border">Medida</th>
                                     <th *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaNutricionales)" 

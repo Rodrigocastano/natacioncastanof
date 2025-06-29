@@ -21,7 +21,7 @@
 
         <ng-template #caption>
             <div class="flex items-center justify-between">
-                <h5 class="m-0">Registro de abono</h5>
+                <h5 class="m-0 text-base md:text-lg font-semibold">Registro de abono</h5>
                 <p-iconfield>
                     <p-inputicon styleClass="pi pi-search"></p-inputicon>
                     <input pInputText type="text" placeholder="Buscar..."
@@ -166,19 +166,21 @@
             <form [formGroup]="formUpdate" class="formulario">
                 <div class="flex flex-col gap-6">
     
-                        <div class="col-span-6">
-                            <label for="id_registro_pago"  class="block font-bold mb-3">Estado pago</label>             
-                              <p-select
-                                [options]="pago" formControlName="id_registro_pago" optionLabel="displayPago" optionValue="id_registro_pago"
-                                placeholder="Seleccione un estado de pago" [filter]="true" filterBy="displayPago" [showClear]="true" [appendTo]="'body'" class="w-full md:w-70">
-                            </p-select>
-                            <div class="mt-2">
-                                <p-message
-                                    *ngIf="formUpdate.get('id_registro_pago')?.invalid && (formUpdate.get('id_registro_pago')?.dirty || formUpdate.get('id_registro_pago')?.touched)" severity="error" variant="simple" size="small" >
-                                    Estado pago es requerido
-                                </p-message>
-                            </div>
-                        </div>
+                    <div class="col-span-6">
+                        <label class="block font-bold mb-3">Estado pago</label>
+
+                        <p-select
+                            [options]="pago"                 
+                            formControlName="id_registro_pago"
+                            optionLabel="displayPago"
+                            optionValue="id_registro_pago"
+                            [disabled]="true"      
+                            [readonly]="true"     
+                            [style]="{'background-color': '#e0e0e0'}"      
+                            class="w-full md:w-70">
+                        </p-select>
+                    </div>
+
 
                         <div class="col-span-6">
                             <label for="monto" class="block font-bold mb-1">Monto</label>

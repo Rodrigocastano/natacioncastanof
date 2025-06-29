@@ -1,6 +1,6 @@
     <p-toolbar styleClass="mb-6">
         <ng-template #start>
-            <p-button label="Agregar nuevo entrenador" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+            <p-button label="Agregar entrenador" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
         </ng-template>
 
         <ng-template #end>
@@ -25,7 +25,7 @@
 
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registro de entrenadores</h5>
+                    <h5 class="m-0 text-base md:text-lg font-semibold">Entrenadores</h5>
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search" />
                         <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
@@ -130,26 +130,56 @@
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-                            <label for="cedula" class="block font-bold mb-1">Identificación</label>
-                            <input type="text" pInputText formControlName="cedula" id="cedula" placeholder="Número de identificación" class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/>
-                            <p-message 
-                                *ngIf="formSave.get('cedula')?.errors?.['required'] && (formSave.get('cedula')?.dirty || formSave.get('cedula')?.touched)" severity="error" variant="simple" size="small">
-                                Identificación es requerida
-                            </p-message>
-                            <p-message 
-                                *ngIf="formSave.get('cedula')?.errors?.['pattern'] && (formSave.get('cedula')?.dirty || formSave.get('cedula')?.touched)" severity="error" variant="simple" size="small">
-                                Identificación valido 10 números
-                            </p-message>
-                        </div>
+  <label for="cedula" class="block font-bold mb-1">Identificación</label>
+  <input type="tel"
+         pInputText 
+         formControlName="cedula" 
+         id="cedula" 
+         placeholder="Número de identificación" 
+         class="w-full text-sm px-0 py-2"
+         (input)="soloNumeros($event)"
+         maxlength="10"
+         pattern="[0-9]*"
+         inputmode="numeric">
+  
+  <!-- Mensajes de validación para cédula -->
+  <div class="mt-1">
+    <p-message *ngIf="formSave.get('cedula')?.hasError('required') && (formSave.get('cedula')?.touched || submitted)" 
+               severity="error" variant="simple" size="small">
+      La identificación es requerida
+    </p-message>
+    <p-message *ngIf="formSave.get('cedula')?.hasError('pattern') || formSave.get('cedula')?.hasError('minlength') || formSave.get('cedula')?.hasError('maxlength')" 
+               severity="error" variant="simple" size="small">
+      Debe contener exactamente 10 dígitos numéricos
+    </p-message>
+  </div>
+</div>
 
-                        <div class="col-span-6">
-                            <label for="telefono" class="block font-bold mb-1">Teléfono</label>
-                                <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Número de télefono"class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/>             
-                            <p-message
-                                *ngIf="formSave.get('telefono')?.errors?.['required'] && (formSave.get('telefono')?.dirty || formSave.get('telefono')?.touched)" severity="error" variant="simple" size="small" >
-                                Valido solo 10 número
-                            </p-message>
-                        </div>
+<div class="col-span-6">
+  <label for="telefono" class="block font-bold mb-1">Teléfono</label>
+  <input type="tel"
+         pInputText 
+         formControlName="telefono" 
+         id="telefono" 
+         placeholder="Número de teléfono" 
+         class="w-full text-sm px-0 py-2"
+         (input)="soloNumeros($event)"
+         maxlength="10"
+         pattern="[0-9]*"
+         inputmode="numeric">
+  
+  <!-- Mensajes de validación para teléfono -->
+  <div class="mt-1">
+    <p-message *ngIf="formSave.get('telefono')?.hasError('required') && (formSave.get('telefono')?.touched || submitted)" 
+               severity="error" variant="simple" size="small">
+      El teléfono es requerido
+    </p-message>
+    <p-message *ngIf="formSave.get('telefono')?.hasError('pattern') || formSave.get('telefono')?.hasError('minlength') || formSave.get('telefono')?.hasError('maxlength')" 
+               severity="error" variant="simple" size="small">
+      Debe contener exactamente 10 dígitos numéricos
+    </p-message>
+  </div>
+</div>
                     </div>
 
                     <div class="grid grid-cols-12 gap-4">
@@ -184,7 +214,7 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <div class="block font-bold mb-3">Fecha de inscripción</div>
-                            <p-datepicker [(ngModel)]="fechaActual" formControlName="fechaInscripcion" inputId="fechaInscripcion" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" [maxDate]="maxDate"> </p-datepicker>
+                            <p-datepicker [(ngModel)]="fechaActual" [appendTo]="'body'" formControlName="fechaInscripcion" inputId="fechaInscripcion" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" [maxDate]="maxDate"> </p-datepicker>
                             <p-message 
                                 *ngIf="formSave.get('fechaInscripcion')?.invalid && (formSave.get('fechaInscripcion')?.dirty || formSave.get('fechaInscripcion')?.touched)" severity="error" variant="simple"size="small">
                                 Fecha Inscripción es requerida
@@ -205,7 +235,7 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <div class="block font-bold mb-3">Fecha de nacimiento</div>
-                            <p-datepicker [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
+                            <p-datepicker [maxDate]="maxDate" [appendTo]="'body'" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
                             <p-message 
                             *ngIf="formSave.get('fechaNacimiento')?.invalid && (formSave.get('fechaNacimiento')?.dirty || formSave.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">
                             Fecha Nacimiento es requerido
@@ -282,28 +312,54 @@
                     </div>
 
                     <div class="grid grid-cols-12 gap-4">
-                        <div class="col-span-6">
-                            <label for="cedula" class="block font-bold mb-1">Cédula</label>
-                            <input type="text" formControlName="cedula" pInputText id="cedula" placeholder="Número de identificación" required fluid  (keypress)="soloNumeros($event)"/>
-                            <p-message 
-                            *ngIf="formUpdate.get('cedula')?.errors?.['required'] && (formUpdate.get('cedula')?.dirty || formUpdate.get('cedula')?.touched)" 
-                            severity="error" variant="simple" size="small">
-                            Identificación es requerida
+                       <div class="col-span-6">
+                            <label for="cedula" class="block font-bold mb-3">Identificación</label>
+                            <input type="tel" 
+                                    formControlName="cedula" 
+                                    pInputText 
+                                    id="cedula" 
+                                    placeholder="Número de Identificación"
+                                    class="w-full text-sm px-0 py-2"
+                                    (input)="soloNumeros($event)"
+                                    maxlength="10"
+                                    pattern="[0-9]*"
+                                    inputmode="numeric">
+                            
+                            <p-message *ngIf="formUpdate.get('cedula')?.hasError('required') && (formUpdate.get('cedula')?.dirty || formUpdate.get('cedula')?.touched)" 
+                                        severity="error" variant="simple" size="small">
+                                Identificación es requerida
                             </p-message>
-                            <p-message 
-                            *ngIf="formUpdate.get('cedula')?.errors?.['pattern'] && (formUpdate.get('cedula')?.dirty || formUpdate.get('cedula')?.touched)" 
-                            severity="error" variant="simple" size="small">
-                            Identificación solo valido 10 números
+                            
+                            <p-message *ngIf="(formUpdate.get('cedula')?.hasError('pattern') || formUpdate.get('cedula')?.hasError('minlength') || formUpdate.get('cedula')?.hasError('maxlength')) 
+                                            && (formUpdate.get('cedula')?.dirty || formUpdate.get('cedula')?.touched)"
+                                        severity="error" variant="simple" size="small">
+                                Debe contener exactamente 10 dígitos numéricos
                             </p-message>
                         </div>
 
                         <div class="col-span-6">
-                            <label for="telefono" class="block font-bold mb-1">télefono</label>
-                            <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Ingrese número de télefono" class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/>              
-                            <p-message
-                            *ngIf="formUpdate.get('telefono')?.errors?.['required'] && (formUpdate.get('telefono')?.dirty || formUpdate.get('telefono')?.touched)" severity="error" variant="simple" size="small" >
-                            Télefono valido solo 10 número
-                            </p-message>
+                        <label for="telefono" class="block font-bold mb-3">Teléfono</label>
+                        <input type="tel" 
+                                formControlName="telefono" 
+                                pInputText 
+                                id="telefono" 
+                                placeholder="Número de teléfono"
+                                class="w-full text-sm px-0 py-2"
+                                (input)="soloNumeros($event)"
+                                maxlength="10"
+                                pattern="[0-9]*"
+                                inputmode="numeric">
+                        
+                        <p-message *ngIf="formUpdate.get('telefono')?.hasError('required') && (formUpdate.get('telefono')?.dirty || formUpdate.get('telefono')?.touched)" 
+                                    severity="error" variant="simple" size="small">
+                            Teléfono es requerido
+                        </p-message>
+                        
+                        <p-message *ngIf="(formUpdate.get('telefono')?.hasError('pattern') || formUpdate.get('telefono')?.hasError('minlength') || formUpdate.get('telefono')?.hasError('maxlength')) 
+                                        && (formUpdate.get('telefono')?.dirty || formUpdate.get('telefono')?.touched)"
+                                    severity="error" variant="simple" size="small">
+                            Debe contener exactamente 10 dígitos numéricos
+                        </p-message>
                         </div>
                     </div>
 
@@ -339,7 +395,7 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <div class="block font-bold mb-3">Fecha de inscripción</div>
-                            <p-datepicker [maxDate]="maxDate" formControlName="fechaInscripcion" inputId="fechaInscripcion" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>  
+                            <p-datepicker [maxDate]="maxDate" [appendTo]="'body'" formControlName="fechaInscripcion" inputId="fechaInscripcion" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>  
                             <p-message 
                             *ngIf="formUpdate.get('fechaInscripcion')?.invalid && (formUpdate.get('fechaInscripcion')?.dirty || formUpdate.get('fechaInscripcion')?.touched)" severity="error" variant="simple"size="small">
                             Fecha Inscripcion es requerido
@@ -360,7 +416,7 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <div class="block font-bold mb-3">Fecha de nacimiento</div>
-                            <p-datepicker [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
+                            <p-datepicker [maxDate]="maxDate" [appendTo]="'body'" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
                             <p-message 
                             *ngIf="formUpdate.get('fechaNacimiento')?.invalid && (formUpdate.get('fechaNacimiento')?.dirty || formUpdate.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">
                             Fecha Nacimiento es requerido

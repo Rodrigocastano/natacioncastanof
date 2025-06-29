@@ -304,13 +304,11 @@ export class PagoComponent implements OnInit{
         };
           this.formUpdate.controls['id_tipo_pago'].setValue(this.pag?.id_tipo_pago)
           this.formUpdate.controls['id_estado_pago'].setValue(this.pag?.id_estado_pago)
-          this.formUpdate.controls['fecha_vencimiento'].setValue(new Date(this.pag?.fecha_vencimiento))
           this.formUpdate.controls['id_usuario'].setValue(this.pag?.id_usuario) 
           this.formUpdate.controls['monto'].setValue(this.pag?.monto) 
           this.formUpdate.controls['monto_abonado'].setValue(this.pag?.monto_abonado) 
-          this.formUpdate.controls['fecha'].setValue(
-          parseLocalDate(this.pag.fecha)
-        );
+          this.formUpdate.controls['fecha_vencimiento'].setValue( parseLocalDate(this.pag.fecha_vencimiento));
+          this.formUpdate.controls['fecha'].setValue( parseLocalDate(this.pag.fecha));
         }
         this.visibleUpdate = true;
         

@@ -12,52 +12,69 @@
         </p-progressSpinner>
     </div>
 
-    <div *ngIf="!loading">
-        <p-table
-            #dt [value]="pruebaTorneo" [rows]="6" [paginator]="true"
-            [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
-            [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true" dataKey="id"
-            currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Torneo"
-            [showCurrentPageReport]="true" [rowsPerPageOptions]="[6, 12, 18]">
-            <ng-template #caption>
-                <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registro de prueba torneo</h5>
-                    <p-iconfield>
-                        <p-inputicon styleClass="pi pi-search" />
-                        <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
-                    </p-iconfield>
-                </div>
-            </ng-template>
+<div *ngIf="!loading">
+  <div style="overflow-x: auto;">
+    <p-table
+      #dt
+      [value]="pruebaTorneo"
+      [rows]="6"
+      [paginator]="true"
+      [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+      [rowHover]="true"
+      dataKey="id"
+      currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Torneo"
+      [showCurrentPageReport]="true"
+      [rowsPerPageOptions]="[6, 12, 18]"
+      [scrollable]="true"
+      scrollDirection="horizontal"
+      [tableStyle]="{ 'min-width': '800px' }"
+    >
+      <ng-template #caption>
+        <div class="flex items-center justify-between">
+          <h5 class="m-0 text-base md:text-lg font-semibold">Torneos de prueba</h5>
+          <p-iconfield>
+            <p-inputicon styleClass="pi pi-search" />
+            <input
+              pInputText
+              type="text"
+              placeholder="Buscar..."
+              [(ngModel)]="filtro"
+              (input)="buscador()"
+            />
+          </p-iconfield>
+        </div>
+      </ng-template>
 
-            <ng-template #header>
-                <tr>
-                    <th style="min-width: 6rem">ID</th>
-                    <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
-                    <th pSortableColumn="name" style="min-width:8rem">Distancia</th>
-                    <th pSortableColumn="price" style="min-width: 12rem">Torneo</th>
-                    <th pSortableColumn="price" style="min-width: 12rem">Categoría prueba</th>
-                    <th pSortableColumn="price" style="min-width: 12rem">Tipo prueba</th>
-                    <th pSortableColumn="inventoryStatus" style="min-width: 10rem">Acciones</th>          
-                </tr>
-            </ng-template>
+      <ng-template #header>
+        <tr>
+          <th style="min-width: 6rem; text-align: left;">ID</th>
+          <th style="min-width: 8rem; text-align: left;">Nombre</th>
+          <th style="min-width: 8rem; text-align: left;">Distancia</th>
+          <th style="min-width: 12rem; text-align: left;">Torneo</th>
+          <th style="min-width: 12rem; text-align: left;">Categoría prueba</th>
+          <th style="min-width: 12rem; text-align: left;">Tipo prueba</th>
+          <th style="width: 110px; text-align: center; white-space: nowrap;">Acciones</th>
+        </tr>
+      </ng-template>
 
-            <ng-template #body let-usuario>
-                <tr>
-                    <td>{{ usuario.id }}</td>
-                    <td>{{ usuario.nombre }}</td>
-                    <td>{{ usuario.distancia }}</td>
-                    <td>{{ getNombreTorneo(usuario.id_torneo) }}</td>
-                    <td>{{ getNombrePrueba(usuario.id_categoria_prueba) }}</td>
-                    <td>{{ getNombreTipo(usuario.id_categoria_tipo) }}</td>
-                    <td>
-                        <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(usuario.id)"/>
-                        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(usuario.id)" />
-                    </td>
-                </tr>
-            </ng-template>
-            
-        </p-table>
-    </div>
+      <ng-template #body let-usuario>
+        <tr>
+          <td style="text-align: left;">{{ usuario.id }}</td>
+          <td style="text-align: left;">{{ usuario.nombre }}</td>
+          <td style="text-align: left;">{{ usuario.distancia }}</td>
+          <td style="text-align: left;">{{ getNombreTorneo(usuario.id_torneo) }}</td>
+          <td style="text-align: left;">{{ getNombrePrueba(usuario.id_categoria_prueba) }}</td>
+          <td style="text-align: left;">{{ getNombreTipo(usuario.id_categoria_tipo) }}</td>
+          <td style="text-align: center; white-space: nowrap;">
+            <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(usuario.id)" />
+            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(usuario.id)" />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
 
     <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar prueba torneo" [modal]="true">
         <ng-template #content>
@@ -164,7 +181,7 @@
                         <label for="id_torneo" class="block font-bold mb-3">Torneo</label>             
                         <p-select
                             [options]="torneo" formControlName="id_torneo" inputId="id_torneo" optionLabel="displayTorneo"optionValue="id"
-                            placeholder="Seleccione un torneo" [filter]="true" filterBy="displayTorneo" [showClear]="true" class="w-full md:w-70">
+                            placeholder="Seleccione un torneo" [filter]="true" [appendTo]="'body'" filterBy="displayTorneo" [showClear]="true" class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message
@@ -178,7 +195,7 @@
                         <label for="id_categoria_prueba" class="block font-bold mb-3">Prueba de categoría</label>             
                         <p-select
                             [options]="categoriaPrueba" formControlName="id_categoria_prueba" inputId="id_categoria_prueba" optionLabel="displayPrueba"optionValue="id"
-                            placeholder="Seleccione una prueba categoría" [filter]="true" filterBy="displayPrueba" [showClear]="true" class="w-full md:w-70">
+                            placeholder="Seleccione una prueba categoría" [filter]="true" [appendTo]="'body'" filterBy="displayPrueba" [showClear]="true" class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message
@@ -192,7 +209,7 @@
                         <label for="id_categoria_tipo" class="block font-bold mb-3">Tipo de categoría</label>             
                         <p-select
                             [options]="categoriaTipo" formControlName="id_categoria_tipo" inputId="id_categoria_tipo" optionLabel="displayTipo"optionValue="id"
-                            placeholder="Seleccione un tipo de categoría " [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
+                            placeholder="Seleccione un tipo de categoría " [filter]="true" [appendTo]="'body'" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
                         </p-select>
                         <div class="mt-2">
                             <p-message

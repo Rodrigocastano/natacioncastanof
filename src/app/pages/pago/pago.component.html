@@ -12,89 +12,127 @@
             </p-progressSpinner>
         </div>
 
-    <div *ngIf="!loading">
-        <p-table [value]="pago" 
-            dataKey="id" [tableStyle]="{ 'min-width': '60rem' }" [expandedRowKeys]="expandedRows" (onRowExpand)="abrirExpand($event)" 
-            (onRowCollapse)="cerrarCollapse($event)"[paginator]="true"[rows]="6" [rowsPerPageOptions]="[6, 12, 18]"
-            [showCurrentPageReport]="true" currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Usuarios">
+<div *ngIf="!loading">
+  <div style="overflow-x: auto;">
+    <p-table
+      [value]="pago"
+      dataKey="id"
+      [expandedRowKeys]="expandedRows"
+      (onRowExpand)="abrirExpand($event)"
+      (onRowCollapse)="cerrarCollapse($event)"
+      [paginator]="true"
+      [rows]="6"
+      [rowsPerPageOptions]="[6, 12, 18]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Usuarios"
+      [tableStyle]="{ 'min-width': '60rem' }"
+    >
+      <!-- Título y buscador -->
+      <ng-template #caption>
+        <div class="flex items-center justify-between">
+          <h5 class="m-0 text-base md:text-lg font-semibold">Registro de pago</h5>
+          <p-iconfield>
+            <p-inputicon styleClass="pi pi-search"></p-inputicon>
+            <input
+              pInputText
+              type="text"
+              placeholder="Buscar..."
+              [(ngModel)]="terminoBusqueda"
+              (input)="filtrarBusqueda()"
+            />
+          </p-iconfield>
+        </div>
+      </ng-template>
 
-            <ng-template #caption>
-                <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registro de pago</h5>
-                    <p-iconfield>
-                        <p-inputicon styleClass="pi pi-search"></p-inputicon>
-                        <input pInputText type="text" placeholder="Buscar..."
-                               [(ngModel)]="terminoBusqueda"
-                               (input)="filtrarBusqueda()" />
-                      </p-iconfield>
-                </div>
-            </ng-template>
+      <!-- Encabezado -->
+      <ng-template #header>
+        <tr>
+          <th style="width: 3rem"></th>
+          <th style="min-width: 8rem">Identificación</th>
+          <th style="min-width: 10rem">Nombre</th>
+          <th style="min-width: 10rem">Apellido</th>
+          <th style="min-width: 8rem">Género</th>
+          <th style="min-width: 6rem">Edad</th>
+        </tr>
+      </ng-template>
 
-            <ng-template #header>
-                <tr>
-                    <th style="min-width: 4rem"></th>
-                    <th pSortableColumn="name" style="min-width:8rem">Identificación</th>
-                    <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
-                    <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
-                    <th pSortableColumn="price" style="min-width: 8rem">Genero</th>
-                    <th pSortableColumn="price" style="min-width: 6rem">Edad</th>
-                </tr>
-            </ng-template>
+      <!-- Cuerpo -->
+      <ng-template #body let-usuario let-expanded="expanded">
+        <tr>
+          <td>
+            <p-button
+              type="button"
+              pRipple
+              [pRowToggler]="usuario"
+              [text]="true"
+              [rounded]="true"
+              [plain]="true"
+              [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+            />
+          </td>
+          <td>{{ usuario.cedula }}</td>
+          <td>{{ usuario.nombre }}</td>
+          <td>{{ usuario.apellido }}</td>
+          <td>{{ usuario.genero }}</td>
+          <td>{{ usuario.edad }}</td>
+        </tr>
+      </ng-template>
 
-            <ng-template #body let-usuario let-expanded="expanded">
-                <tr>
-                    <td>
-                        <p-button type="button" pRipple [pRowToggler]="usuario" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+      <!-- Fila expandida -->
+      <ng-template #expandedrow let-usuario>
+        <tr>
+          <td colspan="7">
+            <div class="p-4 bg-gray-50 rounded shadow-inner">
+              <p-table [value]="usuario.registroPagos" dataKey="id" [tableStyle]="{ 'min-width': '100%' }">
+                <ng-template #header>
+                  <tr>
+                    <th style="min-width: 10rem;">Nombre</th>
+                    <th style="min-width: 10rem;">Tipo de pago</th>
+                    <th style="min-width: 10rem;">Estado pago</th>
+                    <th style="min-width: 7rem;">Monto</th>
+                    <th style="min-width: 10rem;">Monto abonado</th>
+                    <th style="min-width: 10rem;">Fecha registro</th>
+                    <th style="min-width: 11rem;">Fecha vencimiento</th>
+                    <th style="min-width: 9rem; text-align: center;">Acciones</th>
+                  </tr>
+                </ng-template>
+
+                <ng-template #body let-elast>
+                  <tr>
+                    <td>{{ usuario.nombre }} {{ usuario.apellido }}</td>
+                    <td>{{ getNombreTipoPago(elast.id_tipo_pago) }}</td>
+                    <td>{{ getNombreEstadoPago(elast.id_estado_pago) }}</td>
+                    <td>{{ elast.monto }}</td>
+                    <td>{{ elast.monto_abonado }}</td>
+                    <td>{{ elast.fecha }}</td>
+                    <td>{{ elast.fecha_vencimiento }}</td>
+                    <td style="text-align: center;">
+                      <p-button
+                        icon="pi pi-pencil"
+                        class="mr-2"
+                        [rounded]="true"
+                        [outlined]="true"
+                        (click)="edit(elast)"
+                      />
+                      <p-button
+                        icon="pi pi-trash"
+                        severity="danger"
+                        [rounded]="true"
+                        [outlined]="true"
+                        (click)="showModalDelete(elast.id)"
+                      />
                     </td>
-                    <td>{{ usuario.cedula }}</td>
-                    <td>{{ usuario.nombre }}</td>
-                    <td>{{ usuario.apellido }}</td>
-                    <td>{{ usuario.genero }}</td>
-                    <td>{{ usuario.edad }}</td>
-                </tr>
-            </ng-template>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
 
-            <ng-template #expandedrow let-usuario>
-                <tr>
-                    <td colspan="7">
-                        <div class="p-4">
-                            <p-table [value]="usuario.registroPagos
-                            " dataKey="id">
-                                <ng-template #header>
-                                    <tr>
-                                        <th style="min-width: 8rem">Nombre</th>
-                                        <th style="min-width: 8rem">Estado pago</th>
-                                        <th style="min-width: 7rem">Tipo pago</th>
-                                        <th style="min-width: 5rem">Monto</th>
-                                        <th style="min-width: 10rem">Monto abonado</th>
-                                        <th style="min-width: 9rem">Fecha registro</th>
-                                        <th style="min-width: 11rem">Fecha vencimiento</th>
-                                        <th style="min-width: 8rem">Acciones</th>
-                                    </tr>
-
-                                </ng-template>
-                                <ng-template #body let-elast>
-                                    <tr>
-                                        <td>{{ usuario.nombre }} {{ usuario.apellido }}</td>
-                                        <td>{{ getNombreTipoPago(elast.id_tipo_pago) }}</td>
-                                        <td>{{ getNombreEstadoPago(elast.id_estado_pago) }}</td>
-                                        <td>{{ elast.monto }}</td>
-                                        <td>{{ elast.monto_abonado }}</td>
-                                        <td>{{ elast.fecha }}</td>
-                                        <td>{{ elast.fecha_vencimiento }}</td>
-                                        <td>
-                                            <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(elast)"/>
-                                            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(elast.id)" />
-                                        </td>
-                                    </tr>
-                                </ng-template>
-                            </p-table>
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </div>
 
     <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar nuevo pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
         <ng-template #content>
@@ -322,9 +360,6 @@
                         </div>
                     </div>
 
-
-
-
                     <div class="grid grid-cols-12 gap-4"> 
                         <div class="col-span-6">
                             <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
@@ -341,7 +376,7 @@
                         <div class="col-span-6">
                             <label for="fecha_vencimiento" class="block font-bold mb-2">Fecha vencimiento</label>
                             <p-datepicker 
-                                 formControlName="fecha_vencimiento" inputId="fecha_vencimiento" [showIcon]="true" [showButtonBar]="true" 
+                                formControlName="fecha_vencimiento" inputId="fecha_vencimiento" [showIcon]="true" [showButtonBar]="true" 
                                 [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
                             </p-datepicker>
                             <p-message 

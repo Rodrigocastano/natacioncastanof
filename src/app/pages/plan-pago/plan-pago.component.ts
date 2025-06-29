@@ -86,6 +86,9 @@ export class PlanPagoComponent implements OnInit{
       buscarOriginal: PlanPago[] = [];
       opcionesDiass: any[] = [];
 
+      visibleCancelDialog: boolean = false;
+planToCancel: any = null;
+
       constructor(
         private fb: FormBuilder,
         private planPagoService: PlanPagoService,
@@ -125,7 +128,7 @@ export class PlanPagoComponent implements OnInit{
               this.getTipoPago();
             }
 
-            confirmarCancelacion(plan: any) {
+   /*          confirmarCancelacion(plan: any) {
                 this.confirmationService.confirm({
                     message: `¿Estás seguro de cancelar el plan ID: ${plan.id}?`,
                     header: 'Confirmar cancelación',
@@ -136,34 +139,45 @@ export class PlanPagoComponent implements OnInit{
                         this.cancelarPlan(plan);
                     }
                 });
-            }
+            } */
 
-            cancelarPlan(plan: any) {
-                const fechaActual = new Date();
-                const payload = {
-                    fecha_fin: this.formatDate(fechaActual),
-                    estado_funcional: 0
-                };
+          confirmCancel(plan: any) {
+  this.planToCancel = plan;
+  this.visibleCancelDialog = true;
+}
 
-                this.planPagoService.CancelarPlan(plan.id, payload).subscribe({
-                    next: () => {
-                        this.messageService.add({
-                            severity: 'success',
-                            summary: 'Éxito',
-                            detail: `Plan ID: ${plan.id} cancelado correctamente (${this.formatDate(fechaActual)})`
-                        });
-                        this.getPlanPago();
-                    },
-                    error: (err) => {
-                        console.error('Error al cancelar plan:', err);
-                        this.messageService.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: `No se pudo cancelar el plan ID: ${plan.id}`
-                        });
-                    }
-                });
-            }
+cancelarPlan() {
+  if (!this.planToCancel) return;
+
+  const fechaActual = new Date();
+  const payload = {
+    fecha_fin: this.formatDate(fechaActual),
+    estado_funcional: 0
+  };
+
+  this.planPagoService.CancelarPlan(this.planToCancel.id, payload).subscribe({
+    next: () => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Éxito',
+        detail: `Plan ID: ${this.planToCancel.id} cancelado correctamente (${this.formatDate(fechaActual)})`
+      });
+      this.getPlanPago();
+    },
+    error: (err) => {
+      console.error('Error al cancelar plan:', err);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: `No se pudo cancelar el plan ID: ${this.planToCancel.id}`
+      });
+    },
+    complete: () => {
+      this.visibleCancelDialog = false;
+      this.planToCancel = null;
+    }
+  });
+}
 
             cancelarPlanDesdeDialogo() {
                 const planId = this.formUpdate.value.id;

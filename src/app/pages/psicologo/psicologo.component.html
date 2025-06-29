@@ -12,84 +12,110 @@
             </p-progressSpinner>
         </div>
 
-    <div *ngIf="!loading">
-        <p-table [value]="psicologo" 
-            dataKey="id" [tableStyle]="{ 'min-width': '60rem' }" [expandedRowKeys]="expandedRows" (onRowExpand)="abrirExpand($event)" 
-            (onRowCollapse)="cerrarCollapse($event)" [paginator]="true" [rows]="6" [rowsPerPageOptions]="[6, 12, 18]"
-            [showCurrentPageReport]="true" currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Usuarios">
+<div *ngIf="!loading">
+  <div style="overflow-x: auto;">
+    <p-table
+      [value]="psicologo"
+      dataKey="id"
+      [expandedRowKeys]="expandedRows"
+      (onRowExpand)="abrirExpand($event)"
+      (onRowCollapse)="cerrarCollapse($event)"
+      [paginator]="true"
+      [rows]="6"
+      [rowsPerPageOptions]="[6, 12, 18]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Usuarios"
+      [tableStyle]="{ 'min-width': '60rem' }"
+    >
+      <!-- CABECERA SUPERIOR -->
+      <ng-template #caption>
+        <div class="flex items-center justify-between">
+          <h5 class="m-0 text-base md:text-lg font-semibold">Controles psicólogo</h5>
+          <p-iconfield>
+            <p-inputicon styleClass="pi pi-search"></p-inputicon>
+            <input
+              pInputText
+              type="text"
+              placeholder="Buscar..."
+              [(ngModel)]="terminoBusqueda"
+              (input)="filtrarBusqueda()"
+            />
+          </p-iconfield>
+        </div>
+      </ng-template>
 
-            <ng-template #caption>
-                <div class="flex items-center justify-between">
-                    <h5 class="m-0">Registro del control psicólogo</h5>
-                    <p-iconfield>
-                        <p-inputicon styleClass="pi pi-search"></p-inputicon>
-                        <input pInputText type="text" placeholder="Buscar..."
-                               [(ngModel)]="terminoBusqueda"
-                               (input)="filtrarBusqueda()" />
-                      </p-iconfield>
-                </div>
-            </ng-template>
+      <!-- ENCABEZADOS -->
+      <ng-template #header>
+        <tr>
+          <th style="width: 3rem;"></th>
+          <th style="min-width: 8rem;">Identificación</th>
+          <th style="min-width: 10rem;">Nombre</th>
+          <th style="min-width: 10rem;">Apellido</th>
+          <th style="min-width: 8rem;">Género</th>
+          <th style="min-width: 6rem;">Edad</th>
+        </tr>
+      </ng-template>
 
-            <ng-template #header>
-                <tr>
-                    <th style="min-width: 4rem"></th>
-                    <th pSortableColumn="name" style="min-width:8rem">Identificación</th>
-                    <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
-                    <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
-                    <th pSortableColumn="price" style="min-width: 8rem">Género</th>
-                    <th pSortableColumn="price" style="min-width: 6rem">Edad</th>
-                </tr>
-            </ng-template>
+      <!-- CUERPO -->
+      <ng-template #body let-usuario let-expanded="expanded">
+        <tr>
+          <td>
+            <p-button
+              type="button"
+              pRipple
+              [pRowToggler]="usuario"
+              [text]="true"
+              [rounded]="true"
+              [plain]="true"
+              [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+            />
+          </td>
+          <td>{{ usuario.cedula }}</td>
+          <td>{{ usuario.nombre }}</td>
+          <td>{{ usuario.apellido }}</td>
+          <td>{{ usuario.genero }}</td>
+          <td>{{ usuario.edad }}</td>
+        </tr>
+      </ng-template>
 
-            <ng-template #body let-usuario let-expanded="expanded">
-                <tr>
-                    <td>
-                        <p-button type="button" pRipple [pRowToggler]="usuario" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+      <!-- FILA EXPANDIDA -->
+      <ng-template #expandedrow let-usuario>
+        <tr>
+          <td colspan="6">
+            <div class="p-4 bg-gray-50 rounded shadow-inner">
+              <p-table [value]="usuario.controlesPsicologicos" dataKey="id" [tableStyle]="{ 'min-width': '100%' }">
+                <ng-template #header>
+                  <tr>
+                    <th style="min-width: 6rem;">ID</th>
+                    <th style="min-width: 12rem;">Nombres</th>
+                    <th style="min-width: 10rem;">Diagnóstico</th>
+                    <th style="min-width: 6rem; text-align: center;">Apto</th>
+                    <th style="min-width: 10rem;">Fecha</th>
+                    <th style="min-width: 8rem; text-align: center;">Acciones</th>
+                  </tr>
+                </ng-template>
+                <ng-template #body let-elast>
+                  <tr>
+                    <td>{{ elast.id }}</td>
+                    <td>{{ elast.nombre }} {{ elast.apellido }}</td>
+                    <td>{{ elast.diagnostico }}</td>
+                    <td style="text-align: center;">{{ elast.apto ? 'Sí' : 'No' }}</td>
+                    <td>{{ elast.fecha }}</td>
+                    <td style="text-align: center;">
+                      <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(elast)" />
+                      <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(elast.id)" />
                     </td>
-                    <td>{{ usuario.cedula }}</td>
-                    <td>{{ usuario.nombre }}</td>
-                    <td>{{ usuario.apellido }}</td>
-                    <td>{{ usuario.genero }}</td>
-                    <td>{{ usuario.edad }}</td>
-                </tr>
-            </ng-template>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
 
-            <ng-template #expandedrow let-usuario>
-                <tr>
-                    <td colspan="7">
-                        <div class="p-4">
-                            <p-table [value]="usuario.controlesPsicologicos" dataKey="id">
-                                <ng-template #header>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nombres</th>
-                                        <th>Diagnostico</th>
-                                        <th>Apto</th>
-                                        <th>Fecha</th>
-                                        <th>Acciones</th>
-                                    </tr>
-        
-                                </ng-template>
-                                <ng-template #body let-elast>
-                                    <tr>
-                                        <td>{{ elast.id }}</td>
-                                        <td>{{ elast.nombre }} {{ elast.apellido }}</td>
-                                        <td>{{ elast.diagnostico }} </td>
-                                        <td>{{ elast.apto ? 'Sí' : 'No' }}</td>
-                                        <td>{{ elast.fecha }}</td>
-                                        <td>
-                                            <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(elast)"/>
-                                            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(elast.id)" />
-                                        </td>
-                                    </tr>
-                                </ng-template>
-                            </p-table>
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </div>
     
     <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar registro psicólogo" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">  
         <ng-template #content>
