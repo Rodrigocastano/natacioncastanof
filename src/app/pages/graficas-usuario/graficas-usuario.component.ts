@@ -115,9 +115,10 @@ cargarDatos(): void {
 
   configurarOpcionesGrafica(): void {
     const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--text-secondary');
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+  const textColor = documentStyle.getPropertyValue('--text-color');
+  const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+  const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+  const surfaceGround = documentStyle.getPropertyValue('--surface-ground');
 
     this.comboChartOptions = {
       responsive: true,
@@ -161,6 +162,8 @@ cargarDatos(): void {
       }
     };
   }
+
+  
 
   private formatTime(value: number): string {
     const minutes = Math.floor(value);

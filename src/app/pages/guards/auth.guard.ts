@@ -25,7 +25,7 @@ export class AuthGuard implements CanActivate {
 
     if ((rol === 'administrador' || rol === 'entrenador') &&
         (url.includes('graficasusuario') || url.includes('asistenciausuario') ||
-         url.includes('elasticidadusuario') || url.includes('nutricionalusuario') ||
+         url.includes('medidaUsuario') || url.includes('nutricionalusuario') ||
          url.includes('antropometricausuario'))) {
       this.router.navigate(['/dashboard']);
       return false;

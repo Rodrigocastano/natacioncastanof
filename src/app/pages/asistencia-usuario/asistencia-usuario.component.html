@@ -13,7 +13,6 @@
 
 <p-toast></p-toast>
 
-<!-- Cargando -->
 <div *ngIf="loading" class="flex justify-center items-center h-60">
   <p-progressSpinner 
     styleClass="p-text-primary" 
@@ -21,7 +20,6 @@
   </p-progressSpinner>
 </div>
 
-<!-- Tabla de asistencias -->
 <div *ngIf="!loading && asistencias.length > 0" class="bg-white rounded-xl shadow-md p-4">
   <p-table 
     #dt
@@ -36,7 +34,6 @@
     currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} asistencias"
     [globalFilterFields]="['fecha', 'presente']"
   >
-    <!-- Aquí va el caption con el atributo pTemplate -->
     <ng-template pTemplate="caption">
       <div class="flex items-center justify-between p-2">
         <h5 class="m-0 text-base md:text-lg font-semibold">
@@ -57,32 +54,37 @@
 
     <ng-template pTemplate="header">
       <tr>
-        <th class="text-left">Fecha</th>
-        <th class="text-left">Estado</th>
+        <th class="text-left w-3/4">Fecha</th>
+        <th class="flex justify-center items-center">Estado</th>  
       </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-asistencia>
-      <tr>
-        <td>{{ asistencia.fecha }}</td>
-        <td>
-          <span 
-            class="p-tag font-semibold" 
-            [ngClass]="{
-              'p-tag-success': asistencia.presente,
-              'p-tag-danger': !asistencia.presente
-            }"
-          >
-            {{ asistencia.presente ? 'Presente' : 'Ausente' }}
-          </span>
-        </td>
-      </tr>
+        <tr class="align-middle">
+          <!-- Fecha - Visible en ambos modos -->
+          <td class="text-left whitespace-nowrap font-medium text-base text-gray-700 dark:text-gray-300">
+            {{ asistencia.fecha }}
+          </td>
+
+          <!-- Estado - Ajuste para modo oscuro -->
+          <td class="text-center">
+            <div class="flex justify-center items-center">
+              <span
+                class="p-tag font-semibold px-3 py-1 text-base whitespace-nowrap dark:text-white"
+                [ngClass]="{
+                  'p-tag-success': asistencia.presente,
+                  'p-tag-danger': !asistencia.presente
+                }"
+              >
+                {{ asistencia.presente ? 'Presente' : 'Ausente' }}
+              </span>
+            </div>
+          </td>
+        </tr>
     </ng-template>
   </p-table>
 </div>
 
-
-<!-- Sin registros -->
 <div *ngIf="!loading && asistencias.length === 0" class="mt-10 text-center text-gray-500 text-lg">
   <i class="pi pi-info-circle text-2xl text-gray-400 mr-2"></i>
   Aún no tienes asistencias registradas.

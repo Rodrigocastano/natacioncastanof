@@ -118,60 +118,61 @@ export class GraficasComponent implements OnInit {
     }
 
     configurarOpcionesGrafica(): void {
-        const documentStyle = getComputedStyle(document.documentElement);
-        const textColor = documentStyle.getPropertyValue('--text-color');
-        const textColorSecondary = documentStyle.getPropertyValue('--text-secondary');
-        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+      const documentStyle = getComputedStyle(document.documentElement);
+      const textColor = documentStyle.getPropertyValue('--text-color');
+      const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+      const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+      const surfaceGround = documentStyle.getPropertyValue('--surface-ground');
 
-        this.comboChartOptions = {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'top',
-              labels: {
-                color: textColor,
-                font: {
-                  weight: '500'
+          this.comboChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'top',
+                labels: {
+                  color: textColor,
+                  font: {
+                    weight: '500'
+                  }
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: (context: any) => {
+                    const label = context.dataset.label.replace(/ \(Línea\)| \(Barras\)/, '');
+                    const value = context.raw;
+                    if (value === null) return `${label}: Sin registro`;
+                    return `${label}: ${this.formatTime(value)}`;
+                  }
                 }
               }
             },
-            tooltip: {
-              callbacks: {
-                label: (context: any) => {
-                  const label = context.dataset.label.replace(/ \(Línea\)| \(Barras\)/, '');
-                  const value = context.raw;
-                  if (value === null) return `${label}: Sin registro`;
-                  return `${label}: ${this.formatTime(value)}`;
+            scales: {
+              x: {
+                ticks: {
+                  color: textColorSecondary
+                },
+                grid: {
+                  color: surfaceBorder,
+                  drawBorder: false
+                }
+              },
+              y: {
+                min: 0,
+                max: 120,
+                ticks: {
+                  color: textColorSecondary,
+                  callback: (value: any) => this.formatTime(value),
+                  stepSize: 10
+                },
+                grid: {
+                  color: surfaceBorder,
+                  drawBorder: false
                 }
               }
             }
-          },
-          scales: {
-            x: {
-              ticks: {
-                color: textColorSecondary
-              },
-              grid: {
-                color: surfaceBorder,
-                drawBorder: false
-              }
-            },
-            y: {
-              min: 0,
-              max: 120,
-              ticks: {
-                color: textColorSecondary,
-                callback: (value: any) => this.formatTime(value),
-                stepSize: 10
-              },
-              grid: {
-                color: surfaceBorder,
-                drawBorder: false
-              }
-            }
-          }
-        };
+          };
     }
 
     private formatTime(value: number): string {

@@ -208,7 +208,7 @@
                                 <td>{{ h.monto_abonado | currency }}</td>
                                 <td class="text-center">
                                   <i class="pi pi-verified text-green-500" *ngIf="h.pagado"></i>
-                                  <i class="pi pi-times-circle text-red-500" *ngIf="!h.pagado"></i>
+                                  <i class="pi pi-verified text-green-500" *ngIf="!h.pagado"></i>
                                 </td>
                               </tr>
                             </ng-template>

@@ -15,7 +15,7 @@
   <div *ngIf="!loading && !error && mediciones.length > 0" class="overflow-x-auto">
     <table class="min-w-full border-collapse text-center">
       <thead>
-        <tr class="bg-gray-100">
+        <tr class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white">
           <th class="p-2 px-4 border text-left">Medida</th>
           <th *ngFor="let medida of mediciones"
               class="p-2 px-4 border whitespace-nowrap min-w-[100px]">
@@ -64,7 +64,7 @@
   <div *ngIf="!loading && !error && nutriciones.length > 0" class="overflow-x-auto">
     <table class="min-w-full border-collapse text-center">
       <thead>
-        <tr class="bg-gray-100">
+        <tr class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white">
           <th class="p-2 px-4 border text-left">Medida</th>
           <th *ngFor="let n of nutriciones"
               class="p-2 px-4 border whitespace-nowrap min-w-[100px]">
@@ -130,7 +130,7 @@
 <div *ngIf="!loading && !error && antros.length > 0" class="overflow-x-auto">
   <table class="min-w-full border-collapse text-center">
     <thead>
-      <tr class="bg-gray-100">
+      <tr class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white">
         <th class="p-2 px-4 border text-left whitespace-nowrap min-w-[140px]">
           Medida
         </th>
