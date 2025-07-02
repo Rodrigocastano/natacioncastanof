@@ -9,12 +9,3 @@ export interface Elasticida {
     cedula?: string;
   }
   
-/*   export interface Usuarios {
-    id: number;
-    nombre: string;
-    apellido: string;
-    genero: string;
-    edad: number;
-    medidaElasticidas: Elasticida[];
-  }
-   */

@@ -29,6 +29,9 @@ import { AbonopagoComponent } from './abonopago/abonopago.component';
 import { GraficasComponent } from './graficas/graficas.component';
 import { GraficasUsuarioComponent } from './graficas-usuario/graficas-usuario.component';
 import { AsistenciaUsuarioComponent } from './asistencia-usuario/asistencia-usuario.component';
+import { MedidasUsuarioComponent } from './medidas-usuario/medidas-usuario.component';
+import { NutricionaleUsuarioComponent } from './nutricionale-usuario/nutricionale-usuario.component';
+import { AntropometricaUsuarioComponent } from './antropometrica-usuario/antropometrica-usuario.component';
 
 export default [
     { path: 'usuario', component: UsuarioComponent},
@@ -60,5 +63,8 @@ export default [
     { path: 'graficas', component: GraficasComponent },
     { path: 'graficasUsuario', component: GraficasUsuarioComponent },
     { path: 'asistenciaUsuario', component: AsistenciaUsuarioComponent },
+    { path: 'elasticidadUsuario', component: MedidasUsuarioComponent },
+    { path: 'nutricionalUsuario', component: NutricionaleUsuarioComponent },
+    { path: 'antropometricaUsuario', component: AntropometricaUsuarioComponent },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

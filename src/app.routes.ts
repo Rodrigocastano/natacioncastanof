@@ -5,6 +5,7 @@ import { Landing } from './app/pages/landing/landing';
 import { Notfound } from './app/pages/notfound/notfound';
 import { Login } from './app/pages/auth/login';
 import { AuthGuard } from './app/pages/guards/auth.guard';
+import { GraficasUsuarioComponent } from './app/pages/graficas-usuario/graficas-usuario.component';
 
 export const appRoutes: Routes = [
     { path: '', redirectTo: 'landing', pathMatch: 'full' },
@@ -14,6 +15,7 @@ export const appRoutes: Routes = [
         canActivate: [AuthGuard],
         children: [
             { path: 'dashboard', component: Dashboard },
+            { path: 'graficasUsuario', component: GraficasUsuarioComponent },
             { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') }
         ]
     },

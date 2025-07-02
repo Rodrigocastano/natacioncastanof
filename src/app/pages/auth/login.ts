@@ -22,16 +22,24 @@ export class Login {
   email: string = '';
   password: string = '';
 
-  constructor(
-    private loginService: LoginService, 
-    private router: Router, 
-    private messageService: MessageService){
-      if(!!localStorage.getItem('token') )
-      {
-        router.navigate(['/dashboard']);
-      }
+ constructor(
+  private loginService: LoginService,
+  private router: Router,
+  private messageService: MessageService
+) {
+  const token = localStorage.getItem('token');
+  const rol   = localStorage.getItem('rol');
 
+  console.log('🟡 Constructor Login → token:', token, 'rol:', rol);
+
+  if (token && rol) {
+    const destino = this.getRedirectRoute(rol);
+    console.log('🟡 Redirigiendo a', destino);
+    this.router.navigate([destino]);
   }
+}
+
+
 
   errorMessageToast() {
     this.messageService.add({ 

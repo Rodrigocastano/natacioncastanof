@@ -91,7 +91,7 @@
                                     <td *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaNutricionales); let i = index" 
                                         class="text-center p-3 border">
                                         <div class="flex flex-row items-center justify-center gap-2">
-                                        <span class="font-medium">{{ medida.proteina_consumida }}kg</span>
+                                        <span class="font-medium">{{ medida.proteina_consumida }}g</span>
                                         <ng-container *ngIf="compararProteinaAnterior(obtenerMedidasOrdenadas(usuario.medidaNutricionales), i) === 'increase'">
                                             <i class="pi pi-arrow-up text-green-500"></i>
                                         </ng-container>
@@ -108,7 +108,7 @@
                                     <td *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaNutricionales); let i = index" 
                                         class="text-center p-3 border">
                                         <div class="flex flex-row items-center justify-center gap-2">
-                                        <span class="font-medium">{{ medida.caloria_consumida }}kg</span>
+                                        <span class="font-medium">{{ medida.caloria_consumida }}kcal</span>
                                         <ng-container *ngIf="compararCaloriasAnterior(obtenerMedidasOrdenadas(usuario.medidaNutricionales), i) === 'increase'">
                                             <i class="pi pi-arrow-up text-green-500"></i>
                                         </ng-container>

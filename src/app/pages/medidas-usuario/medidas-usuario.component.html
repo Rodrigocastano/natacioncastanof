@@ -1,0 +1,251 @@
+<!-- ᴄᴀʀᴅ Elasticidad -->
+<div class="card p-4">
+  <h2 class="text-center text-2xl font-bold mb-4">Mediciones de Elasticidad</h2>
+
+  <div *ngIf="loading" class="text-center py-10">
+    <div class="inline-block w-12 h-12 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
+    <p class="mt-4 text-gray-600">Cargando datos...</p>
+  </div>
+
+  <div *ngIf="error" class="p-3 bg-red-100 border text-red-800 rounded-md mb-4">
+    <p>Error al cargar los datos.</p>
+    <button pButton label="Reintentar" icon="pi pi-refresh" (click)="cargarMisMedidasElasticidad()" class="p-button-sm"></button>
+  </div>
+
+  <div *ngIf="!loading && !error && mediciones.length > 0" class="overflow-x-auto">
+    <table class="min-w-full border-collapse text-center">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="p-2 px-4 border text-left">Medida</th>
+          <th *ngFor="let medida of mediciones"
+              class="p-2 px-4 border whitespace-nowrap min-w-[100px]">
+            {{ formatDate(medida.fecha) }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="p-2 px-4 border text-left font-semibold">Elasticidad</td>
+          <td *ngFor="let medida of mediciones; let i = index"
+              class="p-2 px-4 border whitespace-nowrap min-w-[100px]">
+            {{ medida.medida_elasticida }}kg
+            <ng-container *ngIf="i > 0">
+              <i *ngIf="+medida.medida_elasticida > +mediciones[i-1].medida_elasticida"
+                class="pi pi-arrow-up text-green-600 ml-1"></i>
+              <i *ngIf="+medida.medida_elasticida < +mediciones[i-1].medida_elasticida"
+                class="pi pi-arrow-down text-red-600 ml-1"></i>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!loading && !error && mediciones.length === 0" class="text-center text-gray-600 mt-4">
+    Aún no tienes mediciones registradas.
+  </div>
+</div>
+
+<!-- ᴄᴀʀᴅ ɴᴜᴛʀɪᴄɪᴏɴᴀʟᴇs -->
+<div class="card p-4">
+  <h2 class="text-center text-2xl font-bold mb-4">Mediciones Nutricionales</h2>
+
+  <div *ngIf="loading" class="text-center py-10">
+    <div class="inline-block w-12 h-12 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
+    <p class="mt-4 text-gray-600">Cargando datos...</p>
+  </div>
+
+  <div *ngIf="error" class="p-3 bg-red-100 border text-red-800 rounded-md mb-4">
+    <p>Error al cargar los datos.</p>
+    <button pButton label="Reintentar" icon="pi pi-refresh"
+            (click)="cargarMisMedidasNutricionales()" class="p-button-sm"></button>
+  </div>
+
+  <div *ngIf="!loading && !error && nutriciones.length > 0" class="overflow-x-auto">
+    <table class="min-w-full border-collapse text-center">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="p-2 px-4 border text-left">Medida</th>
+          <th *ngFor="let n of nutriciones"
+              class="p-2 px-4 border whitespace-nowrap min-w-[100px]">
+            {{ formatDate(n.fecha) }}
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <td class="p-2 px-4 border text-left font-semibold">Calorías</td>
+          <td *ngFor="let n of nutriciones; let i = index"
+              class="p-2 px-4 border whitespace-nowrap min-w-[100px]">
+            {{ n.caloria_consumida }} kcal
+            <ng-container *ngIf="i > 0">
+              <i *ngIf="+n.caloria_consumida > +nutriciones[i-1].caloria_consumida"
+                class="pi pi-arrow-up text-green-600 ml-1"></i>
+              <i *ngIf="+n.caloria_consumida < +nutriciones[i-1].caloria_consumida"
+                class="pi pi-arrow-down text-red-600 ml-1"></i>
+            </ng-container>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="p-2 px-4 border text-left font-semibold">Proteínas</td>
+          <td *ngFor="let n of nutriciones; let i = index"
+              class="p-2 px-4 border whitespace-nowrap min-w-[100px]">
+            {{ n.proteina_consumida }} g
+            <ng-container *ngIf="i > 0">
+              <i *ngIf="+n.proteina_consumida > +nutriciones[i-1].proteina_consumida"
+                class="pi pi-arrow-up text-green-600 ml-1"></i>
+              <i *ngIf="+n.proteina_consumida < +nutriciones[i-1].proteina_consumida"
+                class="pi pi-arrow-down text-red-600 ml-1"></i>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!loading && !error && nutriciones.length === 0"
+       class="text-center text-gray-600 mt-4">
+    Aún no tienes mediciones nutricionales registradas.
+  </div>
+</div>
+
+<!-- ᴄᴀʀᴅ ᴀɴᴛʀᴏᴘᴏᴍᴇ́ᴛʀɪᴄᴀs-->
+<div class="card p-4">
+  <h2 class="text-center text-2xl font-bold mb-4">Mediciones Antropométricas</h2>
+
+  <div *ngIf="loading" class="text-center py-10">
+    <div class="inline-block w-12 h-12 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
+    <p class="mt-4 text-gray-600">Cargando datos...</p>
+  </div>
+
+  <div *ngIf="error" class="p-3 bg-red-100 border text-red-800 rounded-md mb-4">
+    <p>Error al cargar los datos.</p>
+    <button pButton label="Reintentar" icon="pi pi-refresh"
+            (click)="cargarMisMedidasAntropometricas()" class="p-button-sm"></button>
+  </div>
+
+<div *ngIf="!loading && !error && antros.length > 0" class="overflow-x-auto">
+  <table class="min-w-full border-collapse text-center">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="p-2 px-4 border text-left whitespace-nowrap min-w-[140px]">
+          Medida
+        </th>
+        <th *ngFor="let a of antros" class="p-2 px-4 border whitespace-nowrap min-w-[100px]">
+          {{ formatDate(a.fecha) }}
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <!-- Peso -->
+      <tr>
+        <td class="p-2 px-4 border text-left font-semibold">Peso</td>
+        <td *ngFor="let a of antros; let i = index" class="p-2 px-4 border">
+          <div class="flex items-center justify-center gap-1">
+            {{ a.peso }} kg
+            <i *ngIf="i > 0 && +a.peso < +antros[i-1].peso" class="pi pi-arrow-left text-red-600"></i>
+            <i *ngIf="i > 0 && +a.peso > +antros[i-1].peso" class="pi pi-arrow-right text-green-600"></i>
+          </div>
+        </td>
+      </tr>
+
+      <!-- Talla -->
+      <tr>
+        <td class="p-2 px-4 border text-left font-semibold">Talla</td>
+        <td *ngFor="let a of antros; let i = index" class="p-2 px-4 border">
+          <div class="flex items-center justify-center gap-1">
+            {{ a.talla }} cm
+            <i *ngIf="i > 0 && +a.talla < +antros[i-1].talla" class="pi pi-arrow-left text-red-600"></i>
+            <i *ngIf="i > 0 && +a.talla > +antros[i-1].talla" class="pi pi-arrow-right text-green-600"></i>
+          </div>
+        </td>
+      </tr>
+
+      <!-- Envergadura -->
+      <tr>
+        <td class="p-2 px-4 border text-left font-semibold">Envergadura</td>
+        <td *ngFor="let a of antros; let i = index" class="p-2 px-4 border">
+          <div class="flex items-center justify-center gap-1">
+            {{ a.envergadura }} cm
+            <i *ngIf="i > 0 && +a.envergadura < +antros[i-1].envergadura" class="pi pi-arrow-left text-red-600"></i>
+            <i *ngIf="i > 0 && +a.envergadura > +antros[i-1].envergadura" class="pi pi-arrow-right text-green-600"></i>
+          </div>
+        </td>
+      </tr>
+
+      <!-- Circ. Braquial -->
+      <tr>
+        <td class="p-2 px-4 border text-left font-semibold">Circ. Braquial</td>
+        <td *ngFor="let a of antros; let i = index" class="p-2 px-4 border">
+          <div class="flex items-center justify-center gap-1">
+            {{ a.circuferencia_braquial }} cm
+            <i *ngIf="i > 0 && +a.circuferencia_braquial < +antros[i-1].circuferencia_braquial" class="pi pi-arrow-left text-red-600"></i>
+            <i *ngIf="i > 0 && +a.circuferencia_braquial > +antros[i-1].circuferencia_braquial" class="pi pi-arrow-right text-green-600"></i>
+          </div>
+        </td>
+      </tr>
+
+      <!-- Pliegue Cutáneo -->
+      <tr>
+        <td class="p-2 px-4 border text-left font-semibold">Pliegue Cutáneo</td>
+        <td *ngFor="let a of antros; let i = index" class="p-2 px-3 border">
+          <div class="flex items-center justify-center gap-1">
+            {{ a.pliegue_cutanio }} mm
+            <i *ngIf="i > 0 && +a.pliegue_cutanio < +antros[i-1].pliegue_cutanio" class="pi pi-arrow-left text-red-600"></i>
+            <i *ngIf="i > 0 && +a.pliegue_cutanio > +antros[i-1].pliegue_cutanio" class="pi pi-arrow-right text-green-600"></i>
+          </div>
+        </td>
+      </tr>
+
+      <!-- Perímetro Cintura -->
+      <tr>
+        <td class="p-2 px-4 border text-left font-semibold">Perímetro Cintura</td>
+        <td *ngFor="let a of antros; let i = index" class="p-2 px-4 border">
+          <div class="flex items-center justify-center gap-1">
+            {{ a.perimetro_cintura }} cm
+            <i *ngIf="i > 0 && +a.perimetro_cintura < +antros[i-1].perimetro_cintura" class="pi pi-arrow-left text-red-600"></i>
+            <i *ngIf="i > 0 && +a.perimetro_cintura > +antros[i-1].perimetro_cintura" class="pi pi-arrow-right text-green-600"></i>
+          </div>
+        </td>
+      </tr>
+
+      <!-- Perímetro Cadera -->
+      <tr>
+        <td class="p-2 px-4 border text-left font-semibold">Perímetro Cadera</td>
+        <td *ngFor="let a of antros; let i = index" class="p-2 px-4 border">
+          <div class="flex items-center justify-center gap-1">
+            {{ a.perimetro_cadera }} cm
+            <i *ngIf="i > 0 && +a.perimetro_cadera < +antros[i-1].perimetro_cadera" class="pi pi-arrow-left text-red-600"></i>
+            <i *ngIf="i > 0 && +a.perimetro_cadera > +antros[i-1].perimetro_cadera" class="pi pi-arrow-right text-green-600"></i>
+          </div>
+        </td>
+      </tr>
+
+      <!-- Diámetro Sagital -->
+      <tr>
+        <td class="p-2 px-4 border text-left font-semibold">Diámetro Sagital</td>
+        <td *ngFor="let a of antros; let i = index" class="p-2 px-4 border">
+          <div class="flex items-center justify-center gap-1">
+            {{ a.diametro_sagital }} cm
+            <i *ngIf="i > 0 && +a.diametro_sagital < +antros[i-1].diametro_sagital" class="pi pi-arrow-left text-red-600"></i>
+            <i *ngIf="i > 0 && +a.diametro_sagital > +antros[i-1].diametro_sagital" class="pi pi-arrow-right text-green-600"></i>
+          </div>
+        </td>
+      </tr>
+
+
+    </tbody>
+  </table>
+</div>
+
+
+  <div *ngIf="!loading && !error && antros.length === 0"
+       class="text-center text-gray-600 mt-4">
+    Aún no tienes mediciones antropométricas registradas.
+  </div>
+</div>

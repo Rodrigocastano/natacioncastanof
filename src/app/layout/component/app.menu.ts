@@ -50,7 +50,11 @@ export class AppMenu implements OnInit {
                 label: 'Home',
                 items: [
                     { label: 'Gráficas', icon: 'pi pi-chart-bar', routerLink: ['/pages/graficasUsuario'] },
-                    { label: 'Asistencias', icon: 'pi pi-calendar', routerLink: ['/pages/asistenciaUsuario'] }
+                    { label: 'Asistencias', icon: 'pi pi-calendar', routerLink: ['/pages/asistenciaUsuario'] },
+                     { label: 'Elasticida', icon: 'pi pi-calendar', routerLink: ['/pages/elasticidadUsuario'] },
+                    /*{ label: 'Nutricionales', icon: 'pi pi-calendar', routerLink: ['/pages/nutricionalUsuario'] },
+                    { label: 'Antropométrica', icon: 'pi pi-calendar', routerLink: ['/pages/antropometricaUsuario'] }, */
+                    
                 ]
             }
         ];
