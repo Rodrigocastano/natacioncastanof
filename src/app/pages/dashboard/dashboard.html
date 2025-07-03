@@ -1,232 +1,226 @@
-<div class="flex flex-col md:flex-row flex-wrap gap-6 justify-center items-stretch px-4 md:px-0">
-
-  <!-- CARD: Pagos Pendientes -->
-  <div class="card p-6 bg-white rounded-lg shadow-md flex-1 w-full md:w-auto max-w-4xl flex flex-col h-full">
-    <h2 class="text-xl font-extrabold mb-4 text-red-700 tracking-wide">Pagos Pendientes</h2>
-
-    <div class="flex justify-center" *ngIf="loadingPagosPendientes">
-      <p-progressSpinner styleClass="text-red-600" [style]="{ width: '40px', height: '40px' }"></p-progressSpinner>
+<div class="grid grid-cols-1 gap-6 px-4 md:px-0 mb-6">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 flex flex-col items-center justify-center hover:shadow-lg transition-all">
+      <i class="pi pi-clock text-red-600 dark:text-red-400 text-5xl md:text-6xl mb-3"></i>
+      <div class="text-gray-500 dark:text-gray-300 text-sm font-medium">Total pendiente</div>
+      <div class="text-red-600 dark:text-red-400 font-bold text-xl">${{ totalPendiente | number: '1.2-2' }}</div>
     </div>
 
-    <div *ngIf="!loadingPagosPendientes && pendientes.length === 0"
-         class="text-center py-4 text-gray-400 text-sm italic border border-dashed border-gray-300 rounded-md">
-      No se encontraron pagos pendientes.
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 flex flex-col items-center justify-center hover:shadow-lg transition-all">
+      <i class="pi pi-check-circle text-green-600 dark:text-green-400 text-5xl md:text-6xl mb-3"></i>
+      <div class="text-gray-500 dark:text-gray-300 text-sm font-medium">Total pagado</div>
+      <div class="text-green-600 dark:text-green-400 font-bold text-xl">${{ totalPagado | number: '1.2-2' }}</div>
     </div>
 
-    <!-- Tabla de pendientes -->
-    <div class="overflow-x-auto">
-      <p-table *ngIf="!loadingPagosPendientes && pendientes.length"
-               [value]="pendientes"
-               scrollable="true"
-               scrollHeight="flex"
-               class="min-w-[600px] p-datatable-sm p-datatable-striped p-datatable-gridlines w-full">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 flex flex-col items-center justify-center hover:shadow-lg transition-all">
+      <i class="pi pi-user text-blue-600 dark:text-blue-400 text-5xl md:text-6xl mb-3"></i>
+      <div class="text-gray-500 dark:text-gray-300 text-sm font-medium">Entrenadores activos</div>
+      <div class="text-blue-600 dark:text-blue-400 font-bold text-xl">{{ entrenadoresActivos }}</div>
+    </div>
 
-        <ng-template pTemplate="header">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 flex flex-col items-center justify-center hover:shadow-lg transition-all">
+      <i class="pi pi-user text-indigo-600 dark:text-indigo-400 text-5xl md:text-6xl mb-3"></i>
+      <div class="text-gray-500 dark:text-gray-300 text-sm font-medium">Usuarios activos</div>
+      <div class="text-indigo-600 dark:text-indigo-400 font-bold text-xl">{{ usuariosActivos }}</div>
+    </div>
+  </div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 flex flex-col h-full">
+    <h2 class="text-lg font-bold mb-3 text-red-600 dark:text-red-400">Pagos pendientes</h2>
+    
+    <div class="overflow-x-auto flex-1" *ngIf="!loadingPagosPendientes && pendientes.length">
+      <p-table [value]="pendientes" 
+               class="min-w-full p-datatable-sm"
+               [scrollable]="true" 
+               scrollHeight="flex">
+               
+         <ng-template pTemplate="header">
           <tr>
-            <th class="text-left">Tipo de Pago</th>
-            <th></th>
+            <th class="text-center">Tipo de pago</th>
+            <th class="w-24"></th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-grupo>
-          <tr [class.bg-red-50]="grupo.mostrarTodos">
-            <td class="text-left font-medium text-red-700">{{ grupo.tipoPago }}</td>
-            <td class="flex justify-end">
+          <tr [class.bg-red-50]="grupo.mostrarTodos" class="hover:bg-red-50 dark:hover:bg-gray-700">
+            <td class="font-medium text-red-700 dark:text-red-300">{{ grupo.tipoPago }}</td>
+            <td class="text-right w-32">
               <p-button icon="pi pi-eye" [text]="true" severity="danger"
                         (click)="grupo.mostrarTodos = !grupo.mostrarTodos"
-                        [label]="grupo.mostrarTodos ? 'Ocultar' : 'Ver usuarios'"
-                        class="text-sm"></p-button>
+                        [label]="grupo.mostrarTodos ? 'Ocultar' : 'Usuarios'"
+                        class="text-xs float-right"></p-button> 
             </td>
           </tr>
 
           <tr *ngIf="grupo.mostrarTodos">
             <td colspan="2" class="p-0">
-              <div class="overflow-x-auto">
-                <p-table [value]="grupo.pagos"
-                         scrollable="true"
-                         scrollHeight="flex"
-                         class="min-w-[600px] p-datatable-sm p-datatable-gridlines w-full">
-
+              <div class="ml-4 pl-2 border-l-2 border-red-200 dark:border-red-800">
+                <p-table [value]="grupo.pagos" class="min-w-full p-datatable-sm">
+                  
                   <ng-template pTemplate="header">
                     <tr>
-                      <th>Identificación</th>
-                      <th>Nombre</th>
-                      <th>Apellido</th>
-                      <th class="text-center">Acción</th>
+                      <th class="text-left">Identificación</th>
+                      <th class="text-left">Nombres</th>
+                      <th class="text-right w-32">Acción</th>
                     </tr>
                   </ng-template>
 
                   <ng-template pTemplate="body" let-pago>
-                    <tr>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                       <td>{{ pago.cedula }}</td>
-                      <td>{{ pago.nombre }}</td>
-                      <td>{{ pago.apellido }}</td>
-                      <td class="text-center">
-                        <p-button icon="pi pi-eye" [text]="true"
+                      <td>{{ pago.nombre }} {{ pago.apellido }}</td>
+                      <td class="text-right w-32">
+                        <p-button icon="pi pi-eye" [text]="true" severity="danger" size="small"
                                   (click)="pago.mostrarHistorial = !pago.mostrarHistorial"
-                                  [label]="pago.mostrarHistorial ? 'Ocultar' : 'Registros'"
-                                  class="text-sm px-2"></p-button>
+                                  [label]="pago.mostrarHistorial ? 'Ocultar' : 'Historial'"
+                                  class="text-xs float-right"></p-button>
                       </td>
                     </tr>
 
                     <tr *ngIf="pago.mostrarHistorial">
-                      <td colspan="4" class="p-0">
-                        <div class="overflow-x-auto">
-                          <p-table [value]="pago.historial"
-                                   scrollable="true"
-                                   scrollHeight="flex"
-                                   class="min-w-[600px] p-datatable-sm p-datatable-striped w-full">
-
+                      <td colspan="3" class="p-0">
+                        <div class="ml-4 pl-2 border-l-2 border-red-100 dark:border-red-900">
+                          <p-table [value]="pago.historial" class="min-w-full p-datatable-sm">
+                            
                             <ng-template pTemplate="header">
                               <tr>
-                                <th>Fecha</th>
-                                <th>Monto</th>
-                                <th>Abonado</th>
+                                <th class="text-left">Fecha</th>
+                                <th class="text-right">Monto</th>
+                                <th class="text-right">Abonado</th>
                                 <th class="text-center">Estado</th>
                               </tr>
                             </ng-template>
 
                             <ng-template pTemplate="body" let-h>
-                              <tr>
-                                <td>{{ h.fecha | date:'mediumDate' }}</td>
-                                <td>{{ h.monto | currency }}</td>
-                                <td>{{ h.monto_abonado | currency }}</td>
+                              <tr class="text-xs hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <td>{{ h.fecha | date:'shortDate' }}</td>
+                                <td class="text-right">{{ h.monto | currency }}</td>
+                                <td class="text-right">{{ h.monto_abonado | currency }}</td>
                                 <td class="text-center">
                                   <i class="pi pi-times-circle text-red-500" *ngIf="!h.pagado"></i>
-                                  <i class="pi pi-verified text-green-500" *ngIf="h.pagado"></i>
+                                  <i class="pi pi-check-circle text-green-500" *ngIf="h.pagado"></i>
                                 </td>
                               </tr>
                             </ng-template>
-
                           </p-table>
                         </div>
                       </td>
                     </tr>
                   </ng-template>
-
                 </p-table>
               </div>
             </td>
           </tr>
         </ng-template>
-
       </p-table>
     </div>
   </div>
 
-  <!-- CARD: Pagos Completos -->
-  <div class="card p-6 bg-white rounded-lg shadow-md flex-1 w-full md:w-auto max-w-4xl flex flex-col h-full">
-    <h2 class="text-xl font-extrabold mb-4 text-green-700 tracking-wide">Pagos Completos</h2>
-
-    <div class="flex justify-center" *ngIf="loadingPagosCompletos">
-      <p-progressSpinner styleClass="text-green-600" [style]="{ width: '40px', height: '40px' }"></p-progressSpinner>
-    </div>
-
-    <div *ngIf="!loadingPagosCompletos && pagados.length === 0"
-         class="text-center py-4 text-gray-400 text-sm italic border border-dashed border-gray-300 rounded-md">
-      No se encontraron pagos completos.
-    </div>
-
-    <!-- Tabla de completos -->
-    <div class="overflow-x-auto">
-      <p-table
-        *ngIf="!loadingPagosCompletos && pagados.length"
-        [value]="pagados"
-        scrollable="true"
-        scrollHeight="flex"
-        class="min-w-[600px] p-datatable-sm p-datatable-striped p-datatable-gridlines w-full">
-
+  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 flex flex-col h-full">
+    <h2 class="text-lg font-bold mb-3 text-green-600 dark:text-green-400">Pagos completos</h2>
+    
+    <div class="overflow-x-auto flex-1" *ngIf="!loadingPagosCompletos && pagados.length">
+      <p-table [value]="pagados" 
+               class="min-w-full p-datatable-sm"
+               [scrollable]="true" 
+               scrollHeight="flex">
+               
         <ng-template pTemplate="header">
           <tr>
-            <th class="text-left">Tipo de Pago</th>
-            <th></th>
+            <th class="text-center">Tipo de pago</th>
+            <th class="w-24"></th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-grupo>
-          <tr [class.bg-green-50]="grupo.mostrarTodos">
-            <td class="text-left font-medium text-green-700">{{ grupo.tipoPago }}</td>
-            <td class="flex justify-end">
+          <tr [class.bg-green-50]="grupo.mostrarTodos" class="hover:bg-green-50 dark:hover:bg-gray-700">
+            <td class="font-medium text-green-700 dark:text-green-300">{{ grupo.tipoPago }}</td>
+            <td class="text-right w-32">
               <p-button icon="pi pi-eye" [text]="true" severity="success"
                         (click)="grupo.mostrarTodos = !grupo.mostrarTodos"
-                        [label]="grupo.mostrarTodos ? 'Ocultar' : 'Ver usuarios'"
-                        class="text-sm"></p-button>
+                        [label]="grupo.mostrarTodos ? 'Ocultar' : 'Usuarios'"
+                        class="text-xs float-right"></p-button>
             </td>
           </tr>
 
           <tr *ngIf="grupo.mostrarTodos">
             <td colspan="2" class="p-0">
-              <div class="overflow-x-auto">
-                <p-table [value]="grupo.pagos"
-                         scrollable="true"
-                         scrollHeight="flex"
-                         class="min-w-[600px] p-datatable-sm p-datatable-gridlines w-full">
-
+              <div class="ml-4 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                <p-table [value]="grupo.pagos" class="min-w-full p-datatable-sm">
+                  
                   <ng-template pTemplate="header">
                     <tr>
-                      <th>Identificación</th>
-                      <th>Nombre</th>
-                      <th>Apellido</th>
-                      <th class="text-center">Acción</th>
+                      <th class="text-left">Identificación</th>
+                      <th class="text-left">Nombres</th>
+                      <th class="text-right w-32">Acción</th>
                     </tr>
                   </ng-template>
 
                   <ng-template pTemplate="body" let-pago>
-                    <tr>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                       <td>{{ pago.cedula }}</td>
-                      <td>{{ pago.nombre }}</td>
-                      <td>{{ pago.apellido }}</td>
-                      <td class="text-center">
-                        <p-button icon="pi pi-eye" [text]="true"
+                      <td>{{ pago.nombre }} {{ pago.apellido }}</td>
+                      <td class="text-right w-32">
+                        <p-button icon="pi pi-eye" [text]="true" severity="success" size="small"
                                   (click)="pago.mostrarHistorial = !pago.mostrarHistorial"
-                                  [label]="pago.mostrarHistorial ? 'Ocultar' : 'Registros'"
-                                  class="text-sm px-2"></p-button>
+                                  [label]="pago.mostrarHistorial ? 'Ocultar' : 'Historial'"
+                                  class="text-xs float-right"></p-button>
                       </td>
                     </tr>
 
                     <tr *ngIf="pago.mostrarHistorial">
-                      <td colspan="4" class="p-0">
-                        <div class="overflow-x-auto">
-                          <p-table [value]="pago.historial"
-                                   scrollable="true"
-                                   scrollHeight="flex"
-                                   class="min-w-[600px] p-datatable-sm p-datatable-striped w-full">
-
+                      <td colspan="3" class="p-0">
+                        <div class="ml-4 pl-2 border-l-2 border-green-100 dark:border-green-900">
+                          <p-table [value]="pago.historial" class="min-w-full p-datatable-sm">
+                            
                             <ng-template pTemplate="header">
                               <tr>
-                                <th>Fecha</th>
-                                <th>Monto</th>
-                                <th>Abonado</th>
+                                <th class="text-left">Fecha</th>
+                                <th class="text-right">Monto</th>
+                                <th class="text-right">Abonado</th>
                                 <th class="text-center">Estado</th>
                               </tr>
                             </ng-template>
 
                             <ng-template pTemplate="body" let-h>
-                              <tr>
-                                <td>{{ h.fecha | date:'mediumDate' }}</td>
-                                <td>{{ h.monto | currency }}</td>
-                                <td>{{ h.monto_abonado | currency }}</td>
+                              <tr class="text-xs hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <td>{{ h.fecha | date:'shortDate' }}</td>
+                                <td class="text-right">{{ h.monto | currency }}</td>
+                                <td class="text-right">{{ h.monto_abonado | currency }}</td>
                                 <td class="text-center">
-                                  <i class="pi pi-verified text-green-500" *ngIf="h.pagado"></i>
-                                  <i class="pi pi-verified text-green-500" *ngIf="!h.pagado"></i>
+                                  <i class="pi pi-check-circle text-green-500"></i>
                                 </td>
                               </tr>
                             </ng-template>
-
                           </p-table>
                         </div>
                       </td>
                     </tr>
                   </ng-template>
-
                 </p-table>
               </div>
             </td>
           </tr>
         </ng-template>
-
       </p-table>
     </div>
   </div>
+</div>
+
+<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-3 mt-4">
+  <h2 class="text-lg font-semibold mb-2 text-gray-700 dark:text-white">Ingresos por ses</h2>
+  <div class="h-74">  
+    <p-chart *ngIf="!loadingGraficaIngresos" 
+             type="bar" 
+             [data]="chartData" 
+             [options]="chartOptions"
+             styleClass="h-full w-full"></p-chart>
+    <div *ngIf="loadingGraficaIngresos" class="flex justify-center items-center h-full">
+      <p-progressSpinner [style]="{ width: '30px', height: '30px' }"></p-progressSpinner>
+    </div>
+  </div>
+</div>
 
 </div>

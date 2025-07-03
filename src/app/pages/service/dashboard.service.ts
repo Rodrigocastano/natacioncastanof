@@ -20,4 +20,24 @@ export class DashboardService {
     getAllPendiente() {
       return this.http.get<any>(`${this.apisUrl}/pagosPendiente`);
     }
+
+    getAllTotalPendienteUsuario() {
+      return this.http.get<any>(`${this.apisUrl}/totalPendienteUsuario`);
+    }
+
+    getAllTotalPagadoUsuario() {
+      return this.http.get<any>(`${this.apisUrl}/totalPagadoUsuario`);
+    }
+    getAllEntrenadoresCountActivo() {
+      return this.http.get<any>(`${this.apisUrl}/entrenadoresCountActivo`);
+    }
+
+    getAllUsuariosCountActivo() {
+      return this.http.get<any>(`${this.apisUrl}/usuariosCountActivo`);
+    }
+
+    getAllindexIngresoPorMes() {
+      return this.http.get<any>(`${this.apisUrl}/indexIngresoPorMes`);
+    }
+
 }
