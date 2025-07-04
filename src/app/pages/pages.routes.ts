@@ -30,6 +30,8 @@ import { GraficasComponent } from './graficas/graficas.component';
 import { GraficasUsuarioComponent } from './graficas-usuario/graficas-usuario.component';
 import { AsistenciaUsuarioComponent } from './asistencia-usuario/asistencia-usuario.component';
 import { MedidasUsuarioComponent } from './medidas-usuario/medidas-usuario.component';
+import { ReportesComponent } from './reportes/reportes.component';
+import { ComprovanteComponent } from './comprovante/comprovante.component';
 
 
 export default [
@@ -63,5 +65,7 @@ export default [
     { path: 'graficasUsuario', component: GraficasUsuarioComponent },
     { path: 'asistenciaUsuario', component: AsistenciaUsuarioComponent },
     { path: 'medidaUsuario', component: MedidasUsuarioComponent },
+    { path: 'reporte', component: ReportesComponent },
+    { path: 'comprobante', component: ComprovanteComponent },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

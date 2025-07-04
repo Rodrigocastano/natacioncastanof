@@ -134,7 +134,9 @@ export class AppMenu implements OnInit {
                     { label: 'Tipo de pago', icon: 'pi pi-tags', routerLink: ['/pages/tipoPago'] },
                     { label: 'Plan pago', icon: 'pi pi-credit-card', routerLink: ['/pages/planPago'] },
                     { label: 'Registro Pago', icon: 'pi pi-money-bill', routerLink: ['/pages/pago'] },
-                    { label: 'Pagar abono', icon: 'pi pi-money-bill', routerLink: ['/pages/abonoPago'] }
+                    { label: 'Pagar abono', icon: 'pi pi-money-bill', routerLink: ['/pages/abonoPago'] },
+                    { label: 'Reporte general', icon: 'pi pi-money-bill', routerLink: ['/pages/reporte'] },
+                    { label: 'Comprobante de usuario', icon: 'pi pi-money-bill', routerLink: ['/pages/comprobante'] }
                 ]
             },
             { label: 'Asistencias', icon: 'pi pi-pen-to-square', routerLink: ['/pages/asistencia'] }
