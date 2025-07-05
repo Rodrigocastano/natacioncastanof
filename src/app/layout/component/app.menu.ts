@@ -75,8 +75,20 @@ export class AppMenu implements OnInit {
                             { label: 'Entrenadores', icon: 'pi pi-user-plus', routerLink: ['/pages/entrenador'] },
                             { label: 'Representantes', icon: 'pi pi-user-plus', routerLink: ['/pages/representante'] },
                             { label: 'Representantes Nadador', icon: 'pi pi-users', routerLink: ['/pages/representantenadador'] },
-                        ]
+                        ],
+
                     },
+
+                     {
+                label: 'Gestión de pago', icon: 'pi pi-dollar', items: [
+                    { label: 'Tipo de pago', icon: 'pi pi-tags', routerLink: ['/pages/tipoPago'] },
+                    { label: 'Plan pago', icon: 'pi pi-credit-card', routerLink: ['/pages/planPago'] },
+                    { label: 'Registro Pago', icon: 'pi pi-money-bill', routerLink: ['/pages/pago'] },
+                    { label: 'Pagar abono', icon: 'pi pi-money-bill', routerLink: ['/pages/abonoPago'] },
+                    { label: 'Reporte general', icon: 'pi pi-money-bill', routerLink: ['/pages/reporte'] },
+                    { label: 'Comprobante de usuario', icon: 'pi pi-money-bill', routerLink: ['/pages/comprobante'] }
+                ]
+            },
                     ...this.sharedMenuItems()
                 ]
             }
@@ -129,16 +141,7 @@ export class AppMenu implements OnInit {
                     { label: 'Prueba Nadador', icon: 'pi pi-book', routerLink: ['/pages/pruebaNadador'] }
                 ]
             },
-            {
-                label: 'Gestión de pago', icon: 'pi pi-dollar', items: [
-                    { label: 'Tipo de pago', icon: 'pi pi-tags', routerLink: ['/pages/tipoPago'] },
-                    { label: 'Plan pago', icon: 'pi pi-credit-card', routerLink: ['/pages/planPago'] },
-                    { label: 'Registro Pago', icon: 'pi pi-money-bill', routerLink: ['/pages/pago'] },
-                    { label: 'Pagar abono', icon: 'pi pi-money-bill', routerLink: ['/pages/abonoPago'] },
-                    { label: 'Reporte general', icon: 'pi pi-money-bill', routerLink: ['/pages/reporte'] },
-                    { label: 'Comprobante de usuario', icon: 'pi pi-money-bill', routerLink: ['/pages/comprobante'] }
-                ]
-            },
+           
             { label: 'Asistencias', icon: 'pi pi-pen-to-square', routerLink: ['/pages/asistencia'] }
         ];
     }

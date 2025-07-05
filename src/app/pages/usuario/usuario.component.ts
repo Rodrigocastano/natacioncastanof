@@ -438,26 +438,74 @@ export class UsuarioComponent implements OnInit  {
       this.visibleDelete = true
     }  
     
-    exportPdf() {
-      const doc = new jsPDF('p', 'pt', 'a4');
-      const tableData = this.usuario.map((item: any) => [
-        item.id,
-        item.nombre,
-        item.apellido,
-        item.cedula,
-        item.telefono,
-        item.ciudad,
-        item.edad,
-        item.genero,
-        item.fechaNacimiento
-      ]);
-      autoTable(doc, {
-        head: [['ID', 'Nombre', 'Apellido', 'Cédula', 'Teléfono', 'Ciudad', 'Edad', 'Género', 'Nacimiento']],
-        body: tableData,
-        startY: 30
-      });
-    
-      doc.save('Usuarios.pdf');
+exportPdf() {
+  if (!this.usuario?.length) return;
+
+  /* 1. Configuración básica */
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+  const pageWidth  = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const marginL = 28, marginT = 50;
+
+  /* 2. Logo y título */
+  const logo = new Image();
+  logo.src = 'assets/image/natacion-castano1.png';
+  doc.addImage(logo, 'PNG', marginL, 18, 50, 20);
+  doc.setFont('Helvetica', 'bold').setFontSize(14);
+  doc.text('Listado de usuarios', marginL + 60, 30);
+
+  /* 3. Datos ordenados y numeración 1..n */
+  const data = [...this.usuario]
+    .sort((a, b) => a.apellido.localeCompare(b.apellido) || a.nombre.localeCompare(b.nombre))
+    .map((u, idx) => [                  // ← idx + 1 en lugar de u.id
+      idx + 1,
+      u.nombre,
+      u.apellido,
+      u.cedula,
+      u.telefono,
+      this.getNombreCiudad(u.id_ciudad),
+      this.getNombreGenero(u.id_genero),
+      u.edad,
+      u.fechaNacimiento
+    ]);
+
+  /* 4. Tabla */
+  autoTable(doc, {
+    startY: marginT,
+    head: [[
+      'Nº', 'Nombre', 'Apellido', 'Cédula', 'Teléfono',
+      'Ciudad', 'Género', 'Edad', 'Nacimiento'
+    ]],
+    body: data,
+    theme: 'striped',
+    styles:    { fontSize: 9, halign: 'center', overflow: 'linebreak' },
+    headStyles:{ fillColor: [22,160,133], textColor: 255, fontStyle: 'bold' },
+    columnStyles: {
+      0: { cellWidth: 25 },   // ahora solo ocupa el número secuencial
+      3: { cellWidth: 80 },
+      4: { cellWidth: 75 },
+      5: { cellWidth: 60 },
+      7: { cellWidth: 33 },
+      8: { cellWidth: 65 }
+    },
+    margin: { left: marginL, right: marginL }
+  });
+
+  /* 5. Pie de página */
+  const pageCount = doc.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8).setTextColor(100);
+    doc.text(`Página ${i} de ${pageCount}`, pageWidth - marginL - 40, pageHeight - 10);
+    if (i === pageCount) {
+      doc.text(`Generado: ${new Date().toLocaleDateString()}`, marginL, pageHeight - 10);
     }
-      
+  }
+
+  /* 6. Guardar */
+  doc.save('Usuarios.pdf');
+}
+
+
+
 }

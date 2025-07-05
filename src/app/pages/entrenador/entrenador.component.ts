@@ -440,26 +440,70 @@ export class EntrenadorComponent implements OnInit  {
       this.visibleDelete = true
     }  
           
-    exportPdf() {
-      const doc = new jsPDF('p', 'pt', 'a4');
-      const tableData = this.entrenador.map((item: any) => [
-        item.id,
-        item.nombre,
-        item.apellido,
-        item.cedula,
-        item.telefono,
-        item.ciudad,
-        item.edad,
-        item.genero,
-        item.fechaNacimiento
-      ]);
-      autoTable(doc, {
-        head: [['ID', 'Nombre', 'Apellido', 'Cédula', 'Teléfono', 'Ciudad', 'Edad', 'Género', 'Nacimiento']],
-        body: tableData,
-        startY: 30
-      });
-    
-      doc.save('Entrenador.pdf');
+exportPdf() {
+  if (!this.entrenador?.length) return;
+
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+  const pageWidth  = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const marginL = 28, marginT = 50;
+
+  const logo = new Image();
+  logo.src = 'assets/image/natacion-castano1.png';
+  doc.addImage(logo, 'PNG', marginL, 18, 50, 20);
+  doc.setFont('Helvetica', 'bold').setFontSize(14);
+  doc.text('Listado de entrenadores', marginL + 60, 30);
+
+  const data = [...this.entrenador]
+    .sort((a, b) => a.apellido.localeCompare(b.apellido) || a.nombre.localeCompare(b.nombre))
+    .map((e, idx) => [
+      idx + 1,                            
+      e.nombre,
+      e.apellido,
+      e.cedula,
+      e.telefono,
+      this.getNombreCiudad(e.id_ciudad),
+      this.getNombreGenero(e.id_genero),
+      e.edad,
+      e.fechaNacimiento
+    ]);
+
+  autoTable(doc, {
+    startY: marginT,
+    head: [[
+      'Nº', 'Nombre', 'Apellido', 'Cédula', 'Teléfono',
+      'Ciudad', 'Género', 'Edad', 'Nacimiento'
+    ]],
+    body: data,
+    theme: 'striped',
+    styles:    { fontSize: 9, halign: 'center', overflow: 'linebreak' },
+    headStyles:{ fillColor: [22,160,133], textColor: 255, fontStyle: 'bold' },
+    columnStyles: {
+      0: { cellWidth: 25 },
+      3: { cellWidth: 80 },
+      4: { cellWidth: 75 },
+      5: { cellWidth: 60 },
+      7: { cellWidth: 33 },
+      8: { cellWidth: 65 }
+    },
+    margin: { left: marginL, right: marginL }
+  });
+
+  const pageCount = doc.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8).setTextColor(100);
+    doc.text(`Página ${i} de ${pageCount}`,
+             pageWidth - marginL - 40,
+             pageHeight - 10);
+    if (i === pageCount) {
+      doc.text(`Generado: ${new Date().toLocaleDateString()}`,
+               marginL,
+               pageHeight - 10);
     }
-            
+  }
+
+  doc.save('Entrenadores.pdf');
+}
+         
 }
