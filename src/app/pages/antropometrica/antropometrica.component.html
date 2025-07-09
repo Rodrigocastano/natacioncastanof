@@ -269,7 +269,7 @@
         <div class="grid grid-cols-12 gap-4">     
             <div class="col-span-12 md:col-span-6">
             <label for="peso" class="block font-bold mb-1">Peso</label>
-            <p-inputnumber formControlName="peso" id="peso" placeholder="Ingrese el peso" required autofocus class="w-full text-sm px-0 py-1" />             
+            <p-inputnumber formControlName="peso" id="peso" placeholder="Ingrese el peso" required class="w-full text-sm px-0 py-1" />             
             <p-message
                 *ngIf="formSave.get('peso')?.errors?.['required'] && (formSave.get('peso')?.dirty || formSave.get('peso')?.touched)" 
                 severity="error" variant="simple" size="small">

@@ -44,7 +44,6 @@
 
             <ng-template #header>
             <tr>
-            <th style="min-width: 6rem">ID</th>
             <th pSortableColumn="nombre" style="min-width: 8rem">Nombre</th>
             <th pSortableColumn="apellido" style="min-width: 8rem">Apellido</th>
             <th pSortableColumn="price" style="min-width: 8rem">Email</th>
@@ -64,7 +63,6 @@
 
             <ng-template #body let-usuario>
             <tr>
-            <td>{{ usuario.id }}</td>
             <td>{{ usuario.nombre }}</td>
             <td>{{ usuario.apellido }}</td>
             <td>{{ usuario.email }}</td>
@@ -140,27 +138,7 @@
                     </div>
 
                     <div class="grid grid-cols-12 gap-4">
-                   <!--      <div class="col-span-6">
-                            <label for="cedula" class="block font-bold mb-1">Identificación</label>
-                            <input type="text" pInputText formControlName="cedula" id="cedula" placeholder="Número de identificación" class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/>
-                            <p-message 
-                                *ngIf="formSaveUsuario.get('cedula')?.errors?.['required'] && (formSaveUsuario.get('cedula')?.dirty || formSaveUsuario.get('cedula')?.touched)" severity="error" variant="simple" size="small">
-                                Identificación es requerida
-                            </p-message>
-                            <p-message 
-                                *ngIf="formSaveUsuario.get('cedula')?.errors?.['pattern'] && (formSaveUsuario.get('cedula')?.dirty || formSaveUsuario.get('cedula')?.touched)" severity="error" variant="simple" size="small">
-                                Identificación valido 10 números
-                            </p-message>
-                        </div>
 
-                        <div class="col-span-6">
-                            <label for="telefono" class="block font-bold mb-1">Teléfono</label>
-                            <input type="text" pInputText formControlName="telefono" id="telefono" placeholder="Número de teléfono" class="w-full text-sm px-0 py-2" (keypress)="soloNumeros($event)"/>             
-                            <p-message
-                                *ngIf="formSaveUsuario.get('telefono')?.errors?.['required'] && (formSaveUsuario.get('telefono')?.dirty || formSaveUsuario.get('telefono')?.touched)" severity="error" variant="simple" size="small" >
-                                Teléfono valido 10 número
-                            </p-message>
-                        </div> -->
 
 <div class="col-span-6">
   <label for="cedula" class="block font-bold mb-1">Identificación</label>
@@ -177,8 +155,7 @@
   
   <!-- Mensajes de validación para cédula -->
   <div class="mt-1">
-    <p-message *ngIf="formSaveUsuario.get('cedula')?.hasError('required') && (formSaveUsuario.get('cedula')?.touched || submitted)" 
-               severity="error" variant="simple" size="small">
+    <p-message *ngIf="formSaveUsuario.get('cedula')?.hasError('required') && (formSaveUsuario.get('cedula')?.touched)" severity="error" variant="simple" size="small">
       La identificación es requerida
     </p-message>
     <p-message *ngIf="formSaveUsuario.get('cedula')?.hasError('pattern') || formSaveUsuario.get('cedula')?.hasError('minlength') || formSaveUsuario.get('cedula')?.hasError('maxlength')" 
@@ -203,7 +180,7 @@
   
   <!-- Mensajes de validación para teléfono -->
   <div class="mt-1">
-    <p-message *ngIf="formSaveUsuario.get('telefono')?.hasError('required') && (formSaveUsuario.get('telefono')?.touched || submitted)" 
+    <p-message *ngIf="formSaveUsuario.get('telefono')?.hasError('required') && (formSaveUsuario.get('telefono')?.touched)" 
                severity="error" variant="simple" size="small">
       El teléfono es requerido
     </p-message>

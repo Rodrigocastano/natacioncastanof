@@ -253,7 +253,7 @@ export class EntrenadorComponent implements OnInit  {
             this.visibleSave = false;
           },
           error: (err) => {
-            if (err.status === 409 && err.error.message === 'Identificación duplicada') {
+            if (err.status === 409 && err.error.message === 'cedula') {
               this.errorCedulaMessageToast();
             } 
             else if (err.status === 422 && err.error.message.includes('email')) {

@@ -27,6 +27,7 @@ import { Usuario } from '../interfaces/usuario';
 import { UsuarioService } from '../service/usuario.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { formatDate } from '@angular/common';
+import { InputMaskModule } from 'primeng/inputmask';
 
 @Component({
   selector: 'app-pruebanadador',
@@ -49,7 +50,8 @@ import { formatDate } from '@angular/common';
     SelectModule,
     DialogModule,
     DropdownModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    InputMaskModule
   ],
   providers: [MessageService],
   templateUrl: './pruebanadador.component.html',
@@ -179,39 +181,42 @@ getPruebaTorneo() {
 
       store() {
         this.submitted = true;
-      
+
         if (this.formSave.invalid) {
           this.errorMessageToast();
           this.formSave.markAllAsTouched();
           return;
         }
-      
-        if (this.formSave.valid) {
-          const tiempoMinutos = this.formSave.value.tiempo;
-          const horas = Math.floor(tiempoMinutos / 60);
-          const minutos = tiempoMinutos % 60;
-          const tiempoFormateado = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:00`;
-      
-          const newPrueba: any = {
-            id_usuario: this.formSave.value.id_usuario,
-            id_prueba_torneo: this.formSave.value.id_prueba_torneo,
-            fecha: this.formatDate(this.formSave.value.fecha),
-            tiempo: tiempoFormateado,
-          };
-      
-          this.pruebanadadorService.createPruebaNadador(newPrueba).subscribe({
-            next: () => {
-              this.saveMessageToast();
-              this.getPruebaNadador();
-              this.visibleSave = false;
-            },
-            error: (err) => {
-              console.error('Error al guardar registro de prueba nadador:', err);
-            }
-          });
-        }
-      }
 
+        const tiempoStr: string = this.formSave.value.tiempo;
+        const [hStr, mStr, sStr] = tiempoStr.split(':');
+        const h = Number(hStr), m = Number(mStr), s = Number(sStr);
+
+        if ([h, m, s].some(n => isNaN(n))) {
+          this.errorMessageToast();
+          return;
+        }
+
+        const tiempoFormateado = tiempoStr.padStart(8, '0');
+
+        const newPrueba: any = {
+          id_usuario: this.formSave.value.id_usuario,
+          id_prueba_torneo: this.formSave.value.id_prueba_torneo,
+          fecha: this.formatDate(this.formSave.value.fecha),
+          tiempo: tiempoFormateado,
+        };
+
+        this.pruebanadadorService.createPruebaNadador(newPrueba).subscribe({
+          next: () => {
+            this.saveMessageToast();
+            this.getPruebaNadador();
+            this.visibleSave = false;
+          },
+          error: (err) => {
+            console.error('Error al guardar registro de prueba nadador:', err);
+          }
+        });
+      }
 
       showSaveDialog() {
         this.formSave.reset();

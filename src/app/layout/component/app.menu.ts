@@ -85,10 +85,15 @@ export class AppMenu implements OnInit {
                     { label: 'Plan pago', icon: 'pi pi-credit-card', routerLink: ['/pages/planPago'] },
                     { label: 'Registro Pago', icon: 'pi pi-money-bill', routerLink: ['/pages/pago'] },
                     { label: 'Pagar abono', icon: 'pi pi-money-bill', routerLink: ['/pages/abonoPago'] },
-                    { label: 'Reporte general', icon: 'pi pi-money-bill', routerLink: ['/pages/reporte'] },
-                    { label: 'Comprobante de usuario', icon: 'pi pi-money-bill', routerLink: ['/pages/comprobante'] }
+                     { label: 'Pagar Entrenadores', icon: 'pi pi-money-bill', routerLink: ['/pages/pagoEntrenadores'] },
+                    { label: 'Reporte general', icon: 'pi pi-file', routerLink: ['/pages/reporte'] },
+                    { label: 'Comprobante de usuario', icon: 'pi pi-file', routerLink: ['/pages/comprobante'] },
+
+                    
                 ]
             },
+
+            { label: 'Pagar a entrenadores', icon: 'pi pi-money-bill', routerLink: ['/pages/pagoEntrenadores'] },
                     ...this.sharedMenuItems()
                 ]
             }
@@ -110,6 +115,8 @@ export class AppMenu implements OnInit {
     // Menús compartidos por administrador y entrenador
     sharedMenuItems(): MenuItem[] {
         return [
+
+          
             {
                 label: 'Área médica', icon: 'pi pi-book', items: [
                     { label: 'Médico', icon: 'pi pi-book', routerLink: ['/pages/medico'] },

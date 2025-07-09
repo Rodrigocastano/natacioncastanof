@@ -35,7 +35,6 @@
 
             <ng-template #header>
                 <tr>
-                    <th style="min-width: 6rem">ID</th>
                     <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
                     <th pSortableColumn="price" style="min-width: 8rem">Email</th>
@@ -57,7 +56,6 @@
 
             <ng-template #body let-usuario>
                 <tr>
-                    <td>{{ usuario.id }}</td>
                     <td>{{ usuario.nombre }}</td>
                     <td>{{ usuario.apellido }}</td>
                     <td>{{ usuario.email }}</td>
@@ -144,7 +142,7 @@
   
   <!-- Mensajes de validación para cédula -->
   <div class="mt-1">
-    <p-message *ngIf="formSave.get('cedula')?.hasError('required') && (formSave.get('cedula')?.touched || submitted)" 
+    <p-message *ngIf="formSave.get('cedula')?.hasError('required') && (formSave.get('cedula')?.touched)" 
                severity="error" variant="simple" size="small">
       La identificación es requerida
     </p-message>
@@ -170,7 +168,7 @@
   
   <!-- Mensajes de validación para teléfono -->
   <div class="mt-1">
-    <p-message *ngIf="formSave.get('telefono')?.hasError('required') && (formSave.get('telefono')?.touched || submitted)" 
+    <p-message *ngIf="formSave.get('telefono')?.hasError('required') && (formSave.get('telefono')?.touched)" 
                severity="error" variant="simple" size="small">
       El teléfono es requerido
     </p-message>

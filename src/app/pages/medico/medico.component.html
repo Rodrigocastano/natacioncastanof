@@ -98,7 +98,7 @@
                   <tr>
                     <td>{{ elast.id }}</td>
                     <td>{{ elast.nombre }} {{ elast.apellido }}</td>
-                    <td>{{ elast.diagnostico }}</td>
+                    <td>{{ elast.diagnostico || 'Sin diagnóstico' }}</td>
                     <td style="text-align: center;">{{ elast.apto ? 'Sí' : 'No' }}</td>
                     <td>{{ elast.fecha }}</td>
                     <td style="text-align: center;">

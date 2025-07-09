@@ -32,6 +32,7 @@ import { AsistenciaUsuarioComponent } from './asistencia-usuario/asistencia-usua
 import { MedidasUsuarioComponent } from './medidas-usuario/medidas-usuario.component';
 import { ReportesComponent } from './reportes/reportes.component';
 import { ComprovanteComponent } from './comprovante/comprovante.component';
+import { PagoEntrenadoresComponent } from './pago-entrenadores/pago-entrenadores.component';
 
 
 export default [
@@ -67,5 +68,6 @@ export default [
     { path: 'medidaUsuario', component: MedidasUsuarioComponent },
     { path: 'reporte', component: ReportesComponent },
     { path: 'comprobante', component: ComprovanteComponent },
+    { path: 'pagoEntrenadores', component: PagoEntrenadoresComponent },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

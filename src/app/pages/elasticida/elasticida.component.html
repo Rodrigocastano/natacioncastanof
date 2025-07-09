@@ -30,7 +30,6 @@
                 </div>
               </ng-template>
               
-
             <ng-template #header>
                 <tr>
                     <th style="min-width: 4rem"></th>
@@ -73,7 +72,6 @@
                                     </thead>
                                     <tbody>
 
-                                        <!-- Fila de Elasticidad -->
                                         <tr>
                                         <td class="p-3 border text-center align-middle" rowspan="2">
                                             <div class="flex justify-center items-center h-full">
@@ -91,7 +89,7 @@
                                         <td *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaElasticidas); let i = index" 
                                             class="text-center p-3 border">
                                             <div class="flex flex-row items-center justify-center gap-2">
-                                            <span class="font-medium">{{ medida.medida_elasticida | number:'1.2-2' }}kg</span>
+                                            <span class="font-medium">{{ medida.medida_elasticida | number:'1.2-2' }}</span>
                                             <ng-container *ngIf="compararConAnterior(obtenerMedidasOrdenadas(usuario.medidaElasticidas), i) === 'increase'">
                                                 <i class="pi pi-arrow-up text-green-500"></i>
                                             </ng-container>
@@ -102,7 +100,6 @@
                                         </td>
                                         </tr>
                                         
-                                        <!-- Fila de Acciones -->
                                         <tr>
                                             <td class="p-3 border font-bold text-lg">Acciones</td>
                                             <td *ngFor="let medida of obtenerMedidasOrdenadas(usuario.medidaElasticidas)" 
@@ -133,7 +130,6 @@
             
         </p-table>
     </div>
-
 
     <p-dialog [(visible)]="visibleUserMeasureDialog" [style]="{ width: '400px' }" [header]="'Nueva medida para ' + (selectedUser?.nombre || 'Usuario')" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">   
         <ng-template #content>
@@ -189,8 +185,6 @@
             </div>
         </ng-template>
     </p-dialog>
-
-    
 
     <p-dialog [(visible)]="visibleSave" [style]="{ width: '350px' }" header="Agregar elasticida" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
         

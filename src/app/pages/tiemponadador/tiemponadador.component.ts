@@ -28,6 +28,7 @@ import { TiempoNadador } from '../interfaces/tiemponadador';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { formatDate } from '@angular/common';
 import { TiponadoService } from '../service/tiponado.service';
+import { InputMaskModule } from 'primeng/inputmask';
 
 @Component({
   selector: 'app-tiemponadador',
@@ -51,7 +52,8 @@ import { TiponadoService } from '../service/tiponado.service';
     SelectModule,
     DialogModule,
     DropdownModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    InputMaskModule
   ],
   providers: [MessageService],
   templateUrl: './tiemponadador.component.html',
@@ -179,39 +181,39 @@ export class TiemponadadorComponent implements OnInit{
 
       store() {
         this.submitted = true;
-      
+
         if (this.formSave.invalid) {
           this.errorMessageToast();
           this.formSave.markAllAsTouched();
           return;
         }
-      
-        if (this.formSave.valid) {
-          const tiempoMinutos = this.formSave.value.tiempo;
-          const horas = Math.floor(tiempoMinutos / 60);
-          const minutos = tiempoMinutos % 60;
-          const tiempoFormateado = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:00`;
-      
-          const newTorneo: any = {
-            id_usuario: this.formSave.value.id_usuario,
-            id_categoria: this.formSave.value.id_categoria,
-            fecha: this.formatDate(this.formSave.value.fecha),
-            tiempo: tiempoFormateado,
-          };
-      
-          this.tiemponadadorService.createTiemposNado(newTorneo).subscribe({
-            next: () => {
-              this.saveMessageToast();
-              this.getTorneoNado();
-              this.visibleSave = false;
-            },
-            error: (err) => {
-              console.error('Error al guardar registro del pago:', err);
-            }
-          });
-        }
-      }
 
+        const tiempoStr: string = this.formSave.value.tiempo; 
+        const [hStr, mStr, sStr] = tiempoStr.split(':');
+        const h = Number(hStr), m = Number(mStr), s = Number(sStr);
+
+        if ([h, m, s].some(n => isNaN(n))) { 
+          this.errorMessageToast();
+          return;
+        }
+        const tiempoFormateado = tiempoStr.padStart(8, '0'); 
+
+        const newTorneo: any = {
+          id_usuario:  this.formSave.value.id_usuario,
+          id_categoria: this.formSave.value.id_categoria,
+          fecha:        this.formatDate(this.formSave.value.fecha),
+          tiempo:       tiempoFormateado,
+        };
+
+        this.tiemponadadorService.createTiemposNado(newTorneo).subscribe({
+          next: () => {
+            this.saveMessageToast();
+            this.getTorneoNado();
+            this.visibleSave = false;
+          },
+          error: (err) => console.error('Error al guardar registro del tiempo:', err)
+        });
+      }
 
       showSaveDialog() {
         this.formSave.reset();

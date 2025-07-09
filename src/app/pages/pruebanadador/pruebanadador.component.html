@@ -166,16 +166,26 @@
                     </div>
 
                     <div class="col-span-6">
-                        <label for="tiempo" class="block font-bold mb-1">Tiempo (minutos)</label>
-                        <p-inputnumber 
-                            formControlName="tiempo" id="tiempo" placeholder="Ingrese el tiempo en minutos" [min]="0" [max]="300" [step]="1" class="w-full text-sm px-0 py-2">
-                        </p-inputnumber>
-                    
-                        <p-message
-                            *ngIf="formSave.get('tiempo')?.errors?.['required'] && (formSave.get('tiempo')?.dirty || formSave.get('tiempo')?.touched)" severity="error" variant="simple" size="small">
-                            El campo tiempo es requerido
-                        </p-message>
-                    </div>
+                      <label for="tiempo" class="block font-bold mb-1">Tiempo</label>
+
+                      <p-inputMask
+                      formControlName="tiempo"
+                      id="tiempo"
+                      mask="99:99:99"
+                      slotChar="0"
+                      placeholder="00:00:00"
+                      [style]="{ width: '100%', fontSize: '1.00rem', padding: '0.45rem' }">
+                      </p-inputMask>
+
+                      <p-message
+                          *ngIf="formSave.get('tiempo')?.errors?.['required']
+                              && (formSave.get('tiempo')?.dirty || formSave.get('tiempo')?.touched)"
+                          severity="error"
+                          variant="simple"
+                          size="small">
+                          El campo tiempo es requerido
+                      </p-message>
+                      </div>
 
                     <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
