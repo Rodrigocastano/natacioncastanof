@@ -33,6 +33,8 @@ import { MedidasUsuarioComponent } from './medidas-usuario/medidas-usuario.compo
 import { ReportesComponent } from './reportes/reportes.component';
 import { ComprovanteComponent } from './comprovante/comprovante.component';
 import { PagoEntrenadoresComponent } from './pago-entrenadores/pago-entrenadores.component';
+import { RegistroMedicoComponent } from './registro-medico/registro-medico.component';
+import { RegistroPsicologoComponent } from './registro-psicologo/registro-psicologo.component';
 
 
 export default [
@@ -69,5 +71,7 @@ export default [
     { path: 'reporte', component: ReportesComponent },
     { path: 'comprobante', component: ComprovanteComponent },
     { path: 'pagoEntrenadores', component: PagoEntrenadoresComponent },
+    { path: 'medicos', component: RegistroMedicoComponent },
+    { path: 'psicologos', component: RegistroPsicologoComponent },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

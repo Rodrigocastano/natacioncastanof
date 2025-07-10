@@ -86,7 +86,7 @@ export class EntrenadorComponent implements OnInit  {
       private messageService: MessageService
     ) {
       this.formSave = this.fb.group({
-        id_grupo: ['', [Validators.required]],
+      /*   id_grupo: ['', [Validators.required]], */
         id_ciudad: ['', [Validators.required]],
         id_genero: ['', [Validators.required]],
         nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
@@ -109,7 +109,7 @@ export class EntrenadorComponent implements OnInit  {
       });
 
       this.formUpdate = fb.group({
-        id_grupo: ['', [Validators.required]],
+       /*  id_grupo: ['', [Validators.required]], */
         id_ciudad: ['', [Validators.required]],
         id_genero: ['', [Validators.required]],
         nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
@@ -205,68 +205,64 @@ export class EntrenadorComponent implements OnInit  {
       return adjustedDate.toISOString().split('T')[0];
     }
 
-   /*  soloNumeros(event: KeyboardEvent) {
-      const charCode = event.charCode;
-      if (charCode < 48 || charCode > 57) {
-        event.preventDefault();
-      }
-    } */
 
-    store() {
-      this.submitted = true;
-      this.formSave.get('edad')?.enable();
-    
-      if (this.formSave.invalid) {
-        this.errorMessageToast();
-        this.formSave.markAllAsTouched();
-        this.formSave.get('edad')?.disable();
-        return;
-      }
-    
-      if (this.formSave.valid) {
-          const formValues = this.formSave.getRawValue();
-          this.formSave.get('edad')?.disable();
+store() {
+  this.submitted = true;
+  this.formSave.get('edad')?.enable();
 
-        const newEntrenador: any = {
-          nombre: this.formSave.value.nombre,
-          apellido: this.formSave.value.apellido,
-          cedula: this.formSave.value.cedula,
-          email: this.formSave.value.email,
-          password: this.formSave.value.password,
-          telefono: this.formSave.value.telefono,
-          direccion: this.formSave.value.direccion,
-          edad: formValues.edad,
-          fechaNacimiento: this.formatDate(this.formSave.value.fechaNacimiento),
-          fechaInscripcion: this.formatDate(this.formSave.value.fechaInscripcion),
-          id_ciudad: this.formSave.value.id_ciudad,
-          id_genero: this.formSave.value.id_genero,
-          id_grupo: this.formSave.value.id_grupo,
-          id_rol: 2
-        };
-    
-        console.log('Datos enviados al backend:', newEntrenador);
+  if (this.formSave.invalid) {
+    this.errorMessageToast();
+    this.formSave.markAllAsTouched();
+    this.formSave.get('edad')?.disable();
+    return;
+  }
 
-        this.entrenadorService.createEntrenadore(newEntrenador).subscribe({
-          next: () => {
-            this.saveMessageToast();
-            this.getentrenador();
-            this.visibleSave = false;
-          },
-          error: (err) => {
-            if (err.status === 409 && err.error.message === 'cedula') {
-              this.errorCedulaMessageToast();
-            } 
-            else if (err.status === 422 && err.error.message.includes('email')) {
-              this.errorCorreoMessageToast();
-            } 
-            else {
-              this.errorMessageToast();
-            }
+  if (this.formSave.valid) {
+    const formValues = this.formSave.getRawValue();
+    this.formSave.get('edad')?.disable();
+
+    const newEntrenador: any = {
+      nombre: this.formSave.value.nombre,
+      apellido: this.formSave.value.apellido,
+      cedula: this.formSave.value.cedula,
+      email: this.formSave.value.email,
+      password: this.formSave.value.password,
+      telefono: this.formSave.value.telefono,
+      direccion: this.formSave.value.direccion,
+      edad: formValues.edad,
+      fechaNacimiento: this.formatDate(this.formSave.value.fechaNacimiento),
+      fechaInscripcion: this.formatDate(this.formSave.value.fechaInscripcion),
+      id_ciudad: this.formSave.value.id_ciudad,
+      id_genero: this.formSave.value.id_genero,
+      id_rol: 2
+    };
+
+    console.log('Datos enviados al backend:', newEntrenador);
+
+    this.entrenadorService.createEntrenadore(newEntrenador).subscribe({
+      next: () => {
+        this.saveMessageToast();
+        this.getentrenador();
+        this.visibleSave = false;
+      },
+      error: (err) => {
+        if (err.status === 422) {
+          const backendErrors = err.error.errors;
+          
+          if (backendErrors.email) {
+            this.errorCorreoMessageToast();
           }
-        });
+          if (backendErrors.cedula) {
+            this.errorCedulaMessageToast();
+          }
+        } 
+        else if (err.status === 409) {
+          this.errorMessageToast();
+        }
       }
-    }
-  
+    });
+  }
+}
 
   
     cancelSave() {
@@ -358,7 +354,7 @@ export class EntrenadorComponent implements OnInit  {
         fechaInscripcion: this.formatDate(formValues.fechaInscripcion),
         id_ciudad: formValues.id_ciudad,
         id_genero: formValues.id_genero,
-        id_grupo: formValues.id_grupo,
+        /* id_grupo: formValues.id_grupo, */
         id_rol: 2
       };
 
@@ -403,7 +399,7 @@ export class EntrenadorComponent implements OnInit  {
         this.formUpdate.controls['edad'].setValue(this.user?.edad)
         this.formUpdate.controls['id_ciudad'].setValue(this.user?.id_ciudad)
         this.formUpdate.controls['id_genero'].setValue(this.user?.id_genero)
-        this.formUpdate.controls['id_grupo'].setValue(this.user?.id_grupo)
+      /*   this.formUpdate.controls['id_grupo'].setValue(this.user?.id_grupo) */
         this.formUpdate.controls['fechaNacimiento'].setValue(
           parseLocalDate(this.user.fechaNacimiento)
         );

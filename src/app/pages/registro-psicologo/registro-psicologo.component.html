@@ -1,84 +1,76 @@
-    <p-toolbar styleClass="mb-6">
-        <ng-template #start>
-            <p-button label="Agregar entrenador" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+<p-toolbar styleClass="mb-6">
+    <ng-template #start>
+        <p-button label="Agregar psicólogo" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+    </ng-template>
+
+    <ng-template #end>
+        <p-button label="Descargar Pdf" icon="pi pi-download" severity="secondary" (click)="exportPdf()" />
+    </ng-template>
+</p-toolbar>
+
+<p-toast />
+
+<div *ngIf="loading" class="flex justify-center items-center h-[300px]">
+    <p-progressSpinner [style]="{ width: '50px', height: '50px' }" styleClass="p-text-primary"></p-progressSpinner>
+</div>
+
+<div *ngIf="!loading">
+    <p-table [value]="psicologo"            
+        [globalFilterFields]="['nombre', 'apellido', 'cedula']"
+        [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true" dataKey="id" [paginator]="true" 
+        currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Psicólogos"
+        [showCurrentPageReport]="true" [rowsPerPageOptions]="[6, 12, 18]" [rows]="6" #dt>
+
+        <ng-template #caption>
+            <div class="flex items-center justify-between">
+                <h5 class="m-0 text-base md:text-lg font-semibold">Registro de Psicólogos</h5>
+                <p-iconfield>
+                    <p-inputicon styleClass="pi pi-search" />
+                    <input pInputText type="text" placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
+                </p-iconfield>
+            </div>
         </ng-template>
 
-        <ng-template #end>
-            <p-button label="Descargar Pdf" icon="pi pi-download" severity="secondary" (click)="exportPdf()" />
+        <ng-template #header>
+            <tr>
+                <th pSortableColumn="nombre" style="min-width:8rem">Nombre</th>
+                <th pSortableColumn="apellido" style="min-width:8rem">Apellido</th>
+                <th pSortableColumn="email" style="min-width:10rem">Email</th>
+                <th pSortableColumn="cedula" style="min-width:8rem">Cédula</th>
+                <th pSortableColumn="telefono" style="min-width:8rem">Teléfono</th>
+                <th pSortableColumn="direccion" style="min-width:10rem">Dirección</th>
+                <th pSortableColumn="ciudad" style="min-width:8rem">Ciudad</th>
+                <th pSortableColumn="genero" style="min-width:8rem">Género</th>
+                <th pSortableColumn="edad" style="min-width:6rem">Edad</th>
+                <th pSortableColumn="fechaNacimiento" style="min-width:10rem">Nacimiento</th>
+                <th pSortableColumn="fechaInscripcion" style="min-width:10rem">Inscripción</th>
+                <th style="min-width:10rem">Acciones</th>
+            </tr>
         </ng-template>
-    </p-toolbar>
 
-    <p-toast />
-        <div 
-            *ngIf="loading" style="display: flex; justify-content: center; align-items: center; height: 300px;">
-            <p-progressSpinner 
-                [style]="{ width: '50px', height: '50px' }" styleClass="p-text-primary">
-            </p-progressSpinner>
-        </div>
+        <ng-template #body let-psicologo>
+            <tr>
+                <td>{{ psicologo.nombre }}</td>
+                <td>{{ psicologo.apellido }}</td>
+                <td>{{ psicologo.email }}</td>
+                <td>{{ psicologo.cedula }}</td>
+                <td>{{ psicologo.telefono }}</td>
+                <td>{{ psicologo.direccion }}</td>
+                <td>{{ getNombreCiudad(psicologo.id_ciudad) }}</td>
+                <td>{{ getNombreGenero(psicologo.id_genero) }}</td>
+                <td>{{ psicologo.edad }}</td>
+                <td>{{ psicologo.fechaNacimiento | date:'dd/MM/yyyy' }}</td>
+                <td>{{ psicologo.fechaInscripcion | date:'dd/MM/yyyy' }}</td>
+                <td class="flex gap-2">
+                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (click)="edit(psicologo.id)"/>
+                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(psicologo.id)" />
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
 
-    <div *ngIf="!loading">
-        <p-table [value]="entrenador"            
-            [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
-            [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true" dataKey="id" [paginator]="true" 
-            currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Usuarios"
-            [showCurrentPageReport]="true" [rowsPerPageOptions]="[6, 12, 18]" [rows]="6" #dt >
-
-            <ng-template #caption>
-                <div class="flex items-center justify-between">
-                    <h5 class="m-0 text-base md:text-lg font-semibold">Entrenadores</h5>
-                    <p-iconfield>
-                        <p-inputicon styleClass="pi pi-search" />
-                        <input pInputText type="text"  placeholder="Buscar..." [(ngModel)]="filtro" (input)="buscador()" />
-                    </p-iconfield>
-                </div>
-            </ng-template>
-
-            <ng-template #header>
-                <tr>
-                    <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
-                    <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
-                    <th pSortableColumn="price" style="min-width: 8rem">Email</th>
-                    <th pSortableColumn="price" style="min-width: 8rem">password</th>
-                    <th pSortableColumn="price" style="min-width: 10rem">Identificación</th>
-                    <th pSortableColumn="price" style="min-width: 10rem">Teléfono</th>
-                    <th pSortableColumn="price" style="min-width: 8rem">Dirección</th>
-                    <th pSortableColumn="price" style="min-width: 8rem">Ciudad</th>
-                    <th pSortableColumn="price" style="min-width: 8rem">Género</th>
-                    <th pSortableColumn="price" style="min-width: 6rem">Edad</th>
-                   <!--  <th pSortableColumn="price" style="min-width: 7rem">Grupo</th> -->
-                    <th pSortableColumn="price" style="min-width: 12rem">FechaNacimiento</th>
-                    <th pSortableColumn="price" style="min-width: 12rem">FechaInscripción</th>
-                    <th pSortableColumn="inventoryStatus" style="min-width: 10rem">Acciones</th>
-                
-                
-                </tr>
-            </ng-template>
-
-            <ng-template #body let-usuario>
-                <tr>
-                    <td>{{ usuario.nombre }}</td>
-                    <td>{{ usuario.apellido }}</td>
-                    <td>{{ usuario.email }}</td>
-                    <td>{{ usuario.password }} No visible</td>
-                    <td>{{ usuario.cedula }}</td>
-                    <td>{{ usuario.telefono }}</td>
-                    <td>{{ usuario.direccion }}</td>
-                    <td>{{ getNombreCiudad(usuario.id_ciudad) }}</td>
-                    <td>{{ getNombreGenero(usuario.id_genero) }}</td>
-                    <td>{{ usuario.edad }}</td>
-                    <!-- <td>{{ getNombreGrupo(usuario.id_grupo) }}</td> -->
-                    <td>{{ usuario.fechaNacimiento }}</td>
-                    <td>{{ usuario.fechaInscripcion }}</td>
-                    <td>
-                        <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(usuario.id)"/>
-                        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(usuario.id)" />
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </div>
-
-    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar entrenador" [modal]="true">
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar psicólogo" [modal]="true">
         
         <ng-template #content>
             <form [formGroup]="formSave" class="formulario">
@@ -128,29 +120,29 @@
 
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
-  <label for="cedula" class="block font-bold mb-1">Identificación</label>
-  <input type="tel"
-         pInputText 
-         formControlName="cedula" 
-         id="cedula" 
-         placeholder="Número de identificación" 
-         class="w-full text-sm px-0 py-2"
-         (input)="soloNumeros($event)"
-         maxlength="10"
-         pattern="[0-9]*"
-         inputmode="numeric">
-  
-  <!-- Mensajes de validación para cédula -->
-  <div class="mt-1">
-    <p-message *ngIf="formSave.get('cedula')?.hasError('required') && (formSave.get('cedula')?.touched)" 
-               severity="error" variant="simple" size="small">
-      La identificación es requerida
-    </p-message>
-    <p-message *ngIf="formSave.get('cedula')?.hasError('pattern') || formSave.get('cedula')?.hasError('minlength') || formSave.get('cedula')?.hasError('maxlength')" 
-               severity="error" variant="simple" size="small">
-      Debe contener exactamente 10 dígitos numéricos
-    </p-message>
-  </div>
+                            <label for="cedula" class="block font-bold mb-1">Identificación</label>
+                            <input type="tel"
+                                    pInputText 
+                                    formControlName="cedula" 
+                                    id="cedula" 
+                                    placeholder="Número de identificación" 
+                                    class="w-full text-sm px-0 py-2"
+                                    (input)="soloNumeros($event)"
+                                    maxlength="10"
+                                    pattern="[0-9]*"
+                                    inputmode="numeric">
+                            
+                    <!-- Mensajes de validación para cédula -->
+                    <div class="mt-1">
+                        <p-message *ngIf="formSave.get('cedula')?.hasError('required') && (formSave.get('cedula')?.touched)" 
+                                severity="error" variant="simple" size="small">
+                        La identificación es requerida
+                        </p-message>
+                        <p-message *ngIf="formSave.get('cedula')?.hasError('pattern') || formSave.get('cedula')?.hasError('minlength') || formSave.get('cedula')?.hasError('maxlength')" 
+                                severity="error" variant="simple" size="small">
+                        Debe contener exactamente 10 dígitos numéricos
+                        </p-message>
+                    </div>
 </div>
 
 <div class="col-span-6">
@@ -187,7 +179,7 @@
                                 <p-select [options]="ciudad" [appendTo]="'body'" formControlName="id_ciudad"  inputId="id_ciudad"  optionLabel="nombre" optionValue="id" placeholder="Seleccione la ciudad" fluid />
                                 <p-message 
                                     *ngIf="formSave.get('id_ciudad')?.invalid && (formSave.get('id_ciudad')?.dirty || formSave.get('id_ciudad')?.touched)" severity="error" variant="simple"size="small">
-                                    Grupo es requerido
+                                    Ciudad es requerida
                                 </p-message>
                             </div>
                         </div>
@@ -198,7 +190,7 @@
                                 <p-select [options]="genero" [appendTo]="'body'" formControlName="id_genero"  inputId="id_genero"  optionLabel="nombre" optionValue="id" placeholder="Seleccione el género" fluid />
                                 <p-message 
                                     *ngIf="formSave.get('id_genero')?.invalid && (formSave.get('id_genero')?.dirty || formSave.get('id_genero')?.touched)" severity="error" variant="simple"size="small">
-                                    Grupo es requerido
+                                    Género es requerido
                                 </p-message>
                             </div>
                         </div>
@@ -207,11 +199,11 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <div class="col-span-6">
-                                <label for="direccion" class="block font-bold mb-3">Dirección</label>
+                               <label for="direccion" class="block font-bold mb-3">Dirección</label>
                                 <input type="text" formControlName="direccion" pInputText id="direccion" placeholder="Ingrese la dirección" fluid />
                             </div>
                         </div>
-
+                        
                         <div class="col-span-6">
                             <div class="block font-bold mb-3">Fecha de inscripción</div>
                             <p-datepicker [(ngModel)]="fechaActual" [appendTo]="'body'" formControlName="fechaInscripcion" inputId="fechaInscripcion" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" [maxDate]="maxDate"> </p-datepicker>
@@ -220,17 +212,6 @@
                                 Fecha Inscripción es requerida
                             </p-message>  
                         </div>
-
-                    <!--     <div class="col-span-6">
-                            <div class="col-span-6">
-                                <label for="id_grupo" class="block font-bold mb-3">Grupo</label>
-                                <p-select [options]="grupo" formControlName="id_grupo"  inputId="id_grupo"  optionLabel="nombre" optionValue="id" placeholder="Seleccion el grupo" [appendTo]="'body'" fluid />
-                                <p-message 
-                                    *ngIf="formSave.get('id_grupo')?.invalid && (formSave.get('id_grupo')?.dirty || formSave.get('id_grupo')?.touched)" severity="error" variant="simple"size="small">
-                                    Grupo es requerido
-                                </p-message>
-                            </div>
-                        </div> -->
                     </div>
 
                     <div class="grid grid-cols-12 gap-4">
@@ -261,10 +242,11 @@
 
     </p-dialog>
 
+
     <p-dialog [(visible)]="visibleDelete" header="Confirmación" [style]="{ width: '350px' }" [modal]="true">
         <div class="flex items-center justify-center">
             <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
-            <span>¿Estás seguro que deseas eliminar éste entrenador?</span>
+            <span>¿Estás seguro que deseas eliminar éste psicólogo?</span>
         </div>
         <ng-template #footer>
             <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDelete = false" text severity="secondary" (click)="cancelMessageToast()" />
@@ -272,7 +254,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar entrenador" [modal]="true">
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar psicólogo" [modal]="true">
         
         <ng-template #content>
             <form [formGroup]="formUpdate" class="formulario">
@@ -371,7 +353,7 @@
                                 <p-select [options]="ciudad" [appendTo]="'body'" formControlName="id_ciudad"  inputId="id_ciudad"  optionLabel="nombre" optionValue="id" placeholder="Seleccione la ciudad" fluid />
                                 <p-message 
                                     *ngIf="formUpdate.get('id_ciudad')?.invalid && (formUpdate.get('id_ciudad')?.dirty || formUpdate.get('id_ciudad')?.touched)" severity="error" variant="simple"size="small">
-                                    Grupo es requerido
+                                    Ciudad es requerida
                                 </p-message>
                             </div>
                         </div>
@@ -382,7 +364,7 @@
                                 <p-select [options]="genero" [appendTo]="'body'" formControlName="id_genero"  inputId="id_genero"  optionLabel="nombre" optionValue="id" placeholder="Seleccione el género" fluid />
                                 <p-message 
                                     *ngIf="formUpdate.get('id_genero')?.invalid && (formUpdate.get('id_genero')?.dirty || formUpdate.get('id_genero')?.touched)" severity="error" variant="simple"size="small">
-                                    Grupo es requerido
+                                    Género es requerido
                                 </p-message>
                             </div>
                         </div>
@@ -404,17 +386,6 @@
                             Fecha Inscripcion es requerido
                             </p-message>
                         </div>
-
-                        <!--    <div class="col-span-6">
-                            <div class="col-span-6">
-                                <label for="id_grupo" class="block font-bold mb-3">Grupo</label>
-                                <p-select [options]="grupo" [appendTo]="'body'" formControlName="id_grupo"  inputId="id_grupo"  optionLabel="nombre" optionValue="id" placeholder="selecciones grupo" fluid />
-                                <p-message 
-                                *ngIf="formUpdate.get('id_grupo')?.invalid && (formUpdate.get('id_grupo')?.dirty || formUpdate.get('id_grupo')?.touched)" severity="error" variant="simple"size="small">
-                                Grupo es requerido
-                                </p-message>
-                            </div>
-                        </div> -->
                     </div>
 
                     <div class="grid grid-cols-12 gap-4">
@@ -444,6 +415,3 @@
         </ng-template>
 
     </p-dialog>
-
-
-

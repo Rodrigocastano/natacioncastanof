@@ -1,6 +1,6 @@
 export interface Entrenador {
     id: number;
-    id_grupo: any;
+   /*  id_grupo: any; */
     id_rol: number;
     id_ciudad: any;
     id_genero: any;

@@ -73,6 +73,8 @@ export class AppMenu implements OnInit {
                             { label: 'Ciudad', icon: 'pi pi-building', routerLink: ['/pages/ciudad'] },
                             { label: 'Usuarios', icon: 'pi pi-user-plus', routerLink: ['/pages/usuario'] },
                             { label: 'Entrenadores', icon: 'pi pi-user-plus', routerLink: ['/pages/entrenador'] },
+                            { label: 'Médico', icon: 'pi pi-user-plus', routerLink: ['/pages/medicos'] },
+                            { label: 'Psicólogo', icon: 'pi pi-user-plus', routerLink: ['/pages/psicologos'] },
                             { label: 'Representantes', icon: 'pi pi-user-plus', routerLink: ['/pages/representante'] },
                             { label: 'Representantes Nadador', icon: 'pi pi-users', routerLink: ['/pages/representantenadador'] },
                         ],
@@ -85,7 +87,7 @@ export class AppMenu implements OnInit {
                     { label: 'Plan pago', icon: 'pi pi-credit-card', routerLink: ['/pages/planPago'] },
                     { label: 'Registro Pago', icon: 'pi pi-money-bill', routerLink: ['/pages/pago'] },
                     { label: 'Pagar abono', icon: 'pi pi-money-bill', routerLink: ['/pages/abonoPago'] },
-                     { label: 'Pagar Entrenadores', icon: 'pi pi-money-bill', routerLink: ['/pages/pagoEntrenadores'] },
+                    { label: 'Pagar Entrenadores', icon: 'pi pi-money-bill', routerLink: ['/pages/pagoEntrenadores'] },
                     { label: 'Reporte general', icon: 'pi pi-file', routerLink: ['/pages/reporte'] },
                     { label: 'Comprobante de usuario', icon: 'pi pi-file', routerLink: ['/pages/comprobante'] },
 
