@@ -13,7 +13,7 @@ export class HistorialUsuarioService {
 
     constructor(private http: HttpClient) {}
 
-    getAllRepresentante(): Observable<HistorialUsuario[]> {
-      return this.http.get<HistorialUsuario[]>(`${this.apisUrl}/indexRepresentante`);
+    getAllHistorial(): Observable<HistorialUsuario[]> {
+      return this.http.get<HistorialUsuario[]>(`${this.apisUrl}/indexHistorialUsuario`);
     }
 }

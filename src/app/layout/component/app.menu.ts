@@ -77,6 +77,7 @@ export class AppMenu implements OnInit {
                             { label: 'Psicólogo', icon: 'pi pi-user-plus', routerLink: ['/pages/psicologos'] },
                             { label: 'Representantes', icon: 'pi pi-user-plus', routerLink: ['/pages/representante'] },
                             { label: 'Representantes Nadador', icon: 'pi pi-users', routerLink: ['/pages/representantenadador'] },
+                            { label: 'Historial del usuario', icon: 'pi pi-users', routerLink: ['/pages/historiaUsuario'] },
                         ],
 
                     },

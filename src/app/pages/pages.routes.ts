@@ -35,6 +35,7 @@ import { ComprovanteComponent } from './comprovante/comprovante.component';
 import { PagoEntrenadoresComponent } from './pago-entrenadores/pago-entrenadores.component';
 import { RegistroMedicoComponent } from './registro-medico/registro-medico.component';
 import { RegistroPsicologoComponent } from './registro-psicologo/registro-psicologo.component';
+import { HistorialUsuarioComponent } from './historial-usuario/historial-usuario.component';
 
 
 export default [
@@ -73,5 +74,6 @@ export default [
     { path: 'pagoEntrenadores', component: PagoEntrenadoresComponent },
     { path: 'medicos', component: RegistroMedicoComponent },
     { path: 'psicologos', component: RegistroPsicologoComponent },
+    { path: 'historiaUsuario', component: HistorialUsuarioComponent },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;
