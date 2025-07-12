@@ -301,14 +301,8 @@ getPruebaTorneo() {
               this.formUpdate.controls['fecha'].setValue(
               parseLocalDate(this.tiempoNa.fecha)
               );
-
-              if (this.tiempoNa?.tiempo) {
-                  const tiempoString = this.tiempoNa.tiempo;
-                  const [horas, minutos, segundos] = tiempoString.split(':').map(Number);
-                  const totalMinutos = horas * 60 + minutos + Math.floor(segundos / 60);
-      
-                  this.formUpdate.controls['tiempo'].setValue(totalMinutos); 
-              }
+              this.formUpdate.controls['tiempo'].setValue(this.tiempoNa?.tiempo);
+              /* tiempo: this.tiempoNa.tiempo  */
           }
       
           this.visibleUpdate = true;

@@ -288,31 +288,26 @@ export class TiemponadadorComponent implements OnInit{
         }
       }
             
-      edit(tiempoId: any) {
-          this.idForUpdate = true;
-          this.tiempoNa = tiempoId;
-      
-          if (this.tiempoNa) {
-              const parseLocalDate = (dateString: string) => {
-              return dateString ? new Date(dateString + 'T00:00:00') : null;
-              };
-              this.formUpdate.controls['id_usuario'].setValue(this.tiempoNa?.id_usuario);
-              this.formUpdate.controls['id_categoria'].setValue(this.tiempoNa?.id_categoria);
-              this.formUpdate.controls['fecha'].setValue(
-              parseLocalDate(this.tiempoNa.fecha)
-              );
+     edit(tiempoId: any) {
+  this.idForUpdate = true;
+  this.tiempoNa = tiempoId;
 
-              if (this.tiempoNa?.tiempo) {
-                  const tiempoString = this.tiempoNa.tiempo;
-                  const [horas, minutos, segundos] = tiempoString.split(':').map(Number);
-                  const totalMinutos = horas * 60 + minutos + Math.floor(segundos / 60);
-      
-                  this.formUpdate.controls['tiempo'].setValue(totalMinutos); 
-              }
-          }
-      
-          this.visibleUpdate = true;
-      }
+  if (this.tiempoNa) {
+    const parseLocalDate = (dateString: string) => {
+      return dateString ? new Date(dateString + 'T00:00:00') : null;
+    };
+
+    this.formUpdate.patchValue({
+      id_usuario: this.tiempoNa.id_usuario,
+      id_categoria: this.tiempoNa.id_categoria,
+      fecha: parseLocalDate(this.tiempoNa.fecha),
+      tiempo: this.tiempoNa.tiempo // Aquí directamente el string "HH:MM:SS"
+    });
+  }
+
+  this.visibleUpdate = true;
+}
+
       
       canceUpdate() {
         this.visibleUpdate = false;
