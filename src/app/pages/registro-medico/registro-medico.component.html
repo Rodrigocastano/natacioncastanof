@@ -13,6 +13,7 @@
         <p-progressSpinner [style]="{ width: '50px', height: '50px' }" styleClass="p-text-primary"></p-progressSpinner>
     </div>
 
+    
     <div *ngIf="!loading">
         <p-table [value]="medicos"            
             [globalFilterFields]="['nombre', 'apellido', 'cedula']"
