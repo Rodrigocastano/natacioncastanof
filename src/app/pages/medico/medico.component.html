@@ -53,6 +53,7 @@
           <th style="min-width: 10rem;">Apellido</th>
           <th style="min-width: 8rem;">Género</th>
           <th style="min-width: 6rem;">Edad</th>
+          <th style="min-width: 6rem;">Grupo</th>
         </tr>
       </ng-template>
 
@@ -75,13 +76,14 @@
           <td>{{ usuario.apellido }}</td>
           <td>{{ usuario.genero }}</td>
           <td>{{ usuario.edad }}</td>
+          <td>{{ usuario.grupo }}</td>
         </tr>
       </ng-template>
 
       <!-- FILA EXPANDIDA -->
       <ng-template #expandedrow let-usuario>
         <tr>
-          <td colspan="6">
+          <td colspan="7">
             <div class="p-4 bg-gray-50 rounded shadow-inner">
               <p-table [value]="usuario.controlesMedicos" dataKey="id" [tableStyle]="{ 'min-width': '100%' }">
                 <ng-template #header>

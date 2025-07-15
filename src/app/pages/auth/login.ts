@@ -86,7 +86,7 @@ login(): void {
   });
 }
 
-getRedirectRoute(rol: string): string {
+/* getRedirectRoute(rol: string): string {
   switch (rol.toLowerCase()) {
     case 'usuario':
       return '/pages/graficasUsuario';
@@ -96,6 +96,22 @@ getRedirectRoute(rol: string): string {
     default:
       return '/auth/login';
   }
+} */
+getRedirectRoute(rol: string): string {
+  switch (rol.toLowerCase()) {
+    case 'usuario':
+      return '/pages/graficasUsuario';
+    case 'administrador':
+    case 'entrenador':
+      return '/dashboard';
+    case 'psicologo':
+      return '/pages/psicologo';
+    case 'medico':
+      return '/pages/medico';
+    default:
+      return '/auth/login';
+  }
 }
+
 
 }

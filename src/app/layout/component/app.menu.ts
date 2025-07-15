@@ -41,6 +41,10 @@ export class AppMenu implements OnInit {
             this.model = this.getAdminMenu();
         } else if (rol === 'entrenador') {
             this.model = this.getTrainerMenu();
+        } else if (rol === 'psicologo') {
+            this.model = this.getPsychologistMenu();
+        } else if (rol === 'medico') {
+            this.model = this.getMedicalMenu();
         }
     }
 
@@ -52,9 +56,6 @@ export class AppMenu implements OnInit {
                     { label: 'Gráficas', icon: 'pi pi-chart-bar', routerLink: ['/pages/graficasUsuario'] },
                     { label: 'Asistencias', icon: 'pi pi-calendar', routerLink: ['/pages/asistenciaUsuario'] },
                     { label: 'Medidas', icon: 'pi pi-calendar', routerLink: ['/pages/medidaUsuario'] },
-                    /*{ label: 'Nutricionales', icon: 'pi pi-calendar', routerLink: ['/pages/nutricionalUsuario'] },
-                    { label: 'Antropométrica', icon: 'pi pi-calendar', routerLink: ['/pages/antropometricaUsuario'] }, */
-                    
                 ]
             }
         ];
@@ -78,25 +79,20 @@ export class AppMenu implements OnInit {
                             { label: 'Representantes', icon: 'pi pi-user-plus', routerLink: ['/pages/representante'] },
                             { label: 'Representantes Nadador', icon: 'pi pi-users', routerLink: ['/pages/representantenadador'] },
                             { label: 'Historial del usuario', icon: 'pi pi-users', routerLink: ['/pages/historiaUsuario'] },
-                        ],
-
+                        ]
                     },
-
-                     {
-                label: 'Gestión de pago', icon: 'pi pi-dollar', items: [
-                    { label: 'Tipo de pago', icon: 'pi pi-tags', routerLink: ['/pages/tipoPago'] },
-                    { label: 'Plan pago', icon: 'pi pi-credit-card', routerLink: ['/pages/planPago'] },
-                    { label: 'Registro Pago', icon: 'pi pi-money-bill', routerLink: ['/pages/pago'] },
-                    { label: 'Pagar abono', icon: 'pi pi-money-bill', routerLink: ['/pages/abonoPago'] },
-                    { label: 'Pagar Entrenadores', icon: 'pi pi-money-bill', routerLink: ['/pages/pagoEntrenadores'] },
-                    { label: 'Reporte general', icon: 'pi pi-file', routerLink: ['/pages/reporte'] },
-                    { label: 'Comprobante de usuario', icon: 'pi pi-file', routerLink: ['/pages/comprobante'] },
-
-                    
-                ]
-            },
-
-            { label: 'Pagar a entrenadores', icon: 'pi pi-money-bill', routerLink: ['/pages/pagoEntrenadores'] },
+                    {
+                        label: 'Gestión de pago', icon: 'pi pi-dollar', items: [
+                            { label: 'Tipo de pago', icon: 'pi pi-tags', routerLink: ['/pages/tipoPago'] },
+                            { label: 'Plan pago', icon: 'pi pi-credit-card', routerLink: ['/pages/planPago'] },
+                            { label: 'Registro Pago', icon: 'pi pi-money-bill', routerLink: ['/pages/pago'] },
+                            { label: 'Pagar abono', icon: 'pi pi-money-bill', routerLink: ['/pages/abonoPago'] },
+                            { label: 'Pagar Entrenadores', icon: 'pi pi-money-bill', routerLink: ['/pages/pagoEntrenadores'] },
+                            { label: 'Reporte general', icon: 'pi pi-file', routerLink: ['/pages/reporte'] },
+                            { label: 'Comprobante de usuario', icon: 'pi pi-file', routerLink: ['/pages/comprobante'] },
+                        ]
+                    },
+                    { label: 'Pagar a entrenadores', icon: 'pi pi-money-bill', routerLink: ['/pages/pagoEntrenadores'] },
                     ...this.sharedMenuItems()
                 ]
             }
@@ -115,11 +111,32 @@ export class AppMenu implements OnInit {
         ];
     }
 
-    // Menús compartidos por administrador y entrenador
+    getPsychologistMenu(): MenuItem[] {
+        return [
+            {
+                label: 'Home',
+                items: [
+                    { label: 'Dashboard', icon: 'pi pi-home', routerLink: ['/dashboard'] },
+                    { label: 'Psicólogo', icon: 'pi pi-book', routerLink: ['/pages/psicologo'] }
+                ]
+            }
+        ];
+    }
+
+    getMedicalMenu(): MenuItem[] {
+        return [
+            {
+                label: 'Home',
+                items: [
+                    { label: 'Dashboard', icon: 'pi pi-home', routerLink: ['/dashboard'] },
+                    { label: 'Médico', icon: 'pi pi-book', routerLink: ['/pages/medico'] }
+                ]
+            }
+        ];
+    }
+
     sharedMenuItems(): MenuItem[] {
         return [
-
-          
             {
                 label: 'Área médica', icon: 'pi pi-book', items: [
                     { label: 'Médico', icon: 'pi pi-book', routerLink: ['/pages/medico'] },
@@ -151,7 +168,6 @@ export class AppMenu implements OnInit {
                     { label: 'Prueba Nadador', icon: 'pi pi-book', routerLink: ['/pages/pruebaNadador'] }
                 ]
             },
-           
             { label: 'Asistencias', icon: 'pi pi-pen-to-square', routerLink: ['/pages/asistencia'] }
         ];
     }

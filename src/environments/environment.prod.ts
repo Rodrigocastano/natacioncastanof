@@ -1,6 +1,6 @@
 export const  environment = {
     production: true, 
 
-     apisUrls: 'https://natacion-castano-backend-production.up.railway.app/api'
+     apisUrls: 'http://127.0.0.1:8000/api'
      
 }
