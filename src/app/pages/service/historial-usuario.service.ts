@@ -13,7 +13,26 @@ export class HistorialUsuarioService {
 
     constructor(private http: HttpClient) {}
 
-    getAllHistorial(): Observable<HistorialUsuario[]> {
+    getAllUsuarioGrupo(): Observable<HistorialUsuario[]> {
       return this.http.get<HistorialUsuario[]>(`${this.apisUrl}/indexHistorialUsuario`);
     }
+
+    createUsuarioGrupos(historialUsuario: HistorialUsuario): Observable<any> {
+      return this.http.post(`${this.apisUrl}/storeUsuarioGrupo`, historialUsuario);
+    }
+
+    updateUsuarioGrupos(id: number, historialUsuario: any): Observable<any> {
+      return this.http.put(`${this.apisUrl}/updateUsuarioGrupo/${id}`, historialUsuario);
+    }
+
+    destroyUsuarioGrupo(id: number): Observable<any> {
+      return this.http.delete(`${this.apisUrl}/destroyUsuarioGrupos/${id}`);
+    }
+    
+/* 
+    updateHistorialUsuarios(id: number, historialUsuario: HistorialUsuario): Observable<any> {
+      return this.http.put(`${this.apisUrl}/updateHistorialUsuario/${id}`, historialUsuario);
+    } */
+
+
 }

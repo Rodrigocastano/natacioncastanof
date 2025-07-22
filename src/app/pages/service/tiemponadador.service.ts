@@ -75,10 +75,6 @@ export class TiemponadadorService {
     return this.http.get<any[]>(`${this.apisUrl}/obtenerTiemposPorUsuario/${idGrupo}`);
   }
 
-    obtenerTiemposPorUsuario(idUsuario: number): Observable<any> {
-    return this.http.get(`${this.apisUrl}/obtenerTiemposPorUsuario/${idUsuario}`);
-  }
-
     obtenerUsuarios(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${this.apisUrl}/usuarios`);
 

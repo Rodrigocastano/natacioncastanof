@@ -1,0 +1,78 @@
+<div class="card p-6 shadow-md rounded-2xl">
+  <h2 class="text-2xl font-extrabold text-center mb-6 text-neutral-900 dark:text-neutral-100">
+    Nadadores por Entrenador
+  </h2>
+
+  <div *ngIf="!loading && entrenadores.length > 0" class="mb-6">
+    <p-dropdown
+      [options]="entrenadores"
+      [(ngModel)]="idEntrenadorSeleccionado"
+      optionLabel="nombreCompleto"
+      optionValue="id"
+      placeholder="Seleccione un entrenador"
+      filter="true"
+      filterBy="nombreCompleto"
+      (onChange)="cargarEntrenador()"
+      class="w-full md:w-40rem dark:bg-neutral-800 dark:text-white"
+    ></p-dropdown>
+  </div>
+
+  <div *ngIf="loading" class="text-center text-sm py-4 text-neutral-700 dark:text-neutral-300">
+    Cargando datos del entrenador...
+  </div>
+
+  <div
+    *ngIf="error"
+    class="text-center text-neutral-700 dark:text-neutral-300 mt-10 text-base italic"
+  >
+    <i class="pi pi-info-circle mr-2"></i>
+    Este entrenador no tiene nadadores asignados.
+  </div>
+
+  <div *ngIf="!loading && !error && consultaRealizada">
+    <h3 class="text-xl font-semibold text-center mb-6 text-neutral-800 dark:text-neutral-100">
+      Entrenador: {{ entrenador?.nombre_completo }}
+    </h3>
+
+    <div *ngIf="gruposKeys.length > 0; else sinGrupos">
+      <div *ngFor="let grupo of gruposKeys" class="mb-6 border p-4 rounded shadow">
+        <h4 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 mb-2">{{ grupo }}</h4>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left border border-neutral-300 dark:border-neutral-700">
+            <thead>
+              <tr>
+                <th class="p-2 border dark:border-neutral-600">#</th>
+                <th class="p-2 border dark:border-neutral-600">Nombre</th>
+                <th class="p-2 border dark:border-neutral-600">Cédula</th>
+                <th class="p-2 border dark:border-neutral-600">Inicio</th>
+                <th class="p-2 border dark:border-neutral-600">Fin</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let nadador of gruposNadadores[grupo]; let i = index"
+                class="hover:bg-neutral-100 dark:hover:bg-neutral-700"
+              >
+                <td class="p-2 border dark:border-neutral-600">{{ i + 1 }}</td>
+                <td class="p-2 border dark:border-neutral-600">{{ nadador.nombre_completo }}</td>
+                <td class="p-2 border dark:border-neutral-600">{{ nadador.cedula }}</td>
+                <td class="p-2 border dark:border-neutral-600">{{ nadador.fecha_inicio }}</td>
+                <td class="p-2 border dark:border-neutral-600">
+                  {{ nadador.fecha_fin || 'En curso' }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #sinGrupos>
+      <div class="text-center text-neutral-700 dark:text-neutral-300 mt-10 text-base italic">
+        <i class="pi pi-info-circle mr-2"></i>
+        Este entrenador no tiene grupos asignados.
+      </div>
+    </ng-template>
+  </div>
+</div>

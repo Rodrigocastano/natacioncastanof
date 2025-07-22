@@ -92,31 +92,36 @@ export class CiudadComponent implements OnInit {
       : this.buscadorFiltrados.filter(c => c.nombre?.toLowerCase().includes(termino));
   }
 
-  store() {
-    this.submitted = true;
-  
-    if (this.formSave.invalid) {
-      this.errorMessageToast();
-      return;
-    }
-  
-    const newCiudad: any = {
-      nombre: this.formSave.value.nombre,
-    };
+store() {
+  this.submitted = true;
 
-    this.ciudadService.createCiudad(newCiudad).subscribe({
-      next: () => {
-        this.saveMessageToast();
-        this.getCiudad();
-        this.formSave.reset();
-        this.submitted = false;
-      },
-      error: (err) => {
-        console.error('Error al guardar la ciudad:', err);
-        this.errorMessageToast();
-      }
-    });
+  if (this.formSave.invalid) {
+    this.errorMessageToast();
+    return;
   }
+
+  const newCiudad: any = {
+    nombre: this.formSave.value.nombre,
+  };
+
+  this.ciudadService.createCiudad(newCiudad).subscribe({
+    next: () => {
+      this.saveMessageToast();
+      this.getCiudad();
+      this.formSave.reset();
+      this.submitted = false;
+    },
+    error: (err) => {
+      console.error('Error al guardar la ciudad:', err);
+      
+      if (err.status === 409) {
+        this.errorIngresoMessageToast(); // Mensaje específico para nombre duplicado
+      } else {
+        this.errorMessageToast(); // Mensaje genérico para otros errores
+      }
+    }
+  });
+}
 
   edit(ciudad: Ciudad) {
     this.editing = true;
@@ -132,33 +137,37 @@ export class CiudadComponent implements OnInit {
     this.cancelMessageToast();
   }
 
-  update() {
-    this.submitted = true;
-    
-    if (this.formUpdate.invalid) {
-      this.errorMessageToast();
-      return;
-    }
+update() {
+  this.submitted = true;
+  
+  if (this.formUpdate.invalid) {
+    this.errorMessageToast();
+    return;
+  }
 
-    const updateCiudad: Ciudad = {
-      id: this.idForUpdate,
-      nombre: this.formUpdate.value.nombre,
-    };
+  const updateCiudad: Ciudad = {
+    id: this.idForUpdate,
+    nombre: this.formUpdate.value.nombre,
+  };
 
-    this.ciudadService.updateCiudad(this.idForUpdate, updateCiudad).subscribe({
-      next: () => {
-        this.saveMessageToast();
-        this.getCiudad();
-        this.editing = false;
-        this.formUpdate.reset();
-        this.submitted = false;
-      },
-      error: (err) => {
-        console.error('Error actualizando ciudad:', err);
+  this.ciudadService.updateCiudad(this.idForUpdate, updateCiudad).subscribe({
+    next: () => {
+      this.saveMessageToast();
+      this.getCiudad();
+      this.editing = false;
+      this.formUpdate.reset();
+      this.submitted = false;
+
+    },
+    error: (err) => {
+      if (err.status === 409) {
+        this.errorIngresoMessageToast();
+      }  else {
         this.errorMessageToast();
       }
-    });
-  }
+    }
+  });
+}
 
   delete() {
     this.ciudadService.deleteCiudad(this.idCiudad).subscribe({
@@ -194,5 +203,9 @@ export class CiudadComponent implements OnInit {
 
   errorMessageToast() {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ocurrió un problema con la ciudad' });
+  }
+
+  errorIngresoMessageToast() {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ya existe una ciudad con ese nombre registrado' });
   }
 }

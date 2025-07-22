@@ -1,0 +1,343 @@
+<div class="card p-6 shadow-md rounded-2xl">
+
+    <h2 class="text-2xl font-extrabold text-center mb-6 text-gray-900 dark:text-gray-100">
+    Registro de los usuario</h2>
+
+    <div class="col-12">
+        <p-card >
+        <p-dropdown 
+            [options]="usuarios" 
+            [(ngModel)]="idUsuarioSeleccionado"
+            optionLabel="nombreCompleto" 
+            optionValue="id"
+            placeholder="Seleccione un usuario"
+            [filter]="true"
+            filterBy="nombreCompleto"
+            (onChange)="cargarDatosUsuario()"
+            class="w-full">
+        </p-dropdown>
+
+
+
+        
+        </p-card>
+    </div>
+
+    <div *ngIf="loading" class="col-12 text-center">
+        <p-progressSpinner></p-progressSpinner>
+        <p>Cargando datos del usuario...</p>
+    </div>
+
+    <div *ngIf="datosUsuario" class="col-12">
+    <p-card >
+
+        <h5 class="mt-4 text-center mb-5">Pagos</h5>
+        <p-table [value]="datosUsuario.pagos" [paginator]="false">
+        <ng-template pTemplate="header">
+            <tr>
+            <th class="text-left">Mes</th>
+            <th class="text-right">Cantidad de Pagos</th>
+            <th class="text-right">Total Abonado</th>
+            <th class="text-right">Pendiente</th>
+            <th class="text-right">Monto Total</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-pago>
+            <tr [ngClass]="{'font-bold': pago.mes === 'TOTAL'}">
+            <td class="text-left">{{pago.mes === 'TOTAL' ? 'TOTAL' : formatDate(pago.mes)}}</td>
+            <td class="text-right">{{pago.cantidad_pagos}}</td>
+            <td class="text-right">{{pago.total_abonado | currency:'USD':'symbol':'1.0-0'}}</td>
+            <td class="text-right">{{pago.total_pendiente | currency:'USD':'symbol':'1.0-0'}}</td>
+            <td class="text-right">{{pago.total_monto | currency:'USD':'symbol':'1.0-0'}}</td>
+            </tr>
+        </ng-template>
+        </p-table>
+
+        <h5 class="mt-10 text-center mb-5">Pruebas</h5>
+        <p-table [value]="datosUsuario?.pruebas" [paginator]="false" >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="text-left">Prueba/Torneo</th>
+                    <th class="text-center">Tiempo</th>
+                    <th class="text-right">Fecha</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-prueba>
+                <tr>
+                    <td class="text-left font-medium">{{prueba.pruebaTorneo}}</td>
+                    <td class="text-center">{{prueba.tiempo}}</td>
+                    <td class="text-right">{{formatDate(prueba.fecha)}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <h5 class="mt-10 text-center mb-5">Tiempos de Nado</h5>
+        <div *ngFor="let serie of datosUsuario?.tiemposNado?.series" class="col-12 md:col-6 lg:col-4 mb-3">
+            <p-card [header]="comboChartData[serie.tipo_nado_id]?.chartTitle || serie.name">
+            <div class="flex justify-content-center mb-3">
+                <p-selectButton [(ngModel)]="serie.tipoGrafica" 
+                            (onChange)="actualizarTipoGrafica(serie)"></p-selectButton>
+            </div>
+            
+            <div style="height: 150px; position: relative;">
+                <p-chart 
+                type="bar" 
+                [data]="comboChartData[serie.tipo_nado_id]" 
+                [options]="chartOptions">
+                </p-chart>
+            </div>
+            </p-card>
+        </div>
+
+        <h5 class="mt-10 text-center mb-5">Medidas - Elasticidad</h5>
+        <p-table [value]="[{}]" [paginator]="false">
+        <ng-template pTemplate="header">
+            <tr>
+            <th>Medida</th>
+            <th *ngFor="let medida of datosUsuario.medidas.elasticidad">{{formatDate(medida.fecha)}}</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body">
+            <tr>
+            <td>Elasticidad</td>
+            <td *ngFor="let medida of datosUsuario.medidas.elasticidad; let i = index" class="text-center">
+                {{medida.medida_elasticida}}
+                <ng-container *ngIf="i > 0">
+                <ng-container *ngIf="comparar(medida.medida_elasticida, datosUsuario.medidas.elasticidad[i-1].medida_elasticida) !== '↔'">
+                    <i *ngIf="comparar(medida.medida_elasticida, datosUsuario.medidas.elasticidad[i-1].medida_elasticida) === '↑'"
+                    class="pi pi-arrow-up text-green-600 dark:text-green-400 text-xs font-bold align-middle ml-1"></i>
+                    <i *ngIf="comparar(medida.medida_elasticida, datosUsuario.medidas.elasticidad[i-1].medida_elasticida) === '↓'"
+                    class="pi pi-arrow-down text-red-600 dark:text-red-400 text-xs font-bold align-middle ml-1"></i>
+                </ng-container>
+                </ng-container>
+            </td>
+            </tr>
+        </ng-template>
+        </p-table>
+
+        <h5 class="mt-10 text-center mb-5">Medidas - Nutrición</h5>
+        <p-table [value]="[{}]" [paginator]="false">
+        <ng-template pTemplate="header">
+            <tr>
+            <th>Medida</th>
+            <th *ngFor="let medida of datosUsuario.medidas.nutricionales">{{formatDate(medida.fecha)}}</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body">
+            <tr>
+            <td>Caloría</td>
+            <td *ngFor="let medida of datosUsuario.medidas.nutricionales; let i = index" class="text-center">
+                {{medida.caloria_consumida}} kcal
+                <ng-container *ngIf="i > 0">
+                <ng-container *ngIf="comparar(medida.caloria_consumida, datosUsuario.medidas.nutricionales[i-1].caloria_consumida) !== '↔'">
+                    <i *ngIf="comparar(medida.caloria_consumida, datosUsuario.medidas.nutricionales[i-1].caloria_consumida) === '↑'"
+                    class="pi pi-arrow-up text-green-600 dark:text-green-400 text-xs font-bold align-middle ml-1"></i>
+                    <i *ngIf="comparar(medida.caloria_consumida, datosUsuario.medidas.nutricionales[i-1].caloria_consumida) === '↓'"
+                    class="pi pi-arrow-down text-red-600 dark:text-red-400 text-xs font-bold align-middle ml-1"></i>
+                </ng-container>
+                </ng-container>
+            </td>
+            </tr>
+            <tr>
+            <td>Proteínas</td>
+            <td *ngFor="let medida of datosUsuario.medidas.nutricionales; let i = index" class="text-center">
+                {{medida.proteina_consumida}} g
+                <ng-container *ngIf="i > 0">
+                <ng-container *ngIf="comparar(medida.proteina_consumida, datosUsuario.medidas.nutricionales[i-1].proteina_consumida) !== '↔'">
+                    <i *ngIf="comparar(medida.proteina_consumida, datosUsuario.medidas.nutricionales[i-1].proteina_consumida) === '↑'"
+                    class="pi pi-arrow-up text-green-600 dark:text-green-400 text-xs font-bold align-middle ml-1"></i>
+                    <i *ngIf="comparar(medida.proteina_consumida, datosUsuario.medidas.nutricionales[i-1].proteina_consumida) === '↓'"
+                    class="pi pi-arrow-down text-red-600 dark:text-red-400 text-xs font-bold align-middle ml-1"></i>
+                </ng-container>
+                </ng-container>
+            </td>
+            </tr>
+        </ng-template>
+        </p-table>
+
+        <h5 class="mt-10 text-center mb-5">Medidas - Antropométricas</h5>
+        <p-table [value]="[{}]" [paginator]="false">
+        <ng-template pTemplate="header">
+            <tr>
+            <th>Medida</th>
+            <th *ngFor="let medida of datosUsuario.medidas.antropometricas">{{formatDate(medida.fecha)}}</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body">
+
+            <tr>
+            <td>Peso</td>
+            <td *ngFor="let medida of datosUsuario.medidas.antropometricas; let i = index" class="text-center">
+                {{medida.peso}} kg
+                <ng-container *ngIf="i > 0">
+                <ng-container *ngIf="comparar(medida.peso, datosUsuario.medidas.antropometricas[i-1].peso) !== '↔'">
+                    <i *ngIf="comparar(medida.peso, datosUsuario.medidas.antropometricas[i-1].peso) === '↑'"
+                    class="pi pi-arrow-up text-green-600 dark:text-green-400 text-xs font-bold align-middle ml-1"></i>
+                    <i *ngIf="comparar(medida.peso, datosUsuario.medidas.antropometricas[i-1].peso) === '↓'"
+                    class="pi pi-arrow-down text-red-600 dark:text-red-400 text-xs font-bold align-middle ml-1"></i>
+                </ng-container>
+                </ng-container>
+            </td>
+            </tr>
+
+            <tr>
+            <td>Talla</td>
+            <td *ngFor="let medida of datosUsuario.medidas.antropometricas; let i = index" class="text-center">
+                {{medida.talla}} cm
+                <ng-container *ngIf="i > 0">
+                <ng-container *ngIf="comparar(medida.talla, datosUsuario.medidas.antropometricas[i-1].talla) !== '↔'">
+                    <i *ngIf="comparar(medida.talla, datosUsuario.medidas.antropometricas[i-1].talla) === '↑'"
+                    class="pi pi-arrow-up text-green-600 dark:text-green-400 text-xs font-bold align-middle ml-1"></i>
+                    <i *ngIf="comparar(medida.talla, datosUsuario.medidas.antropometricas[i-1].talla) === '↓'"
+                    class="pi pi-arrow-down text-red-600 dark:text-red-400 text-xs font-bold align-middle ml-1"></i>
+                </ng-container>
+                </ng-container>
+            </td>
+            </tr>
+
+            <tr>
+            <td>Envergadura</td>
+            <td *ngFor="let medida of datosUsuario.medidas.antropometricas; let i = index" class="text-center">
+                {{medida.envergadura}} cm
+                <ng-container *ngIf="i > 0">
+                <ng-container *ngIf="comparar(medida.envergadura, datosUsuario.medidas.antropometricas[i-1].envergadura) !== '↔'">
+                    <i *ngIf="comparar(medida.envergadura, datosUsuario.medidas.antropometricas[i-1].envergadura) === '↑'"
+                    class="pi pi-arrow-up text-green-600 dark:text-green-400 text-xs font-bold align-middle ml-1"></i>
+                    <i *ngIf="comparar(medida.envergadura, datosUsuario.medidas.antropometricas[i-1].envergadura) === '↓'"
+                    class="pi pi-arrow-down text-red-600 dark:text-red-400 text-xs font-bold align-middle ml-1"></i>
+                </ng-container>
+                </ng-container>
+            </td>
+            </tr>
+
+            <tr>
+            <td>Circ. Braquial</td>
+            <td *ngFor="let medida of datosUsuario.medidas.antropometricas; let i = index" class="text-center">
+                {{medida.circuferencia_braquial}} cm
+                <ng-container *ngIf="i > 0">
+                <ng-container *ngIf="comparar(medida.circuferencia_braquial, datosUsuario.medidas.antropometricas[i-1].circuferencia_braquial) !== '↔'">
+                    <i *ngIf="comparar(medida.circuferencia_braquial, datosUsuario.medidas.antropometricas[i-1].circuferencia_braquial) === '↑'"
+                    class="pi pi-arrow-up text-green-600 dark:text-green-400 text-xs font-bold align-middle ml-1"></i>
+                    <i *ngIf="comparar(medida.circuferencia_braquial, datosUsuario.medidas.antropometricas[i-1].circuferencia_braquial) === '↓'"
+                    class="pi pi-arrow-down text-red-600 dark:text-red-400 text-xs font-bold align-middle ml-1"></i>
+                </ng-container>
+                </ng-container>
+            </td>
+            </tr>
+
+            <tr>
+            <td>Pliegue Cutáneo</td>
+            <td *ngFor="let medida of datosUsuario.medidas.antropometricas; let i = index" class="text-center">
+                {{medida.pliegue_cutanio}} mm
+                <ng-container *ngIf="i > 0">
+                <ng-container *ngIf="comparar(medida.pliegue_cutanio, datosUsuario.medidas.antropometricas[i-1].pliegue_cutanio) !== '↔'">
+                    <i *ngIf="comparar(medida.pliegue_cutanio, datosUsuario.medidas.antropometricas[i-1].pliegue_cutanio) === '↑'"
+                    class="pi pi-arrow-up text-green-600 dark:text-green-400 text-xs font-bold align-middle ml-1"></i>
+                    <i *ngIf="comparar(medida.pliegue_cutanio, datosUsuario.medidas.antropometricas[i-1].pliegue_cutanio) === '↓'"
+                    class="pi pi-arrow-down text-red-600 dark:text-red-400 text-xs font-bold align-middle ml-1"></i>
+                </ng-container>
+                </ng-container>
+            </td>
+            </tr>
+
+            <tr>
+            <td>Perímetro Cintura</td>
+            <td *ngFor="let medida of datosUsuario.medidas.antropometricas; let i = index" class="text-center">
+                {{medida.perimetro_cintura}} cm
+                <ng-container *ngIf="i > 0">
+                <ng-container *ngIf="comparar(medida.perimetro_cintura, datosUsuario.medidas.antropometricas[i-1].perimetro_cintura) !== '↔'">
+                    <i *ngIf="comparar(medida.perimetro_cintura, datosUsuario.medidas.antropometricas[i-1].perimetro_cintura) === '↑'"
+                    class="pi pi-arrow-up text-green-600 dark:text-green-400 text-xs font-bold align-middle ml-1"></i>
+                    <i *ngIf="comparar(medida.perimetro_cintura, datosUsuario.medidas.antropometricas[i-1].perimetro_cintura) === '↓'"
+                    class="pi pi-arrow-down text-red-600 dark:text-red-400 text-xs font-bold align-middle ml-1"></i>
+                </ng-container>
+                </ng-container>
+            </td>
+            </tr>
+
+            <tr>
+            <td>Perímetro Cadera</td>
+            <td *ngFor="let medida of datosUsuario.medidas.antropometricas; let i = index" class="text-center">
+                {{medida.perimetro_cadera}} cm
+                <ng-container *ngIf="i > 0">
+                <ng-container *ngIf="comparar(medida.perimetro_cadera, datosUsuario.medidas.antropometricas[i-1].perimetro_cadera) !== '↔'">
+                    <i *ngIf="comparar(medida.perimetro_cadera, datosUsuario.medidas.antropometricas[i-1].perimetro_cadera) === '↑'"
+                    class="pi pi-arrow-up text-green-600 dark:text-green-400 text-xs font-bold align-middle ml-1"></i>
+                    <i *ngIf="comparar(medida.perimetro_cadera, datosUsuario.medidas.antropometricas[i-1].perimetro_cadera) === '↓'"
+                    class="pi pi-arrow-down text-red-600 dark:text-red-400 text-xs font-bold align-middle ml-1"></i>
+                </ng-container>
+                </ng-container>
+            </td>
+            </tr>
+
+            <tr>
+            <td>Diámetro Sagital</td>
+            <td *ngFor="let medida of datosUsuario.medidas.antropometricas; let i = index" class="text-center">
+                {{medida.diametro_sagital}} cm
+                <ng-container *ngIf="i > 0">
+                <ng-container *ngIf="comparar(medida.diametro_sagital, datosUsuario.medidas.antropometricas[i-1].diametro_sagital) !== '↔'">
+                    <i *ngIf="comparar(medida.diametro_sagital, datosUsuario.medidas.antropometricas[i-1].diametro_sagital) === '↑'"
+                    class="pi pi-arrow-up text-green-600 dark:text-green-400 text-xs font-bold align-middle ml-1"></i>
+                    <i *ngIf="comparar(medida.diametro_sagital, datosUsuario.medidas.antropometricas[i-1].diametro_sagital) === '↓'"
+                    class="pi pi-arrow-down text-red-600 dark:text-red-400 text-xs font-bold align-middle ml-1"></i>
+                </ng-container>
+                </ng-container>
+            </td>
+            </tr>
+        </ng-template>
+        </p-table>
+
+        <h5 class="mt-10 text-center mb-5">Controles Médicos</h5>
+        <p-table [value]="datosUsuario.controles.medicos" [paginator]="false">
+        <ng-template pTemplate="header">
+            <tr>
+            <th class="text-left">Fecha</th>
+            <th class="text-left">Diagnóstico</th>
+            <th class="text-center">Apto</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-control>
+            <tr>
+            <td class="text-left">{{formatDate(control.fecha)}}</td>
+            <td class="text-left">{{control.diagnostico || 'Sin diagnóstico'}}</td>
+            <td class="text-center">
+                <span [ngClass]="{
+                'text-green-600 font-bold': control.apto === 1,
+                'text-red-600 font-bold': control.apto === 0
+                }">
+                {{control.apto === 1 ? 'Apto' : 'No Apto'}}
+                </span>
+            </td>
+            </tr>
+        </ng-template>
+        </p-table>
+
+        <h5 class="mt-10 text-center mb-5">Controles Psicológicos</h5>
+        <p-table [value]="datosUsuario.controles.psicologicos" [paginator]="false">
+        <ng-template pTemplate="header">
+            <tr>
+            <th class="text-left">Fecha</th>
+            <th class="text-left">Diagnóstico</th>
+            <th class="text-center">Apto</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-control>
+            <tr>
+            <td class="text-left">{{formatDate(control.fecha)}}</td>
+            <td class="text-left">{{control.diagnostico || 'Sin diagnóstico'}}</td>
+            <td class="text-center">
+                <span [ngClass]="{
+                'text-green-600 font-bold': control.apto === 1,
+                'text-red-600 font-bold': control.apto === 0
+                }">
+                {{control.apto === 1 ? 'Apto' : 'No Apto'}}
+                </span>
+            </td>
+            </tr>
+        </ng-template>
+        </p-table>
+
+    </p-card>
+  </div>
+  
+</div>

@@ -2,7 +2,7 @@ export interface Usuario {
     id: number;
     id_ciudad: any;
     id_genero: any;
-    id_grupo: any;
+    id_grupo?: any;
     id_rol: number;
     nombre: string;
     apellido: string;

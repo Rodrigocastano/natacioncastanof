@@ -7,4 +7,6 @@ export interface Asistencia {
     nombre?: string;
     apellido?: string
     cedula?: string
+    grupo?: string;
+    turno?: string;
 }

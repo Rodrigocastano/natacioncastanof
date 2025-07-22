@@ -51,34 +51,38 @@
   </div>
 
   <!-- TABLA -->
-  <p-table
-    *ngIf="ingresos.length"
-    [value]="ingresos"
-    [responsiveLayout]="'scroll'"
-    class="p-datatable-sm"
-  >
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Fecha</th>
-        <th class="text-right">Plan pagados</th>
-        <th class="text-right">Pagos mensual</th>
-      </tr>
-    </ng-template>
+<p-table
+  *ngIf="ingresos.length"
+  [value]="ingresos"
+  [responsiveLayout]="'scroll'"
+  class="p-datatable-sm"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Fecha</th>
+      <th class="text-right">Planes Pagados</th>
+      <th class="text-right">Pendiente</th>
+      <th class="text-right">Abonado</th>
+      <th class="text-right">Monto total</th>
+    </tr>
+  </ng-template>
 
-    <ng-template pTemplate="body" let-row>
-      <tr>
-        <td>{{ row.mes }}</td>
-        <td class="text-right">{{ row.cantidad_pagos }}</td>
-        <td class="text-right">$ {{ row.total_abonado.toFixed(2) }}</td>
-      </tr>
-    </ng-template>
-  </p-table>
+  <ng-template pTemplate="body" let-row>
+    <tr>
+      <td>{{ formatMonth(row.mes) }}</td>
+      <td class="text-right">{{ row.cantidad_pagos }}</td>
+      <td class="text-right">$ {{ row.total_pendiente.toFixed(2) }}</td>
+      <td class="text-right">$ {{ row.total_abonado.toFixed(2) }}</td>
+      <td class="text-right">$ {{ row.total_pagado.toFixed(2) }}</td>
+      
+    </tr>
+  </ng-template>
+</p-table>
 
-  <!-- SIN DATOS -->
-  <p
-    *ngIf="!ingresos.length && fechaInicio && fechaFin "
-    class="text-center text-color-secondary mt-3"
-  >
-    No se encontraron ingresos en el rango seleccionado.
-  </p>
+
+<div *ngIf="mostrarMensajeVacio && ingresos.length === 0" class="text-center p-4">
+  <p>No se encontraron ingresos en el rango seleccionado.</p>
+</div>
+
+
 </p-card>

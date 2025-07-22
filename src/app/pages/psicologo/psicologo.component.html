@@ -89,17 +89,15 @@
                     <ng-template #header>
                       <tr>
                         <th style="min-width: 6rem;">ID</th>
-                        <th style="min-width: 12rem;">Nombres</th>
                         <th style="min-width: 10rem;">Diagnóstico</th>
                         <th style="min-width: 6rem; text-align: center;">Apto</th>
                         <th style="min-width: 10rem;">Fecha</th>
                         <th style="min-width: 8rem; text-align: center;">Acciones</th>
                       </tr>
                     </ng-template>
-                    <ng-template #body let-elast>
+                    <ng-template #body let-elast let-i="rowIndex">
                       <tr>
-                        <td>{{ elast.id }}</td>
-                        <td>{{ elast.nombre }} {{ elast.apellido }}</td>
+                        <td>{{ i + 1 }}</td>
                         <td>{{ elast.diagnostico || 'Sin diagnóstico' }}</td>
                         <td style="text-align: center;">{{ elast.apto ? 'Sí' : 'No' }}</td>
                         <td>{{ elast.fecha }}</td>

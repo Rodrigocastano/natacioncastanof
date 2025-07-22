@@ -47,14 +47,12 @@
             <th pSortableColumn="nombre" style="min-width: 8rem">Nombre</th>
             <th pSortableColumn="apellido" style="min-width: 8rem">Apellido</th>
             <th pSortableColumn="price" style="min-width: 8rem">Email</th>
-            <!-- <th pSortableColumn="price" style="min-width: 8rem">Password</th> -->
             <th pSortableColumn="cedula" style="min-width: 10rem">Identificación</th>
             <th style="min-width: 10rem">Teléfono</th>
             <th style="min-width: 8rem">Dirección</th>
             <th style="min-width: 8rem">Ciudad</th>
             <th style="min-width: 8rem">Género</th>
             <th style="min-width: 6rem">Edad</th>
-            <th style="min-width: 7rem">Grupo</th>
             <th style="min-width: 12rem">Fecha Nacimiento</th>
             <th style="min-width: 12rem">Fecha Inscripción</th>
             <th style="min-width: 10rem">Acciones</th> 
@@ -66,14 +64,12 @@
             <td>{{ usuario.nombre }}</td>
             <td>{{ usuario.apellido }}</td>
             <td>{{ usuario.email }}</td>
-            <!-- <td>{{ usuario.password }} No visible</td> -->
             <td>{{ usuario.cedula }}</td>
             <td>{{ usuario.telefono }}</td>
             <td>{{ usuario.direccion }}</td>
             <td>{{ getNombreCiudad(usuario.id_ciudad) }}</td>
             <td>{{ getNombreGenero(usuario.id_genero) }}</td>
             <td>{{ usuario.edad }}</td>
-            <td>{{ getNombreGrupo(usuario.id_grupo) }}</td>
             <td>{{ usuario.fechaNacimiento }}</td>
             <td>{{ usuario.fechaInscripcion }}</td>
             <td>
@@ -230,16 +226,6 @@
                                 *ngIf="formSaveUsuario.get('fechaInscripcion')?.invalid && (formSaveUsuario.get('fechaInscripcion')?.dirty || formSaveUsuario.get('fechaInscripcion')?.touched)" severity="error" variant="simple"size="small">
                                 Fecha inscripción es requerida
                             </p-message>  
-                        </div>
-                        <div class="col-span-6">
-                            <div class="col-span-6">
-                                <label for="id_grupo" class="block font-bold mb-3">Grupo</label>
-                                <p-select [options]="grupo" [appendTo]="'body'" formControlName="id_grupo"  inputId="id_grupo"  optionLabel="nombre" optionValue="id" placeholder="Seleccione el grupo" fluid />
-                                <p-message 
-                                    *ngIf="formSaveUsuario.get('id_grupo')?.invalid && (formSaveUsuario.get('id_grupo')?.dirty || formSaveUsuario.get('id_grupo')?.touched)" severity="error" variant="simple"size="small">
-                                    Grupo es requerido
-                                </p-message>
-                            </div>
                         </div>
                     </div>
 
@@ -436,16 +422,6 @@
                                 *ngIf="formUpdateUsuario.get('fechaInscripcion')?.invalid && (formUpdateUsuario.get('fechaInscripcion')?.dirty || formUpdateUsuario.get('fechaInscripcion')?.touched)" severity="error" variant="simple"size="small">
                                 Fecha inscripción es requerida
                             </p-message>
-                        </div>
-                        <div class="col-span-6">
-                            <div class="col-span-6">
-                                <label for="id_grupo" class="block font-bold mb-3">Grupo</label>
-                                <p-select [options]="grupo" [appendTo]="'body'" formControlName="id_grupo"  inputId="id_grupo"  optionLabel="nombre" optionValue="id" placeholder="Seleccione el grupo" fluid />
-                                <p-message 
-                                    *ngIf="formUpdateUsuario.get('id_grupo')?.invalid && (formUpdateUsuario.get('id_grupo')?.dirty || formUpdateUsuario.get('id_grupo')?.touched)" severity="error" variant="simple"size="small">
-                                    Grupo es requerido
-                                </p-message>
-                            </div>
                         </div>
                     </div>
 

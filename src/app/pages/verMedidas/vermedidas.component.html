@@ -1,0 +1,91 @@
+<div class="card p-6 shadow-md rounded-2xl">
+    <h2 class="text-2xl font-extrabold text-center mb-6 text-gray-900 dark:text-gray-100">
+        Datos de medidas
+    </h2>
+
+    <div *ngIf="loading" class="text-center text-gray-500 dark:text-gray-400 italic py-4 text-base">
+        Cargando...
+    </div>
+
+    <div *ngIf="error" class="text-red-700 dark:text-red-400 p-3 mb-5 bg-red-100 dark:bg-red-900 rounded-md border border-red-300 dark:border-red-700 shadow-sm text-base">
+        Error al cargar los datos
+    </div>
+
+    <div *ngIf="usuarios.length > 0" class="mb-4">
+        <p-dropdown 
+        [options]="usuarios" 
+        [(ngModel)]="idUsuarioSeleccionado" 
+        optionLabel="nombreCompleto" 
+        optionValue="id"
+        placeholder="Seleccione un usuario" 
+        filter="true" 
+        filterBy="nombreCompleto"  
+        (onChange)="idUsuarioSeleccionado !== null && cargarDatos(idUsuarioSeleccionado)"
+        class="w-full md:w-40rem">
+        </p-dropdown>
+    </div>
+
+    <ng-container *ngFor="let seccion of [
+        { titulo: 'Mediciones de Elasticidad', datos: medidaElasticidas, fechas: fechasElasticidad, campos: [
+        { label: 'Elasticidad', key: 'medida_elasticida', unidad: '' }] },
+        { titulo: 'Mediciones Nutricionales', datos: medidaNutricionales, fechas: fechasNutricionales, campos: [
+        { label: 'Calorías', key: 'caloria_consumida', unidad: 'kcal' },
+        { label: 'Proteínas', key: 'proteina_consumida', unidad: 'g' }
+        ]},
+        { titulo: 'Mediciones Antropométricas', datos: medidaAntropometricas, fechas: fechasAntropometricas, campos: [
+        { label: 'Peso', key: 'peso', unidad: 'kg' },
+        { label: 'Talla', key: 'talla', unidad: 'cm' },
+        { label: 'Envergadura', key: 'envergadura', unidad: 'cm' },
+        { label: 'Circ. Braquial', key: 'circuferencia_braquial', unidad: 'cm' },
+        { label: 'Pliegue Cutáneo', key: 'pliegue_cutanio', unidad: 'mm' },
+        { label: 'Perímetro Cintura', key: 'perimetro_cintura', unidad: 'cm' },
+        { label: 'Perímetro Cadera', key: 'perimetro_cadera', unidad: 'cm' },
+        { label: 'Diámetro Sagital', key: 'diametro_sagital', unidad: 'cm' }
+        ]}
+    ]">
+        <div *ngIf="seccion.datos.length > 0" class="mb-10">
+        <h3 class="text-xl font-semibold mb-4 text-center text-gray-800 dark:text-gray-200 border-b border-gray-300 dark:border-gray-700 pb-2">
+            {{ seccion.titulo }}
+        </h3>
+        <div class="overflow-x-auto">
+            <table class="min-w-full border-collapse border border-gray-300 dark:border-gray-700 text-base">
+            <thead class="bg-gray-50 dark:bg-gray-800">
+                <tr>
+                <th class="border border-gray-300 dark:border-gray-700 px-4 py-3 sticky left-0 bg-gray-50 dark:bg-gray-800 z-10 text-left">
+                    Medida
+                </th>
+                <th *ngFor="let f of seccion.fechas" class="border border-gray-300 dark:border-gray-700 px-4 py-3 whitespace-nowrap">
+                    {{ f }}
+                </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let campo of seccion.campos" class="even:bg-gray-100 dark:even:bg-gray-900">
+                <td class="border border-gray-300 dark:border-gray-700 px-4 py-3 font-medium sticky left-0 bg-white dark:bg-gray-900 z-0">
+                    {{ campo.label }}
+                </td>
+                <td *ngFor="let m of seccion.datos; let i = index" class="border border-gray-300 dark:border-gray-700 px-4 py-3 text-center whitespace-nowrap">
+                    {{ m[campo.key] }} {{ campo.unidad }}
+                        <ng-container *ngIf="i > 0">
+                        <ng-container *ngIf="comparar(m[campo.key], seccion.datos[i-1][campo.key]) !== '↔'">
+                            <i *ngIf="comparar(m[campo.key], seccion.datos[i-1][campo.key]) === '↑'"
+                            class="pi pi-arrow-up text-green-600 dark:text-green-400 text-2xl font-bold align-middle ml-2"></i>
+                            <i *ngIf="comparar(m[campo.key], seccion.datos[i-1][campo.key]) === '↓'"
+                            class="pi pi-arrow-down text-red-600 dark:text-red-400 text-2xl font-bold align-middle ml-2"></i>
+                        </ng-container>
+                        </ng-container>
+                </td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        </div>
+    </ng-container>
+
+    <div *ngIf="medidaElasticidas.length === 0 && medidaNutricionales.length === 0 && medidaAntropometricas.length === 0 && idUsuarioSeleccionado"
+        class="text-center text-gray-600 dark:text-gray-300 mt-10 text-base italic">
+        <i class="pi pi-info-circle mr-2"></i>
+        No se encontraron mediciones registradas para este usuario.
+    </div>
+
+</div>

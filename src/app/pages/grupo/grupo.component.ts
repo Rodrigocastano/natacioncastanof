@@ -94,13 +94,13 @@ export class GrupoComponent implements OnInit {
 
   store() {
     this.submitted = true;
-  
+
     if (this.formSave.invalid) {
       this.errorMessageToast();
       return;
     }
-  
-    const newGrupo: any = {
+
+    const newGrupo: any =  {
       nombre: this.formSave.value.nombre,
     };
 
@@ -113,10 +113,16 @@ export class GrupoComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al guardar el grupo:', err);
-        this.errorMessageToast();
+
+        if (err.status === 409) {
+          this.errorIngresoMessageToast();
+        }  else {
+          this.errorMessageToast();
+        }
       }
     });
   }
+
 
   edit(usuario: Grupo) {
     this.editing = true;
@@ -133,31 +139,33 @@ export class GrupoComponent implements OnInit {
   }
 
   update() {
-    this.submitted = true;
-    
-    if (this.formUpdate.invalid) {
-      this.errorMessageToast();
-      return;
-    }
-
-    const updateGrupo: Grupo = {
-      id: this.idForUpdate,
-      nombre: this.formUpdate.value.nombre,
-    };
-
-    this.grupoService.updateGrupo(this.idForUpdate, updateGrupo).subscribe({
-      next: () => {
-        this.saveMessageToast();
-        this.getGrupo();
-        this.editing = false;
-        this.formUpdate.reset();
-        this.submitted = false;
-      },
-      error: (err) => {
-        console.error('Error actualizando grupo:', err);
-        this.errorMessageToast();
+      this.submitted = true;
+      
+      if (this.formUpdate.invalid) {
+          this.errorMessageToast();
+          return;
       }
-    });
+
+      const updateGrupo: Grupo = {
+          id: this.idForUpdate,
+          nombre: this.formUpdate.value.nombre,
+      };
+
+      this.grupoService.updateGrupo(this.idForUpdate, updateGrupo).subscribe({
+          next: () => {
+              this.saveMessageToast();
+              this.getGrupo();
+              this.editing = false;
+              this.formUpdate.reset();
+              this.submitted = false;
+          },
+          error: (err) => {
+              if (err.status === 409) {
+                  this.errorIngresoMessageToast();
+                  this.errorMessageToast();
+              }
+          }
+      });
   }
 
   delete() {
@@ -195,4 +203,9 @@ export class GrupoComponent implements OnInit {
   errorMessageToast() {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al procesar el grupo' });
   }
+
+  errorIngresoMessageToast() {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ya existe un grupo con ese nombre registrado' });
+  }
+
 }

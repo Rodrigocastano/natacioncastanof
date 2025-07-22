@@ -5,6 +5,7 @@ export interface HistorialUsuario {
     apellido: string;
     cedula: string;
     id_grupo: number;
+    turno: 'mañana' | 'tarde' | 'noche' | null;
     grupo: string;
     fecha_inicio: string;
     fecha_fin: string | null;

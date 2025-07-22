@@ -57,9 +57,9 @@
         </tr>
       </ng-template>
 
-      <ng-template #body let-usuario>
+      <ng-template #body let-usuario let-i="rowIndex">
         <tr>
-          <td style="text-align: left;">{{ usuario.id }}</td>
+          <td style="text-align: left;">{{ i + 1 }}</td>
           <td style="text-align: left;">{{ usuario.nombre }}</td>
           <td style="text-align: left;">{{ usuario.distancia }}</td>
           <td style="text-align: left;">{{ getNombreTorneo(usuario.id_torneo) }}</td>

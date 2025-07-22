@@ -1,19 +1,21 @@
-<p-toolbar styleClass="mb-6">
-  <ng-template #start>
-    <p-button label="Agregar pago entrenador" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
-  </ng-template>
-</p-toolbar>
+    <p-toolbar styleClass="mb-6">
+    <ng-template #start>
+        <p-button label="Agregar registro de pago" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+    </ng-template>
+    </p-toolbar>
 
-<p-toast></p-toast>
-
-<div *ngIf="loading" class="flex justify-center items-center" style="height: 300px;">
-  <p-progressSpinner styleClass="p-text-primary" [style]="{ width: '50px', height: '50px' }"></p-progressSpinner>
-</div>
+    <p-toast />
+        <div 
+            *ngIf="loading" style="display: flex; justify-content: center; align-items: center; height: 300px;">
+            <p-progressSpinner 
+                [style]="{ width: '50px', height: '50px' }" styleClass="p-text-primary">
+            </p-progressSpinner>
+        </div>
 
 <div *ngIf="!loading">
   <div style="overflow-x: auto;">
     <p-table
-      [value]="pagos"
+      [value]="pago"
       dataKey="id"
       [expandedRowKeys]="expandedRows"
       (onRowExpand)="abrirExpand($event)"
@@ -22,76 +24,95 @@
       [rows]="6"
       [rowsPerPageOptions]="[6, 12, 18]"
       [showCurrentPageReport]="true"
-      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entrenadores"
+      currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Usuarios"
       [tableStyle]="{ 'min-width': '60rem' }"
     >
       <ng-template #caption>
         <div class="flex items-center justify-between">
-          <h5 class="m-0 text-base md:text-lg font-semibold">Pagos de entrenadores</h5>
-          <p-inputText
-            placeholder="Buscar..."
-            [(ngModel)]="terminoBusqueda"
-            (input)="filtrarBusqueda()"
-            style="width: 250px"
-          ></p-inputText>
+          <h5 class="m-0 text-base md:text-lg font-semibold">Registro de pago</h5>
+          <p-iconfield>
+            <p-inputicon styleClass="pi pi-search"></p-inputicon>
+            <input
+              pInputText
+              type="text"
+              placeholder="Buscar..."
+              [(ngModel)]="terminoBusqueda"
+              (input)="filtrarBusqueda()"
+            />
+          </p-iconfield>
         </div>
       </ng-template>
 
       <ng-template #header>
         <tr>
-          <th></th>
-          <th>Cédula</th>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>Género</th>
+          <th style="width: 3rem"></th>
+          <th style="min-width: 8rem">Identificación</th>
+          <th style="min-width: 10rem">Nombre</th>
+          <th style="min-width: 10rem">Apellido</th>
+          <th style="min-width: 8rem">Género</th>
+          <th style="min-width: 6rem">Edad</th>
         </tr>
       </ng-template>
 
-      <ng-template #body let-entrenador let-expanded="expanded">
+      <ng-template #body let-usuario let-expanded="expanded">
         <tr>
           <td>
             <p-button
               type="button"
               pRipple
-              [pRowToggler]="entrenador"
+              [pRowToggler]="usuario"
               [text]="true"
               [rounded]="true"
               [plain]="true"
               [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-            ></p-button>
+            />
           </td>
-          <td>{{ entrenador.cedula }}</td>
-          <td>{{ entrenador.nombre }}</td>
-          <td>{{ entrenador.apellido }}</td>
-          <td>{{ entrenador.genero }}</td>
+          <td>{{ usuario.cedula }}</td>
+          <td>{{ usuario.nombre }}</td>
+          <td>{{ usuario.apellido }}</td>
+          <td>{{ usuario.genero }}</td>
+          <td>{{ usuario.edad }}</td>
         </tr>
       </ng-template>
 
-      <ng-template #expandedrow let-entrenador>
+      <ng-template #expandedrow let-usuario>
         <tr>
-          <td colspan="5">
+          <td colspan="7">
             <div class="p-4 bg-gray-50 rounded shadow-inner">
-              <p-table [value]="entrenador.pagos" dataKey="id" [tableStyle]="{ 'min-width': '100%' }">
+              <p-table [value]="usuario.registroPagos" dataKey="id" [tableStyle]="{ 'min-width': '100%' }">
                 <ng-template #header>
                   <tr>
-                    <th>ID</th>
-                    <th>Fecha</th>
-                    <th>Monto</th>
-                    <th>Estado funcional</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
+                    <th style="min-width: 10rem;">Estado pago</th>
+                    <th style="min-width: 7rem;">Monto</th>
+                    <th style="min-width: 10rem;">Monto abonado</th>
+                    <th style="min-width: 10rem;">Fecha registro</th>
+                    <th style="min-width: 11rem;">Fecha vencimiento</th>
+                    <th style="min-width: 9rem; text-align: center;">Acciones</th>
                   </tr>
                 </ng-template>
-                <ng-template #body let-pago>
+
+                <ng-template #body let-elast>
                   <tr>
-                    <td>{{ pago.id }}</td>
-                    <td>{{ pago.fecha }}</td>
-                    <td>{{ pago.monto }}</td>
-                    <td>{{ pago.estado_funcional }}</td>
-                    <td>{{ pago.estado ? 'Activo' : 'Inactivo' }}</td>
-                    <td>
-                      <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(pago)"></p-button>
-                      <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(pago.id)"></p-button>
+                    <td>{{ getNombreEstadoPago(elast.id_estado_pago) }}</td>
+                    <td>{{ elast.monto }}</td>
+                    <td>{{ elast.monto_abonado }}</td>
+                    <td>{{ elast.fecha }}</td>
+                    <td>{{ elast.fecha_vencimiento }}</td>
+                    <td style="text-align: center;">
+                      <p-button
+                        icon="pi pi-pencil"
+                        class="mr-2"
+                        [rounded]="true"
+                        [outlined]="true"
+                        (click)="edit(elast)"
+                      />
+                      <p-button
+                        icon="pi pi-trash"
+                        severity="danger"
+                        [rounded]="true"
+                        [outlined]="true"
+                        (click)="showModalDelete(elast.id)"
+                      />
                     </td>
                   </tr>
                 </ng-template>
@@ -104,211 +125,244 @@
   </div>
 </div>
 
-<p-dialog
-  [(visible)]="visibleSave"
-  header="Agregar pago a entrenador"
-  [modal]="true"
-  [style]="{ width: '380px' }"
-  [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
->
-  <!-- ---------- CONTENIDO ---------- -->
-  <ng-template #content>
-    <form [formGroup]="formSave" class="formulario">
-      <div class="flex flex-col gap-6">
 
-        <!-- Entrenador -->
-        <div class="col-span-6">
-          <label for="id_usuario" class="block font-bold mb-3">Entrenador</label>
-          <p-select
-            [options]="usuarios"
-            formControlName="id_usuario"
-            inputId="id_usuario"
-            optionLabel="display"
-            optionValue="id"
-            placeholder="Seleccione un entrenador"
-            [appendTo]="'body'"
-            [filter]="true"
-            filterBy="display"
-            [showClear]="true"
-            class="w-full md:w-70"
-          ></p-select>
-          <p-message
-            *ngIf="formSave.get('id_usuario')?.invalid && (formSave.get('id_usuario')?.touched || formSave.get('id_usuario')?.dirty)"
-            severity="error"
-            variant="simple"
-            size="small"
-          >
-            Entrenador es requerido
-          </p-message>
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar nuevo pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
+        <ng-template #content>
+            <form [formGroup]="formSave" class="formulario">
+                <div class="flex flex-col gap-6">
+
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="id_usuario" class="block font-bold mb-3">Usuario</label>             
+                            <p-select
+                                [options]="usuarios" [appendTo]="'body'" formControlName="id_usuario"inputId="id_usuario"optionLabel="display"optionValue="id"
+                                placeholder="Seleccione un usuario" [filter]="true" filterBy="display" [showClear]="true" class="w-full md:w-70">
+                            </p-select>
+                            <div class="mt-2">
+                                <p-message
+                                    *ngIf="formSave.get('id_usuario')?.invalid && (formSave.get('id_usuario')?.dirty || formSave.get('id_usuario')?.touched)" severity="error" variant="simple" size="small" >
+                                    Usuario es requerido
+                                </p-message>
+                            </div>
+                        </div>
+
+                        <div class="col-span-6">
+                            <label for="id_estado_pago" class="block font-bold mb-3">Estado pago</label>             
+                            <p-select
+                                [options]="estadoPago" [appendTo]="'body'" formControlName="id_estado_pago" inputId="id_estado_pago" optionLabel="displayTipo" optionValue="id"
+                                placeholder="Seleccione el estado pago" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
+                            </p-select>
+                            <div class="mt-2">
+                                <p-message
+                                    *ngIf="formSave.get('id_estado_pago')?.invalid && (formSave.get('id_estado_pago')?.dirty || formSave.get('id_estado_pago')?.touched)" severity="error" variant="simple" size="small" >
+                                    Estado pago es requerido
+                                </p-message>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4 w-full">
+                        <div class="col-span-12 md:col-span-6">
+                            <label for="monto" class="block font-bold mb-1">Monto</label>
+                            <p-inputnumber 
+                            formControlName="monto" 
+                            id="monto" 
+                            placeholder="Ingrese el monto" 
+                            mode="currency" 
+                            currency="USD" 
+                            locale="en-US" 
+                            class="w-full">
+                            </p-inputnumber>
+                        </div>
+
+                        <div class="col-span-12 md:col-span-6">
+                            <label for="monto_abonado" class="block font-bold mb-1">Monto abonado</label>
+                            <p-inputnumber 
+                            formControlName="monto_abonado" 
+                            id="monto_abonado" 
+                            placeholder="Ingrese el monto abonado" 
+                            mode="currency" 
+                            currency="USD" 
+                            locale="en-US" 
+                            class="w-full">
+                            </p-inputnumber>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-6">
+                            <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
+                            <p-datepicker 
+                                [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
+                                [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
+                            </p-datepicker>
+                            <p-message 
+                                *ngIf="formSave.get('fecha')?.invalid && (formSave.get('fecha')?.dirty || formSave.get('fecha')?.touched)"  severity="error"  variant="simple" size="small">
+                                Fecha registró es requerido
+                            </p-message>
+                        </div>
+
+                        <div class="col-span-6">
+                            <label for="fecha_vencimiento" class="block font-bold mb-2">Fecha vencimiento</label>
+                            <p-datepicker 
+                                formControlName="fecha_vencimiento" inputId="fecha_vencimiento" [showIcon]="true" [showButtonBar]="true" 
+                                [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha '" class="w-96" >
+                            </p-datepicker>
+                            <p-message 
+                                *ngIf="formSave.get('fecha_vencimiento')?.invalid && (formSave.get('fecha_vencimiento')?.dirty || formSave.get('fecha_vencimiento')?.touched)"  severity="error"  variant="simple" size="small">
+                                Fecha vencimiento es requerido
+                            </p-message>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </ng-template>
+
+        <ng-template #footer>
+            <form [formGroup]="formSave" class="formulario">
+            <p-button label="Cancelar" icon="pi pi-times" text (click)="cancelSave()"  />
+            <p-button label="Guardar" icon="pi pi-check" (click)="store()" />
+        </form>
+        </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="visibleDelete" header="Confirmafación"  [style]="{ width: '350px' }" [modal]="true">
+        <div class="flex items-center justify-center">
+            <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
+            <span>¿Estás seguro que deseas eliminar este registro?</span>
         </div>
+        <ng-template #footer>
+            <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDelete = false" text severity="secondary" (click)="cancelMessageToast()" />
+            <p-button label="Eliminar" icon="pi pi-check" (click)="delete()" severity="danger" outlined />
+        </ng-template>
+    </p-dialog>
 
-        <!-- Monto -->
-        <div class="col-span-6">
-          <label for="monto" class="block font-bold mb-3">Monto ($)</label>
-          <p-inputNumber
-            inputId="monto"
-            formControlName="monto"
-            [mode]="'currency'"
-            currency="USD"
-            [minFractionDigits]="2"
-            class="w-full"
-          ></p-inputNumber>
-          <p-message
-            *ngIf="formSave.get('monto')?.invalid && (formSave.get('monto')?.touched || formSave.get('monto')?.dirty)"
-            severity="error"
-            variant="simple"
-            size="small"
-          >
-            Monto es requerido
-          </p-message>
-        </div>
-
-        <!-- Estado funcional -->
-        <div class="col-span-6">
-          <label class="block font-bold mb-2">Estado funcional</label>
-          <div class="flex items-center gap-4">
-            <div class="flex items-center gap-2">
-              <p-radiobutton name="estado_funcional" [value]="1" formControlName="estado_funcional" inputId="efActivo" />
-              <label for="efActivo">Activo</label>
-            </div>
-            <div class="flex items-center gap-2">
-              <p-radiobutton name="estado_funcional" [value]="0" formControlName="estado_funcional" inputId="efInactivo" />
-              <label for="efInactivo">Inactivo</label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Fecha -->
-        <div class="col-span-12 flex justify-center">
-          <div class="col-span-6">
-            <label for="fecha" class="block font-bold mb-2">Fecha del pago</label>
-            <p-datepicker
-              formControlName="fecha"
-              inputId="fecha"
-              [maxDate]="maxDate"
-              [showIcon]="true"
-              [showButtonBar]="true"
-              [appendTo]="'body'"
-              dateFormat="yy-mm-dd"
-              placeholder="Seleccione una fecha"
-              class="w-96"
-            ></p-datepicker>
-            <p-message
-              *ngIf="formSave.get('fecha')?.invalid && (formSave.get('fecha')?.touched || formSave.get('fecha')?.dirty)"
-              severity="error"
-              variant="simple"
-              size="small"
-            >
-              Fecha es requerida
-            </p-message>
-          </div>
-        </div>
-
-      </div>
-    </form>
-  </ng-template>
-
-  <!-- ---------- BOTONERA ---------- -->
-  <ng-template #footer>
-    <p-button label="Cancelar" icon="pi pi-times" text (click)="cancelSave()" />
-    <p-button label="Guardar" icon="pi pi-check" (click)="store()" />
-  </ng-template>
-</p-dialog>
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar registro del pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+        
+        <ng-template #content>
+            <form [formGroup]="formUpdate" class="formulario">
+                <div class="flex flex-col gap-6">
 
 
+                    <div class="grid grid-cols-12 gap-4">  
+                        <div class="col-span-6">
+                            <label for="id_usuario" class="block font-bold mb-3">Usuario</label>   
+                            <p-select 
+                                [options]="usuarios" formControlName="id_usuario" optionLabel="display" optionValue="id" [readonly]="true" [style]="{'background-color': '#e0e0e0'}" class="w-full md:w-70 ">
+                            </p-select>
+                        </div>
+    
+                        <div class="col-span-6">
+                            <label for="id_estado_pago"  class="block font-bold mb-3">Estado pago</label>             
+                            <p-select
+                                [options]="estadoPago" [appendTo]="'body'" formControlName="id_estado_pago" inputId="id_estado_pago" optionLabel="displayTipo" optionValue="id" 
+                                placeholder="Seleccione el estado pago" [filter]="true" filterBy="displayTipo" [showClear]="true" class="w-full md:w-70">
+                            </p-select>
+                            <div class="mt-2">
+                                <p-message
+                                    *ngIf="formUpdate.get('id_estado_pago')?.invalid && (formUpdate.get('id_estado_pago')?.dirty || formUpdate.get('id_estado_pago')?.touched)" severity="error" variant="simple" size="small" >
+                                    Estado pago es requerido
+                                </p-message>
+                            </div>
+                        </div>
+                    </div>
 
- <p-dialog
-  [(visible)]="visibleUpdate"
-  header="Actualizar pago entrenador"
-  [modal]="true"
-  [style]="{ width: '380px' }"
-  [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
->
-  <ng-template #content>
-    <form [formGroup]="formUpdate" class="formulario">
-      <div class="flex flex-col gap-6">
+                    <div class="grid grid-cols-12 gap-4">
+                        <!-- Campo Monto -->
+                        <div class="col-span-12 md:col-span-6">
+                            <label for="monto" class="block font-bold mb-3">Monto</label>
+                            <p-inputNumber
+                            formControlName="monto"
+                            id="monto"
+                            placeholder="Ingrese el monto"
+                            mode="currency"
+                            currency="USD"
+                            locale="en-US"
+                            required
+                            class="w-full"
+                            [ngClass]="{
+                                'p-invalid': formUpdate.get('monto')?.invalid &&
+                                            (formUpdate.get('monto')?.dirty || formUpdate.get('monto')?.touched)
+                            }"
+                            ></p-inputNumber>
 
-        <div class="col-span-6">
-          <label for="upd_usuario" class="block font-bold mb-3">Entrenador</label>
-          <p-select
-            [options]="usuarios"
-            formControlName="id_usuario"
-            optionLabel="display"
-            optionValue="id"
-            [readonly]="true"
-            class="w-full md:w-70"
-            inputId="upd_usuario"
-          ></p-select>
-        </div>
+                            <div class="mt-2">
+                            <p-message
+                                *ngIf="formUpdate.get('monto')?.invalid &&
+                                    (formUpdate.get('monto')?.dirty || formUpdate.get('monto')?.touched)"
+                                severity="error"
+                                variant="simple"
+                                size="small"
+                                text="El campo monto es requerido"
+                            ></p-message>
+                            </div>
+                        </div>
 
-        <div class="col-span-6">
-          <label for="upd_monto" class="block font-bold mb-3">Monto ($)</label>
-          <p-inputNumber
-            inputId="upd_monto"
-            formControlName="monto"
-            [mode]="'currency'"
-            currency="USD"
-            [minFractionDigits]="2"
-            class="w-full"
-          ></p-inputNumber>
-        </div>
+                        <!-- Campo Monto Abonado -->
+                        <div class="col-span-12 md:col-span-6">
+                            <label for="monto_abonado" class="block font-bold mb-3">Monto abonado</label>
+                            <p-inputNumber
+                            formControlName="monto_abonado"
+                            id="monto_abonado"
+                            placeholder="Ingrese el monto abonado"
+                            mode="currency"
+                            currency="USD"
+                            locale="en-US"
+                            [readonly]="true"
+                            required
+                            class="w-full"
+                            ></p-inputNumber>
 
-        <div class="col-span-6">
-          <label class="block font-bold mb-2">Estado funcional</label>
-          <div class="flex items-center gap-4">
-            <div class="flex items-center gap-2">
-              <p-radiobutton name="estado_funcionalUpd" [value]="1" formControlName="estado_funcional" inputId="efUpdActivo" />
-              <label for="efUpdActivo">Activo</label>
-            </div>
-            <div class="flex items-center gap-2">
-              <p-radiobutton name="estado_funcionalUpd" [value]="0" formControlName="estado_funcional" inputId="efUpdInactivo" />
-              <label for="efUpdInactivo">Inactivo</label>
-            </div>
-          </div>
-        </div>
+                            <div class="mt-2">
+                            <p-message
+                                *ngIf="formUpdate.get('monto_abonado')?.invalid &&
+                                    (formUpdate.get('monto_abonado')?.dirty || formUpdate.get('monto_abonado')?.touched)"
+                                severity="error"
+                                variant="simple"
+                                size="small"
+                                text="El campo monto abonado es requerido"
+                            ></p-message>
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="col-span-12 flex justify-center">
-          <div class="col-span-6">
-            <label for="fechaUpd" class="block font-bold mb-2">Fecha del pago</label>
-            <p-datepicker
-              formControlName="fecha"
-              inputId="fechaUpd"
-              [maxDate]="maxDate"
-              [showIcon]="true"
-              [showButtonBar]="true"
-              [appendTo]="'body'"
-              dateFormat="yy-mm-dd"
-              placeholder="Seleccione una fecha"
-              class="w-96"
-            ></p-datepicker>
-          </div>
-        </div>
-
-      </div>
-    </form>
-  </ng-template>
-
-  <ng-template #footer>
-    <p-button label="Cancelar" icon="pi pi-times" text (click)="cancelUpdate()" />
-    <p-button label="Guardar" icon="pi pi-check" (click)="update()" />
-  </ng-template>
-</p-dialog>
-
-
-<p-dialog
-  [(visible)]="visibleDelete"
-  header="Confirmar eliminación"
-  [modal]="true"
-  [style]="{ width: '350px' }"
->
-  <div class="flex items-center justify-center">
-    <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"></i>
-    <span>¿Estás seguro de eliminar este pago?</span>
-  </div>
-
-  <ng-template #footer>
-    <p-button label="Cancelar" icon="pi pi-times" text (click)="visibleDelete = false" severity="secondary" />
-    <p-button label="Eliminar" icon="pi pi-check" severity="danger" outlined (click)="delete()" />
-  </ng-template>
-</p-dialog>
-
+                    <div class="grid grid-cols-12 gap-4"> 
+                        <div class="col-span-6">
+                            <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
+                            <p-datepicker 
+                                [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
+                                [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
+                            </p-datepicker>
+                            <p-message 
+                                *ngIf="formUpdate.get('fecha')?.invalid && (formUpdate.get('fecha')?.dirty || formUpdate.get('fecha')?.touched)"  severity="error"  variant="simple" size="small">
+                                Fecha registró es requerido
+                            </p-message>
+                        </div>
+                   
+                        <div class="col-span-6">
+                            <label for="fecha_vencimiento" class="block font-bold mb-2">Fecha vencimiento</label>
+                            <p-datepicker 
+                                formControlName="fecha_vencimiento" inputId="fecha_vencimiento" [showIcon]="true" [showButtonBar]="true" 
+                                [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
+                            </p-datepicker>
+                            <p-message 
+                                *ngIf="formUpdate.get('fecha_vencimiento')?.invalid && (formUpdate.get('fecha_vencimiento')?.dirty || formUpdate.get('fecha_vencimiento')?.touched)"  severity="error"  variant="simple" size="small">
+                                Fecha vencimiento es requerido
+                            </p-message>
+                        </div>
+                    </div>
+       
+                </div>
+            </form>
+        </ng-template>
+    
+        <ng-template #footer>
+            <form [formGroup]="formUpdate" class="formulario">
+                <p-button label="Cancelar" icon="pi pi-times" text (click)="canceUpdate()"  />
+                <p-button label="Guardar" icon="pi pi-check" (click)="update()" />
+        </form>
+        </ng-template>
+    
+    </p-dialog>

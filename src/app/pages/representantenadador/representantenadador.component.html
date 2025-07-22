@@ -95,9 +95,9 @@
                     </tr>
                   </ng-template>
 
-                  <ng-template #body let-elast>
+                  <ng-template #body let-elast let-i="rowIndex">
                     <tr>
-                      <td>{{ elast.id_usuario }}</td>
+                      <td>{{ i + 1 }}</td>
                       <td>{{ elast.nombre }}</td>
                       <td>{{ elast.apellido }}</td>
                       <td>{{ elast.cedula }}</td>

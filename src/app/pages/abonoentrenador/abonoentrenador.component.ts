@@ -1,0 +1,318 @@
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { ButtonModule } from 'primeng/button';
+import { ToolbarModule } from 'primeng/toolbar';
+import { InputIconModule } from 'primeng/inputicon';
+import { IconFieldModule } from 'primeng/iconfield';
+import { TableModule, TableRowCollapseEvent, TableRowExpandEvent } from 'primeng/table';
+import { InputTextModule } from 'primeng/inputtext';
+import { CommonModule } from '@angular/common';
+import { MessageService, ToastMessageOptions } from 'primeng/api';
+import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
+import { SelectModule } from 'primeng/select';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { TextareaModule } from 'primeng/textarea';
+import { DatePickerModule } from 'primeng/datepicker';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { AbonoentrenadorService } from '../service/abonoentrenador.service';
+import { AbonoEntrenador } from '../interfaces/abonoentrenador';
+import { PagoService } from '../service/pago.service';
+import { pagoEntrenadores } from '../interfaces/pagoentrenadores';
+import { formatDate } from '@angular/common';
+
+@Component({
+  selector: 'app-abonoentrenador',
+   imports: [
+    CommonModule,
+    ButtonModule,
+    ToolbarModule,
+    InputIconModule,
+    IconFieldModule,
+    TableModule,
+    FormsModule,
+    InputTextModule,
+    InputNumberModule,
+    RadioButtonModule,
+    TextareaModule,
+    MessageModule,
+    ToastModule,
+    ReactiveFormsModule,
+    DatePickerModule,
+    SelectModule,
+    DialogModule,
+    DropdownModule,
+    ProgressSpinnerModule
+  ],
+  providers: [MessageService],
+  templateUrl: './abonoentrenador.component.html',
+})
+export class AbonoentrenadorComponent implements OnInit{
+  
+      formSave!: FormGroup;
+      visibleSave: boolean = false;
+      abonoPago: AbonoEntrenador[] = [];
+      idAbonoPago: number = 0;
+      visibleDelete: boolean = false;
+
+      formUpdate!: FormGroup;
+      abonoPa: any
+      idForUpdate: boolean = false;
+      visibleUpdate: boolean = false;
+      pago: pagoEntrenadores[] = [];
+      expandedRows = {};
+      cols: any[] = [];
+      expanded: boolean = false;
+      msgs: ToastMessageOptions[] | null = [];
+
+      submitted: boolean = false;
+      maxDate: Date = new Date();
+      fechaActual: Date = new Date();
+      loading: boolean = true;
+      abonoPagoSelect: any[] = [];
+
+      terminoBusqueda: string = '';
+      buscarOriginal: AbonoEntrenador[] = [];
+      pagosParaEditar: pagoEntrenadores[] = [];
+
+      constructor(
+        private fb: FormBuilder,
+        private abonoentrenadorService: AbonoentrenadorService,
+        private messageService: MessageService
+      ) {
+        this.formSave = this.fb.group({
+          id_pago_entrenador: ['', [Validators.required]],
+          monto: ['', [Validators.required]],
+          fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
+          
+        });
+        this.formUpdate = fb.group({
+          id_pago_entrenador: ['', [Validators.required]],
+          monto: ['', [Validators.required]],
+          fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
+        });
+      }
+  
+      ngOnInit(): void {
+        this.getAbonoPago();
+        this.getPagos();
+
+          setInterval(() => {
+          this.getPagos();
+          }, 30000);
+      }
+
+      getAbonoPago() {
+        this.abonoentrenadorService.getAllAbonoEntrenador().subscribe(data => {
+
+          this.abonoPago = data.data;
+          this.buscarOriginal = data.data;
+          this.loading = false;
+          this.abonoPagoSelect = [];
+          data.data.forEach((usuario: any) => {
+            usuario.abonosPagos.forEach((abono: any) => {
+              this.abonoPagoSelect.push({
+                id: abono.id_pago_entrenador,
+                display: `${usuario.nombre} ${usuario.apellido} - ${abono.fecha}`
+              });
+            });
+          });
+        });
+      }
+
+
+      getPagos() {
+        this.abonoentrenadorService.getAllRegistroPago().subscribe(data => {
+          console.log('Datos recibidos:', data);
+
+          this.pago = data.map((pago: any) => ({
+            ...pago,
+           displayPago: `${pago.nombre} ${pago.apellido} | ${pago.fecha} | Monto: $${pago.monto} | Abonado: $${pago.monto_abonado}`
+
+
+          }));
+
+          console.log('Datos para el select:', this.pago);
+        });
+      }
+
+
+
+      filtrarBusqueda() {
+        const termino = this.terminoBusqueda.trim().toLowerCase();
+        this.abonoPa = this.buscarOriginal.filter(usuario => {
+          return (
+            usuario.nombre?.toLowerCase().includes(termino) ||
+            usuario.apellido?.toLowerCase().includes(termino) ||
+            usuario.cedula?.toLowerCase().includes(termino)
+          );
+        });
+      }
+
+      abrirExpand(event: TableRowExpandEvent) {
+        this.messageService.add({ 
+          severity: 'info', 
+          summary: 'Abierto Expandicion de', 
+          detail: event.data.nombre, 
+          life: 3000 });
+      }
+
+      cerrarCollapse(event: TableRowCollapseEvent) {
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Cerrado Expandicion de ',
+            detail: event.data.nombre,
+            life: 3000
+        });
+      }
+
+      store() {
+      this.submitted = true;
+  
+      if (this.formSave.invalid) {
+        this.errorMessageToast();
+        this.formSave.markAllAsTouched();
+        return;
+      }
+  
+      if (this.formSave.valid) {
+        const newPago: any = {
+          id_pago_entrenador: this.formSave.value.id_pago_entrenador,
+          fecha: this.formatDate(this.formSave.value.fecha),
+          monto: this.formSave.value.monto,
+        };
+  
+        this.abonoentrenadorService.createAbonoEntrenador(newPago).subscribe({
+          next: () => {
+            this.saveMessageToast();
+            this.getAbonoPago();
+            this.visibleSave = false;
+          },
+          error: (err) => {
+            console.error('Error al guardar registro del pago:', err);
+            
+          }
+        });
+      }
+      }
+
+      getNombrePago(id: number): string {
+        const tipo = this.pago.find(tp => tp.id === id);
+        return tipo ? tipo.fecha_vencimiento : 'Desconocido';
+      }
+      
+      showSaveDialog() {
+        this.formSave.reset();
+        this.visibleSave = true;
+      }
+
+    formatDate = (date: Date): string => {
+      const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+      return adjustedDate.toISOString().split('T')[0];
+    }
+  
+      saveMessageToast() {
+        this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Guardado correctamente' });
+      }
+
+      cancelMessageToast() {
+        this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Cancelado!...' });
+      }
+
+      errorMessageToast() {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al guardar el datos.' });
+      }
+
+      EliminadoMessageToasts() {
+        this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Eliminado correctamente' });
+      }
+
+      cancelSave() {
+        this.visibleSave = false;
+        this.cancelMessageToast();
+      }
+
+      update() {
+        if (this.formUpdate.invalid) {
+          this.errorMessageToast(); 
+          this.formUpdate.markAllAsTouched();
+          return;
+        }
+        if (this.formUpdate.valid) {
+          const updatePago: AbonoEntrenador = {
+            id: this.abonoPa.id,
+            id_pago_entrenador: this.formUpdate.value.id_pago_entrenador,
+            monto: this.formUpdate.value.monto,
+            fecha: this.formatDate(this.formUpdate.value.fecha),
+          };
+      
+          this.abonoentrenadorService.updateAbonoEntrenador(this.abonoPa.id, updatePago).subscribe({
+            next: (res) => {
+              this.getAbonoPago();
+              this.visibleUpdate = false;
+              this.saveMessageToast();
+            },
+            error: (err) => {
+              console.error('Error actualizando el abono pago:', err);
+              this.errorMessageToast(); 
+            }
+          });
+        }
+      }
+
+
+      
+      // En la función edit()
+edit(elasticId: any) {
+  this.idForUpdate = true;
+  this.abonoPa = elasticId;
+
+  if (this.abonoPa) {
+    const pagoRelacionado = this.pago.find(p => p.id_pago_entrenador === this.abonoPa.id_pago_entrenador);
+    // Crea un arreglo con solo ese pago
+    this.pagosParaEditar = pagoRelacionado ? [pagoRelacionado] : [];
+
+    this.formUpdate.patchValue({
+      id_pago_entrenador: this.abonoPa.id_pago_entrenador,
+      monto: this.abonoPa.monto,
+      fecha: new Date(this.abonoPa.fecha)
+    });
+  }
+  this.visibleUpdate = true;
+}
+
+
+
+
+      canceUpdate() {
+        this.visibleUpdate = false;
+        this.cancelMessageToast();
+      }
+
+      delete() {
+        console.log('ID a eliminar:', this.abonoPa);
+        this.abonoentrenadorService.deleteAbonoEntrenador(this.abonoPa).subscribe({
+          next: () => {
+            this.visibleDelete = false;
+            this.getAbonoPago();
+            this.abonoPa = 0;
+            this.EliminadoMessageToasts(); 
+          },
+          error: (err) => {
+            console.error('Error al eliminar:', err);
+            this.errorMessageToast();
+          }
+        });
+      }
+
+      showModalDelete(id: number) {
+        this.abonoPa = id;
+        this.visibleDelete = true;
+      }
+
+}

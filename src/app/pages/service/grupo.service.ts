@@ -29,5 +29,9 @@ private apisUrl = environment.apisUrls;
     return this.http.delete(`${this.apisUrl}/destroyGrupo/${id}`);
   }
 
+  getGruposByEntrenador(idGrupo: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apisUrl}/getGruposByEntrenado/${idGrupo}`);
+  }
+
 }
 

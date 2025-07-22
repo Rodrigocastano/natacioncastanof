@@ -86,7 +86,6 @@ export class UsuarioComponent implements OnInit  {
       private messageService: MessageService
     ) {
       this.formSaveUsuario = this.fb.group({
-        id_grupo: ['', [Validators.required]],
         id_ciudad: ['', [Validators.required]],
         id_genero: ['', [Validators.required]],
         nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
@@ -109,7 +108,6 @@ export class UsuarioComponent implements OnInit  {
       });
       
       this.formUpdateUsuario = fb.group({
-        id_grupo: ['', [Validators.required]],
         id_ciudad: ['', [Validators.required]],
         id_genero: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
@@ -200,7 +198,7 @@ export class UsuarioComponent implements OnInit  {
       return false;
     }
 
-   store() {
+store() {
   this.submitted = true;
   this.formSaveUsuario.get('edad')?.enable();
 
@@ -215,44 +213,48 @@ export class UsuarioComponent implements OnInit  {
     const formValues = this.formSaveUsuario.getRawValue();
     this.formSaveUsuario.get('edad')?.disable();
 
-    const newUsuario: any = {
-      nombre: formValues.nombre,
-      apellido: formValues.apellido,
-      email: formValues.email,
-      password: formValues.password,
-      cedula: formValues.cedula,
-      telefono: formValues.telefono,
-      direccion: formValues.direccion,
+    const newEntrenador: any = {
+      nombre: this.formSaveUsuario.value.nombre,
+      apellido: this.formSaveUsuario.value.apellido,
+      cedula: this.formSaveUsuario.value.cedula,
+      email: this.formSaveUsuario.value.email,
+      password: this.formSaveUsuario.value.password,
+      telefono: this.formSaveUsuario.value.telefono,
+      direccion: this.formSaveUsuario.value.direccion,
       edad: formValues.edad,
-      fechaNacimiento: this.formatDate(formValues.fechaNacimiento),
-      fechaInscripcion: this.formatDate(formValues.fechaInscripcion),
-      id_ciudad: formValues.id_ciudad,
-      id_genero: formValues.id_genero,
-      id_grupo: formValues.id_grupo,
-      id_rol: 3
+      fechaNacimiento: this.formatDate(this.formSaveUsuario.value.fechaNacimiento),
+      fechaInscripcion: this.formatDate(this.formSaveUsuario.value.fechaInscripcion),
+      id_ciudad: this.formSaveUsuario.value.id_ciudad,
+      id_genero: this.formSaveUsuario.value.id_genero,
+      id_rol: 2
     };
 
-    console.log('Datos a enviar al backend:', newUsuario);
+    console.log('Datos enviados al backend:', newEntrenador);
 
-    this.usuarioService.createUsuario(newUsuario).subscribe({
+    this.usuarioService.createUsuario(newEntrenador).subscribe({
       next: () => {
         this.saveMessageToast();
         this.getUsuarios();
         this.visibleSave = false;
       },
-       error: (err) => {
-      if (err.status === 409 && err.error.message === 'Identificación duplicada') {
-        this.errorCedulaMessageToast();
-      } else if (err.status === 422 && err.error.message.includes('email')) {
+      error: (err) => {
+        if (err.status === 422) {
+          const backendErrors = err.error.errors;
+          
+          if (backendErrors.email) {
             this.errorCorreoMessageToast();
-          } 
-          else {
-            this.errorMessageToast();
           }
-    }
-      });
-    }
+          if (backendErrors.cedula) {
+            this.errorCedulaMessageToast();
+          }
+        } 
+        else if (err.status === 409) {
+          this.errorMessageToast();
+        }
+      }
+    });
   }
+}
 
     
 
@@ -357,7 +359,6 @@ export class UsuarioComponent implements OnInit  {
     fechaInscripcion: this.formatDate(formValues.fechaInscripcion),
     id_ciudad: formValues.id_ciudad,
     id_genero: formValues.id_genero,
-    id_grupo: formValues.id_grupo,
     id_rol: 3
   };
 
@@ -401,7 +402,6 @@ export class UsuarioComponent implements OnInit  {
         this.formUpdateUsuario.controls['edad'].setValue(this.user?.edad)
         this.formUpdateUsuario.controls['id_ciudad'].setValue(this.user?.id_ciudad)
         this.formUpdateUsuario.controls['id_genero'].setValue(this.user?.id_genero)
-        this.formUpdateUsuario.controls['id_grupo'].setValue(this.user?.id_grupo)
         this.formUpdateUsuario.controls['fechaNacimiento'].setValue(
           parseLocalDate(this.user.fechaNacimiento)
         );
@@ -505,7 +505,5 @@ exportPdf() {
   /* 6. Guardar */
   doc.save('Usuarios.pdf');
 }
-
-
 
 }

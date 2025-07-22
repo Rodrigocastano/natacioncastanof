@@ -25,150 +25,178 @@ import { AppMenuitem } from './app.menuitem';
         </ng-template>
     `
 })
+
 export class AppMenu implements OnInit {
     model: MenuItem[] = [];
 
     ngOnInit() {
-        const rol = localStorage.getItem('rol')?.toLowerCase();
-        if (!rol) {
-            this.model = [];
-            return;
-        }
+      const rol = localStorage.getItem('rol')?.toLowerCase();
+      if (!rol) {
+        this.model = [];
+        return;
+      }
 
-        if (rol === 'usuario') {
-            this.model = this.getUserMenu();
-        } else if (rol === 'administrador') {
-            this.model = this.getAdminMenu();
-        } else if (rol === 'entrenador') {
-            this.model = this.getTrainerMenu();
-        } else if (rol === 'psicologo') {
-            this.model = this.getPsychologistMenu();
-        } else if (rol === 'medico') {
-            this.model = this.getMedicalMenu();
-        }
+      if (rol === 'usuario') {
+        this.model = this.getUserMenu();
+      } else if (rol === 'administrador') {
+        this.model = this.getAdminMenu();
+      } else if (rol === 'entrenador') {
+        this.model = this.getTrainerMenu();
+      } else if (rol === 'psicologo') {
+        this.model = this.getPsychologistMenu();
+      } else if (rol === 'medico') {
+        this.model = this.getMedicalMenu();
+      }
     }
 
     getUserMenu(): MenuItem[] {
-        return [
-            {
-                label: 'Home',
-                items: [
-                    { label: 'Gráficas', icon: 'pi pi-chart-bar', routerLink: ['/pages/graficasUsuario'] },
-                    { label: 'Asistencias', icon: 'pi pi-calendar', routerLink: ['/pages/asistenciaUsuario'] },
-                    { label: 'Medidas', icon: 'pi pi-calendar', routerLink: ['/pages/medidaUsuario'] },
-                ]
-            }
-        ];
+      return [
+        {
+          label: 'Home',
+          items: [
+            { label: 'Gráficas', icon: 'pi pi-chart-bar', routerLink: ['/pages/graficasUsuario'] },
+            { label: 'Asistencias', icon: 'pi pi-calendar', routerLink: ['/pages/asistenciaUsuario'] },
+            { label: 'Medidas', icon: 'pi pi-calendar', routerLink: ['/pages/medidaUsuario'] },
+          ]
+        }
+      ];
     }
 
     getAdminMenu(): MenuItem[] {
-        return [
+      return [
+        {
+          label: 'Home',
+          items: [
+            { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/dashboard'] },
+            { label: 'Dashboard usuario', icon: 'pi pi-fw pi-home', routerLink: ['/pages/verDashboard'] },
+            
             {
-                label: 'Home',
-                items: [
-                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/dashboard'] },
-                    {
-                        label: 'Gestión de Usuarios', icon: 'pi pi-id-card', items: [
-                            { label: 'Grupo', icon: 'pi pi-sitemap', routerLink: ['/pages/grupo'] },
-                            { label: 'Género', icon: 'pi pi-mars', routerLink: ['/pages/genero'] },
-                            { label: 'Ciudad', icon: 'pi pi-building', routerLink: ['/pages/ciudad'] },
-                            { label: 'Usuarios', icon: 'pi pi-user-plus', routerLink: ['/pages/usuario'] },
-                            { label: 'Entrenadores', icon: 'pi pi-user-plus', routerLink: ['/pages/entrenador'] },
-                            { label: 'Médico', icon: 'pi pi-user-plus', routerLink: ['/pages/medicos'] },
-                            { label: 'Psicólogo', icon: 'pi pi-user-plus', routerLink: ['/pages/psicologos'] },
-                            { label: 'Representantes', icon: 'pi pi-user-plus', routerLink: ['/pages/representante'] },
-                            { label: 'Representantes Nadador', icon: 'pi pi-users', routerLink: ['/pages/representantenadador'] },
-                            { label: 'Historial del usuario', icon: 'pi pi-users', routerLink: ['/pages/historiaUsuario'] },
-                        ]
-                    },
-                    {
-                        label: 'Gestión de pago', icon: 'pi pi-dollar', items: [
-                            { label: 'Tipo de pago', icon: 'pi pi-tags', routerLink: ['/pages/tipoPago'] },
-                            { label: 'Plan pago', icon: 'pi pi-credit-card', routerLink: ['/pages/planPago'] },
-                            { label: 'Registro Pago', icon: 'pi pi-money-bill', routerLink: ['/pages/pago'] },
-                            { label: 'Pagar abono', icon: 'pi pi-money-bill', routerLink: ['/pages/abonoPago'] },
-                            { label: 'Pagar Entrenadores', icon: 'pi pi-money-bill', routerLink: ['/pages/pagoEntrenadores'] },
-                            { label: 'Reporte general', icon: 'pi pi-file', routerLink: ['/pages/reporte'] },
-                            { label: 'Comprobante de usuario', icon: 'pi pi-file', routerLink: ['/pages/comprobante'] },
-                        ]
-                    },
-                    { label: 'Pagar a entrenadores', icon: 'pi pi-money-bill', routerLink: ['/pages/pagoEntrenadores'] },
-                    ...this.sharedMenuItems()
-                ]
-            }
-        ];
+              label: 'Gestión de Usuarios', icon: 'pi pi-id-card', items: [
+                { label: 'Grupo', icon: 'pi pi-sitemap', routerLink: ['/pages/grupo'] },
+                { label: 'Género', icon: 'pi pi-mars', routerLink: ['/pages/genero'] },
+                { label: 'Ciudad', icon: 'pi pi-building', routerLink: ['/pages/ciudad'] },
+                { label: 'Usuarios', icon: 'pi pi-user-plus', routerLink: ['/pages/usuario'] },
+                { label: 'Entrenadores', icon: 'pi pi-user-plus', routerLink: ['/pages/entrenador'] },
+                { label: 'Médico', icon: 'pi pi-user-plus', routerLink: ['/pages/medicos'] },
+                { label: 'Psicólogo', icon: 'pi pi-user-plus', routerLink: ['/pages/psicologos'] },
+                { label: 'Representantes', icon: 'pi pi-user-plus', routerLink: ['/pages/representante'] },
+                { label: 'Representantes Nadador', icon: 'pi pi-users', routerLink: ['/pages/representantenadador'] },
+                { label: 'Matriculas de usuario', icon: 'pi pi-users', routerLink: ['/pages/historiaUsuario'] },
+                { label: 'Matriculas de entrenador', icon: 'pi pi-users', routerLink: ['/pages/Entrenadorgrupo'] },
+                { label: 'Ver entrenador con usuario', icon: 'pi pi-users', routerLink: ['/pages/Verentrenadorusuario'] },
+
+                
+              ]
+            },
+            {
+              label: 'Gestión de pago', icon: 'pi pi-dollar', items: [
+                { label: 'Tipo de pago', icon: 'pi pi-tags', routerLink: ['/pages/tipoPago'] },
+                { label: 'Plan pago', icon: 'pi pi-credit-card', routerLink: ['/pages/planPago'] },
+                { label: 'Registro Pago', icon: 'pi pi-money-bill', routerLink: ['/pages/pago'] },
+                { label: 'Pagar abono', icon: 'pi pi-money-bill', routerLink: ['/pages/abonoPago'] },
+                { label: 'Ver pago usuario', icon: 'pi pi-credit-card', routerLink: ['/pages/verPago'] },
+                { label: 'Reporte general', icon: 'pi pi-file', routerLink: ['/pages/reporte'] },
+                { label: 'Comprobante de usuario', icon: 'pi pi-file', routerLink: ['/pages/comprobante'] },
+               
+              ]
+            },
+            
+              {
+              label: 'Egreso de pago', icon: 'pi pi-dollar', items: [
+            
+            { label: 'Pagar a entrenadores', icon: 'pi pi-money-bill', routerLink: ['/pages/pagoEntrenadores'] },
+            { label: 'Pagar abono', icon: 'pi pi-money-bill', routerLink: ['/pages/pagarAbono'] },
+            { label: 'Reporte general', icon: 'pi pi-file', routerLink: ['/pages/reporteentrenadores'] },
+            { label: 'Reporte por entrenador', icon: 'pi pi-file', routerLink: ['/pages/reporteentrenador'] },
+          ]
+            },
+            
+
+            ...this.sharedMenuItems('administrador')
+          ]
+        }
+      ];
     }
 
     getTrainerMenu(): MenuItem[] {
-        return [
-            {
-                label: 'Home',
-                items: [
-                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/dashboard'] },
-                    ...this.sharedMenuItems()
-                ]
-            }
-        ];
+      return [
+        {
+          label: 'Home',
+          items: [
+            { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/dashboard'] },
+            ...this.sharedMenuItems('entrenador')
+          ]
+        }
+      ];
     }
 
+    
     getPsychologistMenu(): MenuItem[] {
-        return [
-            {
-                label: 'Home',
-                items: [
-                    { label: 'Dashboard', icon: 'pi pi-home', routerLink: ['/dashboard'] },
-                    { label: 'Psicólogo', icon: 'pi pi-book', routerLink: ['/pages/psicologo'] }
-                ]
-            }
-        ];
+      return [
+        {
+          label: 'Home',
+          items: [
+            { label: 'Dashboard', icon: 'pi pi-home', routerLink: ['/dashboard'] },
+            { label: 'Psicólogo', icon: 'pi pi-book', routerLink: ['/pages/psicologo'] }
+          ]
+        }
+      ];
     }
 
     getMedicalMenu(): MenuItem[] {
-        return [
-            {
-                label: 'Home',
-                items: [
-                    { label: 'Dashboard', icon: 'pi pi-home', routerLink: ['/dashboard'] },
-                    { label: 'Médico', icon: 'pi pi-book', routerLink: ['/pages/medico'] }
-                ]
-            }
-        ];
+      return [
+        {
+          label: 'Home',
+          items: [
+            { label: 'Dashboard', icon: 'pi pi-home', routerLink: ['/dashboard'] },
+            { label: 'Médico', icon: 'pi pi-book', routerLink: ['/pages/medico'] }
+          ]
+        }
+      ];
     }
 
-    sharedMenuItems(): MenuItem[] {
-        return [
-            {
-                label: 'Área médica', icon: 'pi pi-book', items: [
-                    { label: 'Médico', icon: 'pi pi-book', routerLink: ['/pages/medico'] },
-                    { label: 'Psicólogo', icon: 'pi pi-book', routerLink: ['/pages/psicologo'] },
-                ]
-            },
-            {
-                label: 'Medidas físicas', icon: 'pi pi-id-card', items: [
-                    { label: 'Elasticida', icon: 'pi pi-id-card', routerLink: ['/pages/elasticida'] },
-                    { label: 'Nutricionales', icon: 'pi pi-id-card', routerLink: ['/pages/nutricionales'] },
-                    { label: 'Antropométrica', icon: 'pi pi-id-card', routerLink: ['/pages/antropometrica'] }
-                ]
-            },
-            {
-                label: 'Rendimiento natación', icon: 'pi pi-history', items: [
-                    { label: 'Tipo de nado', icon: 'pi pi-sync', routerLink: ['/pages/tipoNado'] },
-                    { label: 'Categoria Distancia', icon: 'pi pi-send', routerLink: ['/pages/categoriaDistancia'] },
-                    { label: 'Tiempo Nadador', icon: 'pi pi-history', routerLink: ['/pages/tiempoNadador'] },
-                    { label: 'Graficas', icon: 'pi pi-history', routerLink: ['/pages/graficas'] }
-                ]
-            },
-            {
-                label: 'Competencia natación', icon: 'pi pi-history', items: [
-                    { label: 'Área de Nado', icon: 'pi pi-arrows-h', routerLink: ['/pages/areaNado'] },
-                    { label: 'Categoría de Prueba', icon: 'pi pi-tags', routerLink: ['/pages/categoriaProducto'] },
-                    { label: 'Tipo de Categoría', icon: 'pi pi-tags', routerLink: ['/pages/categoriaTipo'] },
-                    { label: 'Torneo', icon: 'pi pi-book', routerLink: ['/pages/torneo'] },
-                    { label: 'Prueba Torneo', icon: 'pi pi-book', routerLink: ['/pages/pruebaTorneo'] },
-                    { label: 'Prueba Nadador', icon: 'pi pi-book', routerLink: ['/pages/pruebaNadador'] }
-                ]
-            },
-            { label: 'Asistencias', icon: 'pi pi-pen-to-square', routerLink: ['/pages/asistencia'] }
-        ];
+    sharedMenuItems(rol: string): MenuItem[] {
+      const items: MenuItem[] = [
+        {
+          label: 'Medidas físicas', icon: 'pi pi-id-card', items: [
+            { label: 'Elasticida', icon: 'pi pi-id-card', routerLink: ['/pages/elasticida'] },
+            { label: 'Nutricionales', icon: 'pi pi-id-card', routerLink: ['/pages/nutricionales'] },
+            { label: 'Antropométrica', icon: 'pi pi-id-card', routerLink: ['/pages/antropometrica'] },
+            { label: 'Ver Medidas Usuario', icon: 'pi pi-file', routerLink: ['/pages/VerMedidasUsuario'] }
+          ]
+        },
+        {
+          label: 'Rendimiento natación', icon: 'pi pi-history', items: [
+            { label: 'Tipo de nado', icon: 'pi pi-sync', routerLink: ['/pages/tipoNado'] },
+            { label: 'Categoria Distancia', icon: 'pi pi-send', routerLink: ['/pages/categoriaDistancia'] },
+            { label: 'Tiempo Nadador', icon: 'pi pi-history', routerLink: ['/pages/tiempoNadador'] },
+            { label: 'Graficas', icon: 'pi pi-warehouse', routerLink: ['/pages/graficas'] }
+          ]
+        },
+        {
+          label: 'Competencia natación', icon: 'pi pi-history', items: [
+            { label: 'Área de Nado', icon: 'pi pi-arrows-h', routerLink: ['/pages/areaNado'] },
+            { label: 'Categoría de Prueba', icon: 'pi pi-tags', routerLink: ['/pages/categoriaProducto'] },
+            { label: 'Tipo de Categoría', icon: 'pi pi-tags', routerLink: ['/pages/categoriaTipo'] },
+            { label: 'Torneo', icon: 'pi pi-book', routerLink: ['/pages/torneo'] },
+            { label: 'Prueba Torneo', icon: 'pi pi-book', routerLink: ['/pages/pruebaTorneo'] },
+            { label: 'Prueba Nadador', icon: 'pi pi-book', routerLink: ['/pages/pruebaNadador'] },
+            { label: 'Ver los torneos', icon: 'pi pi-file', routerLink: ['/pages/verTorneo'] }
+          ]
+        },
+        { label: 'Asistencias', icon: 'pi pi-pen-to-square', routerLink: ['/pages/asistencia'] }
+      ];
+
+      if (rol !== 'entrenador') {
+        items.unshift({
+          label: 'Área médica', icon: 'pi pi-book', items: [
+            { label: 'Médico', icon: 'pi pi-book', routerLink: ['/pages/medico'] },
+            { label: 'Psicólogo', icon: 'pi pi-book', routerLink: ['/pages/psicologo'] },
+            { label: 'Datos médico usuario', icon: 'pi pi-book', routerLink: ['/pages/VerAreaMedicaUsuario'] },
+          ]
+        });
+      }
+
+      return items;
     }
 }

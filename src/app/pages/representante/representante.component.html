@@ -60,9 +60,9 @@
         </ng-template>
 
         <!-- ---------- BODY ---------- -->
-        <ng-template pTemplate="body" let-usuario>
-            <tr>
-            <td>{{ usuario.id }}</td>
+        <ng-template pTemplate="body" let-usuario let-i="rowIndex">
+            <tr> 
+            <td>{{ i + 1 }}</td>
             <td>{{ usuario.nombre }}</td>
             <td>{{ usuario.apellido }}</td>
             <td>{{ usuario.cedula }}</td>

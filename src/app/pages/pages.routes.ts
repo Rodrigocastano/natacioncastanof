@@ -26,7 +26,7 @@ import { PruebatorneoComponent } from './pruebatorneo/pruebatorneo.component';
 import { PruebanadadorComponent } from './pruebanadador/pruebanadador.component';
 import { PlanPagoComponent } from './plan-pago/plan-pago.component';
 import { AbonopagoComponent } from './abonopago/abonopago.component';
-import { GraficasComponent } from './graficas/graficas.component';
+import { GraficasComponent } from './verGraficas/graficas.component';
 import { GraficasUsuarioComponent } from './graficas-usuario/graficas-usuario.component';
 import { AsistenciaUsuarioComponent } from './asistencia-usuario/asistencia-usuario.component';
 import { MedidasUsuarioComponent } from './medidas-usuario/medidas-usuario.component';
@@ -36,6 +36,17 @@ import { PagoEntrenadoresComponent } from './pago-entrenadores/pago-entrenadores
 import { RegistroMedicoComponent } from './registro-medico/registro-medico.component';
 import { RegistroPsicologoComponent } from './registro-psicologo/registro-psicologo.component';
 import { HistorialUsuarioComponent } from './historial-usuario/historial-usuario.component';
+import { VermedidasComponent } from './verMedidas/vermedidas.component';
+import { MedicoUsuarioComponent } from './verMedicoUsuario/medico-usuario.component';
+import { VerpagoComponent } from './verPago/verpago.component';
+import { VertorneocompetidaComponent } from './verTorneoCompetida/vertorneocompetida.component';
+import { VerdashboarComponent } from './verDashboarUsuario/verdashboar.component';
+import { AbonoentrenadorComponent } from './abonoentrenador/abonoentrenador.component';
+import { EntrenadorgrupoComponent } from './entrenadorgrupo/entrenadorgrupo.component';
+import { VerentrenadorusuarioComponent } from './verentrenadorusuario/verentrenadorusuario.component';
+import { ReporteentrenadoresComponent } from './reporteentrenadores/reporteentrenadores.component';
+import { ReporteentrenadorComponent } from './reporteentrenador/reporteentrenador.component';
+
 
 
 export default [
@@ -75,5 +86,15 @@ export default [
     { path: 'medicos', component: RegistroMedicoComponent },
     { path: 'psicologos', component: RegistroPsicologoComponent },
     { path: 'historiaUsuario', component: HistorialUsuarioComponent },
+    { path: 'VerMedidasUsuario', component: VermedidasComponent },
+    { path: 'VerAreaMedicaUsuario', component: MedicoUsuarioComponent },
+    { path: 'verPago', component: VerpagoComponent },
+    { path: 'verTorneo', component: VertorneocompetidaComponent },
+    { path: 'verDashboard', component: VerdashboarComponent },
+    { path: 'pagarAbono', component: AbonoentrenadorComponent },
+    { path: 'Entrenadorgrupo', component: EntrenadorgrupoComponent },
+    { path: 'Verentrenadorusuario', component: VerentrenadorusuarioComponent },
+    { path: 'reporteentrenadores', component: ReporteentrenadoresComponent },
+    { path: 'reporteentrenador', component: ReporteentrenadorComponent },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

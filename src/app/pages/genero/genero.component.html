@@ -76,9 +76,9 @@
         </tr>
       </ng-template>
 
-      <ng-template #body let-genero>
+      <ng-template #body let-genero let-i="rowIndex">
         <tr>
-          <td style="text-align: left;">{{ genero.id }}</td>
+          <td style="text-align: left;">{{ i + 1 }}</td>
           <td style="width: 150px; text-align: center;">{{ genero.nombre }}</td>
           <td style="text-align: right;">
             <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(genero)"/>

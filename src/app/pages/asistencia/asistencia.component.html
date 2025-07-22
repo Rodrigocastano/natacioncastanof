@@ -1,5 +1,4 @@
 <div class="card p-2 mb-1">
-
   <p-toolbar styleClass="mb-3">
     <ng-template #start>
       <p-button label="Tomar asistencia" icon="pi pi-plus" severity="secondary" class="mr-2" 
@@ -7,263 +6,293 @@
     </ng-template>
   </p-toolbar>
 
+  <!-- Sección para tomar asistencia -->
   <div *ngIf="showAsistenciaSection" 
        class="mb-6 p-6 border-round surface-card bg-white shadow-md rounded-lg max-w-screen-lg mx-auto">
 
-    <!-- Grupo arriba -->
-    <div class="mb-6">
-      <label class="block font-semibold mb-3 text-gray-700">Grupo</label>
+    <!-- Selección de entrenador -->
+    <div class="mb-4">
+      <label class="block font-semibold mb-2 text-gray-700">Entrenador</label>
       <p-dropdown
         class="w-full"
-        [options]="grupos"
+        [options]="entrenadores"
+        optionValue="id"
+        [(ngModel)]="selectedEntrenador"
+        (onChange)="onEntrenadorChange()"
+        [showClear]="true"
+        placeholder="Seleccione un entrenador"
+        [appendTo]="'body'">
+
+        <!-- Item de lista -->
+        <ng-template let-entrenador pTemplate="item">
+          {{ entrenador.nombre }} {{ entrenador.apellido }} - {{ entrenador.cedula }}
+        </ng-template>
+
+        <!-- Item seleccionado -->
+        <ng-template let-entrenador pTemplate="selectedItem">
+          {{ entrenador?.nombre }} {{ entrenador?.apellido }} - {{ entrenador?.cedula }}
+        </ng-template>
+
+        <ng-template pTemplate="empty">
+          <div class="p-2 text-center text-gray-500 italic">No hay entrenadores disponibles</div>
+        </ng-template>
+      </p-dropdown>
+    </div>
+
+    <!-- Selección de grupo -->
+    <div *ngIf="selectedEntrenador" class="mb-4">
+      <label class="block font-semibold mb-2 text-gray-700">Grupo</label>
+      <p-dropdown
+        class="w-full"
+        [options]="gruposDelEntrenador"
         optionLabel="nombre"
         optionValue="id"
         placeholder="Seleccione un grupo"
         [(ngModel)]="selectedGrupo"
         (onChange)="onGrupoChange()"
         [showClear]="true"
+        [disabled]="!selectedEntrenador"
         [appendTo]="'body'">
         <ng-template pTemplate="empty">
-          <div class="p-2 text-center text-gray-500 italic">No hay grupos disponibles</div>
+          <div class="p-2 text-center text-gray-500 italic">
+            {{ selectedEntrenador ? 'No hay grupos para este entrenador' : 'Seleccione un entrenador primero' }}
+          </div>
         </ng-template>
       </p-dropdown>
     </div>
 
-    <!-- Contenido debajo del grupo -->
-    <div *ngIf="selectedGrupo">
-
-      <!-- Sin usuarios -->
-      <div *ngIf="usuariosParaAsistencia.length === 0" 
-           class="flex justify-center items-center p-6 rounded-lg bg-yellow-50 text-yellow-700 text-md font-medium border border-yellow-200 mb-6">
-        <i class="pi pi-info-circle mr-3 text-xl"></i>
-        <span>No hay usuarios registrados en este grupo</span>
-      </div>
-
-      <!-- Con usuarios -->
-      <div *ngIf="usuariosParaAsistencia.length > 0" class="flex flex-col">
-
-        <!-- Filtros -->
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-          <p-datepicker
-            class="w-full md:w-auto"
-            [(ngModel)]="fechaAsistencias"
-            dateFormat="yy-mm-dd"
-            [showIcon]="true"
-            [showButtonBar]="true"
-            [maxDate]="maxDate"
-            [appendTo]="'body'">
-          </p-datepicker>
-
-          <p-iconfield class="w-full md:w-64">
-            <p-inputicon styleClass="pi pi-search" />
-            <input pInputText
-                   type="text"
-                   placeholder="Buscar usuarios..."
-                   [(ngModel)]="filtroBusqueda"
-                   class="rounded-md border border-gray-300 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50 transition-all duration-200" />
-          </p-iconfield>
-        </div>
-
-        <!-- Tabla -->
-        <p-table
-          [value]="usuariosFiltrados"
-          styleClass="p-datatable-sm p-datatable-gridlines"
-          [responsiveLayout]="'scroll'"
-          [breakpoint]="'0px'"
-          [showGridlines]="true"
-          [stripedRows]="true"
-          [scrollable]="true"
-          scrollHeight="350px"
-          class="rounded-lg shadow-md border border-gray-200 min-w-full mb-6">
-
-          <ng-template pTemplate="header">
-            <tr class="bg-blue-50 text-blue-700 font-semibold text-sm capitalize">
-              <th class="text-center" style="width: 6rem;">Asistencia</th>
-              <th>Identificación</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Teléfono</th>
-            </tr>
-          </ng-template>
-
-          <ng-template pTemplate="body" let-u>
-            <tr class="hover:bg-blue-50 transition-colors duration-150 cursor-pointer">
-              <td class="text-center">
-                <p-checkbox [(ngModel)]="u.presente" [binary]="true" inputId="presente-{{u.id}}"></p-checkbox>
-              </td>
-              <td>{{ u.cedula }}</td>
-              <td>{{ u.nombre }}</td>
-              <td>{{ u.apellido }}</td>
-              <td>{{ u.telefono }}</td>
-            </tr>
-          </ng-template>
-        </p-table>
-
-        <!-- Botones -->
-        <div class="flex flex-col md:flex-row md:justify-end gap-3">
-          <p-button label="Cancelar" icon="pi pi-times" (click)="cancelAsistencia()" text></p-button>
-          <p-button
-            label="Guardar"
-            icon="pi pi-check"
-            (click)="saveAsistencias()"
-            [disabled]="usuariosParaAsistencia.length === 0"
-            severity="success">
-          </p-button>
-        </div>
-
-      </div>
+    <!-- Selección de turno -->
+    <div *ngIf="selectedGrupo" class="mb-4">
+      <label class="block font-semibold mb-2 text-gray-700">Turno</label>
+      <p-dropdown
+        class="w-full"
+        [options]="turnos"
+        placeholder="Seleccione un turno"
+        [(ngModel)]="selectedTurno"
+        (onChange)="onTurnoChange()"
+        [showClear]="true"
+        [disabled]="!selectedGrupo"
+        [appendTo]="'body'">
+      </p-dropdown>
     </div>
 
+    <!-- Mensaje cuando no hay usuarios -->
+    <div *ngIf="selectedGrupo && selectedTurno && usuariosParaAsistencia.length === 0" 
+         class="flex justify-center items-center p-6 rounded-lg bg-yellow-50 text-yellow-700 text-md font-medium border border-yellow-200 mb-6">
+      <i class="pi pi-info-circle mr-3 text-xl"></i>
+      <span>No hay usuarios registrados en este grupo y turno</span>
+    </div>
+
+    <!-- Lista de usuarios -->
+    <div *ngIf="selectedGrupo && selectedTurno && usuariosParaAsistencia.length > 0" class="flex flex-col">
+      <!-- Filtros -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+        <p-datepicker
+          class="w-full md:w-auto"
+          [(ngModel)]="fechaAsistencias"
+          dateFormat="yy-mm-dd"
+          [showIcon]="true"
+          [showButtonBar]="true"
+          [maxDate]="maxDate"
+          [appendTo]="'body'">
+        </p-datepicker>
+
+        <p-iconfield class="w-full md:w-64">
+          <p-inputicon styleClass="pi pi-search" />
+          <input pInputText type="text" placeholder="Buscar usuarios..."
+                 [(ngModel)]="filtroBusqueda" class="w-full p-2 border border-gray-300 rounded-md" />
+        </p-iconfield>
+      </div>
+
+      <!-- Tabla de usuarios -->
+      <p-table [value]="usuariosFiltrados" styleClass="p-datatable-sm p-datatable-gridlines"
+               [responsiveLayout]="'scroll'" [breakpoint]="'0px'" [showGridlines]="true"
+               [stripedRows]="true" [scrollable]="true" scrollHeight="350px"
+               class="rounded-lg shadow-md border border-gray-200 min-w-full mb-6">
+
+        <ng-template pTemplate="header">
+          <tr class="bg-blue-50 text-blue-700 font-semibold text-sm capitalize">
+            <th class="text-center" style="width: 6rem;">Asistencia</th>
+            <th>Identificación</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Teléfono</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-u>
+          <tr class="hover:bg-blue-50 cursor-pointer">
+            <td class="text-center">
+              <p-checkbox [(ngModel)]="u.presente" [binary]="true" inputId="presente-{{u.id}}"></p-checkbox>
+            </td>
+            <td>{{ u.cedula }}</td>
+            <td>{{ u.nombre }}</td>
+            <td>{{ u.apellido }}</td>
+            <td>{{ u.telefono }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <!-- Botones -->
+      <div class="flex flex-col md:flex-row md:justify-end gap-3">
+        <p-button label="Cancelar" icon="pi pi-times" (click)="cancelAsistencia()" text></p-button>
+        <p-button label="Guardar" icon="pi pi-check" (click)="saveAsistencias()"
+                  [disabled]="usuariosParaAsistencia.length === 0" severity="success">
+        </p-button>
+      </div>
+    </div>
   </div>
 </div>
 
+<!-- Toast -->
 <p-toast></p-toast>
 
+<!-- Spinner de carga -->
 <div *ngIf="loading" class="flex justify-center items-center h-72">
-  <p-progressSpinner 
-    [style]="{ width: '50px', height: '50px' }" styleClass="p-text-primary">
-  </p-progressSpinner>
+  <p-progressSpinner [style]="{ width: '50px', height: '50px' }" styleClass="p-text-primary"></p-progressSpinner>
 </div>
 
+<!-- Tabla principal -->
+<div *ngIf="!loading">
+  <p-table [value]="asistencia" dataKey="id" [tableStyle]="{ 'min-width': '60rem' }" [expandedRowKeys]="expandedRows"
+           (onRowExpand)="abrirExpand($event)" (onRowCollapse)="cerrarCollapse($event)"
+           [paginator]="true" [rows]="6" [rowsPerPageOptions]="[6, 12, 18]"
+           [showCurrentPageReport]="true"
+           currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros">
 
-    <div *ngIf="!loading">
-        <p-table [value]="asistencia" 
-            dataKey="id" [tableStyle]="{ 'min-width': '60rem' }" [expandedRowKeys]="expandedRows" (onRowExpand)="abrirExpand($event)" 
-            (onRowCollapse)="cerrarCollapse($event)" [paginator]="true" [rows]="6" [rowsPerPageOptions]="[6, 12, 18]"
-            [showCurrentPageReport]="true" currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Usuarios">
-                
-            <ng-template #caption>
-                <div class="flex items-center justify-between">
-                    <h5 class="m-0 text-base md:text-lg font-semibold">Asistencias</h5>
-                    <p-iconfield>
-                        <p-inputicon styleClass="pi pi-search"></p-inputicon>
-                        <input pInputText type="text" placeholder="Buscar..."
-                                [(ngModel)]="terminoBusqueda"
-                                (input)="filtrarBusqueda()" />
-                        </p-iconfield>
-                </div>
-            </ng-template>
-    
-            <ng-template #header>
-                <tr>
-                    <th style="min-width: 4rem"></th>
-                    <th pSortableColumn="name" style="min-width:8rem">Identificación</th>
-                    <th pSortableColumn="name" style="min-width:8rem">Nombre</th>
-                    <th pSortableColumn="price" style="min-width: 8rem">Apellido</th>
-                    <th pSortableColumn="price" style="min-width: 8rem">Género</th>
-                    <th pSortableColumn="price" style="min-width: 6rem">Edad</th>
-                </tr>
-            </ng-template>
-    
-            <ng-template #body let-usuario let-expanded="expanded">
-                <tr>
-                    <td>
-                        <p-button type="button" pRipple [pRowToggler]="usuario" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
-                    </td>
-                    <td>{{ usuario.cedula }}</td>
-                    <td>{{ usuario.nombre }}</td>
-                    <td>{{ usuario.apellido }}</td>
-                    <td>{{ usuario.genero }}</td>
-                    <td>{{ usuario.edad }}</td>
-                </tr>
-            </ng-template>
-            <ng-template #expandedrow let-usuario>
-                <tr>
-                    <td colspan="7">
-                        <div class="p-4">
-                            <p-table [value]="usuario.asistencias
-                            " dataKey="id">
-                                <ng-template #header>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Apellido</th>
-                                        <th>Asistencias</th>
-                                        <th>Fecha</th>
-                                        <th>Acciones</th>
-                                    </tr>
-        
-                                </ng-template>
-                                <ng-template #body let-elast>
-                                    <tr>
-                                        <td>{{ elast.id }}</td>
-                                        <td>{{ elast.nombre }}</td>
-                                        <td>{{ elast.apellido }}</td>
-                                        <td>{{ elast.presente ? 'Presente' : 'Ausente' }}</td>
-                                        <td>{{ elast.fecha }}</td>
-                                        <td>
-                                            <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(elast)"/>
-                                            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="showModalDelete(elast.id)" />
-                                        </td>
-                                    </tr>
-                                </ng-template>
-                            </p-table>
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </div>
+    <ng-template #caption>
+      <div class="flex items-center justify-between">
+        <h5 class="m-0 text-base md:text-lg font-semibold">Asistencias</h5>
+        <p-iconfield>
+          <p-inputicon styleClass="pi pi-search"></p-inputicon>
+          <input pInputText type="text" placeholder="Buscar..." [(ngModel)]="terminoBusqueda" (input)="filtrarBusqueda()" />
+        </p-iconfield>
+      </div>
+    </ng-template>
 
-    <p-dialog [(visible)]="visibleDelete" header="Confirmación" [style]="{ width: '350px' }" [modal]="true">
-        <div class="flex items-center justify-center">
-            <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
-            <span>¿Estás seguro que deseas eliminar este registro?</span>
+    <ng-template #header>
+      <tr>
+        <th style="min-width: 4rem"></th>
+        <th pSortableColumn="cedula">Identificación</th>
+        <th pSortableColumn="nombre">Nombre</th>
+        <th pSortableColumn="apellido">Apellido</th>
+        <th pSortableColumn="genero">Género</th>
+        <th pSortableColumn="edad">Edad</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-usuario let-expanded="expanded">
+      <tr>
+        <td>
+          <p-button type="button" pRipple [pRowToggler]="usuario" [text]="true" [rounded]="true" [plain]="true"
+                    [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+        </td>
+        <td>{{ usuario.cedula }}</td>
+        <td>{{ usuario.nombre }}</td>
+        <td>{{ usuario.apellido }}</td>
+        <td>{{ usuario.genero }}</td>
+        <td>{{ usuario.edad }}</td>
+      </tr>
+    </ng-template>
+
+    <ng-template #expandedrow let-usuario>
+      <tr>
+        <td colspan="7">
+          <div class="p-4">
+            <p-table [value]="usuario.asistencias" dataKey="id">
+              <ng-template #header>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Asistencia</th>
+                  <th>Fecha</th>
+                  <th>Acciones</th>
+                </tr>
+              </ng-template>
+              <ng-template #body let-asistencia let-i="rowIndex">
+                <tr>
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ asistencia.nombre }}</td>
+                  <td>{{ asistencia.apellido }}</td>
+                  <td>{{ asistencia.presente ? 'Presente' : 'Ausente' }}</td>
+                  <td>{{ asistencia.fecha }}</td>
+                  <td>
+                    <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true"
+                              (click)="edit(asistencia)" />
+                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
+                              (click)="showModalDelete(asistencia.id)" />
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Diálogo eliminar -->
+<p-dialog [(visible)]="visibleDelete" header="Confirmación" [style]="{ width: '350px' }" [modal]="true">
+  <div class="flex items-center justify-center">
+    <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"></i>
+    <span>¿Estás seguro que deseas eliminar este registro?</span>
+  </div>
+  <ng-template #footer>
+    <p-button label="Cancelar" icon="pi pi-times" text severity="secondary" (click)="cancelMessageToast()" />
+    <p-button label="Eliminar" icon="pi pi-check" (click)="delete()" severity="danger" outlined />
+  </ng-template>
+</p-dialog>
+
+<!-- Diálogo actualizar asistencia -->
+<p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar asistencia"
+          [modal]="true" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }">
+
+  <ng-template #content>
+    <form [formGroup]="formUpdate" class="formulario">
+      <div class="flex flex-col gap-6">
+        <div class="col-span-6">
+          <label for="id_usuario" class="block font-bold mb-3">Usuario</label>
+          <p-dropdown [options]="usuarios" formControlName="id_usuario" optionLabel="display" optionValue="id"
+                      [readonly]="true" class="w-full"></p-dropdown>
         </div>
-        <ng-template #footer>
-            <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDelete = false" text severity="secondary" (click)="cancelMessageToast()" />
-            <p-button label="Eliminar" icon="pi pi-check" (click)="delete()" severity="danger" outlined/>
-        </ng-template>
-    </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar asistencia" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
-        
-        <ng-template #content>
-            <form [formGroup]="formUpdate" class="formulario">
-                <div class="flex flex-col gap-6">
+        <div class="col-span-6">
+          <label for="presente" class="block font-bold mb-2">Asistencia</label>
+          <div class="grid grid-cols-12 gap-4">
+            <div class="flex items-center gap-2 col-span-6 justify-center">
+              <p-radiobutton name="presente" [value]="true" formControlName="presente" inputId="presenteSi" />
+              <label for="presenteSi">Presente</label>
+            </div>
+            <div class="flex items-center gap-2 col-span-6 justify-center ml-6">
+              <p-radiobutton name="presente" [value]="false" formControlName="presente" inputId="presenteNo" />
+              <label for="presenteNo">Ausente</label>
+            </div>
+          </div>
+        </div>
 
-                    <div class="col-span-6">
-                        <label for="id_usuario" class="block font-bold mb-3">Usuario</label>   
-                        <p-select 
-                            [options]="usuarios" formControlName="id_usuario" optionLabel="display" optionValue="id" [readonly]="true" [style]="{'background-color': '#e0e0e0'}" class="w-full md:w-70 ">
-                        </p-select>
-                    </div>
+        <div class="col-span-12 flex justify-center">
+          <div class="col-span-6">
+            <label for="fecha" class="block font-bold mb-2">Fecha de registro</label>
+            <p-datepicker [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true"
+                          [showButtonBar]="true" [appendTo]="'body'" dateFormat="yy-mm-dd"
+                          placeholder="Seleccione una fecha" class="w-full">
+            </p-datepicker>
+            <p-message *ngIf="formUpdate.get('fecha')?.invalid && (formUpdate.get('fecha')?.dirty || formUpdate.get('fecha')?.touched)"
+                       severity="error" variant="simple" size="small">
+              La fecha es requerida
+            </p-message>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-template>
 
-                        <div class="col-span-6">
-                        <label for="presente" class="block font-bold mb-2">Asistencias</label>
-                        <div class="grid grid-cols-12 gap-4">
-                            <div class="flex items-center gap-2 col-span-6 justify-center">
-                                <p-radiobutton name="presente" [value]="true" formControlName="presente" inputId="aptoSi" />
-                                <label for="aptoSi">Presente</label>
-                            </div>
-                            <div class="flex items-center gap-2 col-span-6 justify-center ml-6">
-                                <p-radiobutton name="presente" [value]="false" formControlName="presente" inputId="aptoNo" />
-                                <label for="aptoNo">Ausente</label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-span-12 flex justify-center" >
-                        <div class="col-span-6">
-                            <label for="fecha" class="block font-bold mb-2">Fecha de registro</label>
-                            <p-datepicker 
-                                [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
-                                [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
-                            </p-datepicker>
-                            <p-message 
-                                *ngIf="formUpdate.get('fecha')?.invalid && (formUpdate.get('fecha')?.dirty || formUpdate.get('fecha')?.touched)"  severity="error"  variant="simple" size="small">
-                                Fecha Nacimiento es requerido
-                            </p-message>
-                        </div>
-                    </div>   
-                </div>
-            </form>
-        </ng-template>
-    
-        <ng-template #footer>
-            <form [formGroup]="formUpdate" class="formulario">
-                <p-button label="Cancelar" icon="pi pi-times" text (click)="canceUpdate()"  />
-                <p-button label="Guardar" icon="pi pi-check" (click)="update()" />
-            </form>
-        </ng-template>
-    </p-dialog>
+  <ng-template #footer>
+    <form [formGroup]="formUpdate" class="formulario">
+      <p-button label="Cancelar" icon="pi pi-times" text (click)="canceUpdate()" />
+      <p-button label="Guardar" icon="pi pi-check" (click)="update()" />
+    </form>
+  </ng-template>
+</p-dialog>

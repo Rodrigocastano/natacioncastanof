@@ -75,23 +75,23 @@ export class RepresentantenadadorComponent implements OnInit{
   terminoBusqueda: string = '';
   buscarOriginal: RepresentanteNadador[] = [];
 
-  constructor(
-      private fb: FormBuilder,
-      private representantenadadorService: RepresentantenadadorService,
-      private usuarioService: UsuarioService,
-      private representanteService: RepresentanteService,
-      private messageService: MessageService
-    ) {
-      this.formSave = this.fb.group({
-        id_usuario: ['', [Validators.required]],
-        id_representante: ['', [Validators.required]],
+    constructor(
+        private fb: FormBuilder,
+        private representantenadadorService: RepresentantenadadorService,
+        private usuarioService: UsuarioService,
+        private representanteService: RepresentanteService,
+        private messageService: MessageService
+      ) {
+        this.formSave = this.fb.group({
+          id_usuario: ['', [Validators.required]],
+          id_representante: ['', [Validators.required]],
 
-        
-      });
-      this.formUpdate = fb.group({
-        id_usuario: ['', [Validators.required]],
-        id_representante: ['', [Validators.required]],
-      });
+          
+        });
+        this.formUpdate = fb.group({
+          id_usuario: ['', [Validators.required]],
+          id_representante: ['', [Validators.required]],
+        });
     }
   
     ngOnInit(): void {
@@ -154,52 +154,61 @@ export class RepresentantenadadorComponent implements OnInit{
       });
     }
 
-    abrirExpand(event: TableRowExpandEvent) {
-      this.messageService.add({ 
-        severity: 'info', 
-        summary: 'Abierto Expandicion de', 
-        detail: event.data.nombre, 
-        life: 3000 });
-    }
-  
-    cerrarCollapse(event: TableRowCollapseEvent) {
-      this.messageService.add({
-          severity: 'success',
-          summary: 'Cerrado Expandicion de ',
-          detail: event.data.nombre,
-          life: 3000
-      });
-    }  
-
-    store() {
-      this.submitted = true;
-  
-      if (this.formSave.invalid) {
-        this.errorMessageToast();
-        this.formSave.markAllAsTouched();
-        return;
+      abrirExpand(event: TableRowExpandEvent) {
+        this.messageService.add({ 
+          severity: 'info', 
+          summary: 'Abierto Expandicion de', 
+          detail: event.data.nombre, 
+          life: 3000 });
       }
-  
-      if (this.formSave.valid) {
-        const newRepresentante: any = {
-          id_representante: this.formSave.value.id_representante,
-          id_usuario: this.formSave.value.id_usuario,
-        };
-  
-        this.representantenadadorService.createRepresentanteNadador(newRepresentante).subscribe({
-          next: () => {
-            this.saveMessageToast();
-            this.getRepresentanteNadador();
-            this.visibleSave = false;
-          },
-          error: (err) => {
-            console.error('Error al guardar registro del representante del nadador:', err);
-            
-          }
+    
+      cerrarCollapse(event: TableRowCollapseEvent) {
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Cerrado Expandicion de ',
+            detail: event.data.nombre,
+            life: 3000
         });
+      }  
+
+      store() {
+        this.submitted = true;
+
+        if (this.formSave.invalid) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Por favor, completa todos los campos obligatorios.',
+          });
+          this.formSave.markAllAsTouched();
+          return;
+        }
+
+        if (this.formSave.valid) {
+          const newRepresentante: any = {
+            id_representante: this.formSave.value.id_representante,
+            id_usuario: this.formSave.value.id_usuario,
+          };
+
+          this.representantenadadorService.createRepresentanteNadador(newRepresentante).subscribe({
+            next: () => {
+              this.saveMessageToast();
+              this.getRepresentanteNadador();
+              this.visibleSave = false;
+            },
+            error: (err) => {
+              console.error('Error al guardar:', err);
+
+              if (err.status === 422 && err.error?.message?.includes('ya está asignado')) {
+                this.errorAlGuardarNadador();
+              } else {
+                this.errorAlGuardarDatos();
+              }
+            }
+          });
+        }
       }
-      }
-  
+
       showSaveDialog() {
         this.formSave.reset();
         this.visibleSave = true;
@@ -208,6 +217,14 @@ export class RepresentantenadadorComponent implements OnInit{
       formatDate = (date: Date): string => {
         return date.toISOString().split('T')[0];
       };
+
+      errorAlGuardarDatos() {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ocurrió un error al guardar el representante del nadador.' });
+      }
+
+      errorAlGuardarNadador() {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Este nadador ya está asignado a este representante.' });
+      }
     
       saveMessageToast() {
         this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Guardado correctamente' });
@@ -230,32 +247,44 @@ export class RepresentantenadadorComponent implements OnInit{
         this.cancelMessageToast();
       }
 
-      update() {
-        if (this.formUpdate.invalid) {
-          this.errorMessageToast(); 
-          this.formUpdate.markAllAsTouched();
-          return;
-        }
-        if (this.formUpdate.valid) {
-          const updateRepresentante: RepresentanteNadador = {
-            id: this.reprenada.id,
-            id_representante: this.formUpdate.value.id_representante,
-            id_usuario: this.formUpdate.value.id_usuario,
-          };
-      
-          this.representantenadadorService.updateRepresentanteNadador(this.reprenada.id, updateRepresentante).subscribe({
-            next: (res) => {
-              this.getRepresentanteNadador();
-              this.visibleUpdate = false;
-              this.saveMessageToast();
-            },
-            error: (err) => {
-              console.error('Error actualizando registro representante nadador:', err);
-              this.errorMessageToast(); 
-            }
-          });
-        }
+      update() 
+      {
+          if (this.formUpdate.invalid) {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Por favor, completa todos los campos obligatorios.',
+            });
+            this.formUpdate.markAllAsTouched();
+            return;
+          }
+
+          if (this.formUpdate.valid) {
+            const updateRepresentante: RepresentanteNadador = {
+              id: this.reprenada.id,
+              id_representante: this.formUpdate.value.id_representante,
+              id_usuario: this.formUpdate.value.id_usuario,
+            };
+
+            this.representantenadadorService.updateRepresentanteNadador(this.reprenada.id, updateRepresentante).subscribe({
+              next: () => {
+                this.getRepresentanteNadador();
+                this.visibleUpdate = false;
+                this.saveMessageToast();
+              },
+              error: (err) => {
+                console.error('Error actualizando representante-nadador:', err);
+
+                if (err.status === 422 && err.error?.message?.includes('ya está asignado')) {
+                  this.errorAlGuardarNadador();
+                } else {
+                  this.errorAlGuardarDatos();
+                }
+              }
+            });
+          }
       }
+
 
       edit(representanteId: any) {
         this.idForUpdate = true;

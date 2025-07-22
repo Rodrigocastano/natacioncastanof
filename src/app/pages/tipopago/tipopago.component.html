@@ -74,9 +74,9 @@
         </tr>
       </ng-template>
 
-      <ng-template #body let-tipo>
+      <ng-template #body let-tipo let-i="rowIndex">
         <tr>
-          <td style="text-align: left;">{{ tipo.id }}</td>
+          <td style="text-align: left;">{{ i + 1 }}</td>
           <td style="width: 150px; text-align: center;">{{ tipo.nombre }}</td>
           <td style="text-align: right;">
             <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="edit(tipo)"/>

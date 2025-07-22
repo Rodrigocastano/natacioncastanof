@@ -134,11 +134,25 @@ soloNumeros(event: any): boolean {
           this.visibleSave = false;
         },
         error: (err) => {
-          console.error('Error al guardar la representante:', err);
+          if (err.status === 422) {
+            this.errorCedulaMessageToast();
+          } else {
+            this.errorAlGuardarDatos();
+          }
         }
+
       });
     }
   }
+
+        errorAlGuardarDatos() {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ocurrió un error al guardar el representante.' });
+      }
+
+    errorCedulaMessageToast() {
+      this.messageService.add({ severity: 'error', summary: 'Identificación duplicada', detail: 'Ya existe un representante registrado con esta identificación.'});
+    }
+    
 
   cancelSave() {
     this.visibleSave = false;

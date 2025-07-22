@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PagoEntrenadoresService } from '../service/pago-entrenadores.service';
 import { pagoEntrenadores } from '../interfaces/pagoentrenadores';
-import { MessageService } from 'primeng/api';
+import { MessageService, ToastMessageOptions } from 'primeng/api';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, formatDate } from '@angular/common';
 import { TableModule, TableRowCollapseEvent, TableRowExpandEvent } from 'primeng/table';
@@ -20,8 +20,8 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { DropdownModule } from 'primeng/dropdown';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
-import { EntrenadorService } from '../service/entrenador.service';
-import { Entrenador } from '../interfaces/entrenador';
+import { Usuario } from '../interfaces/usuario';
+import { EstadoPago } from '../interfaces/estadoPago';
 
 @Component({
   selector: 'app-pago-entrenadores',
@@ -50,195 +50,267 @@ import { Entrenador } from '../interfaces/entrenador';
   ],
 })
 export class PagoEntrenadoresComponent implements OnInit {
-  pagos: any[] = [];
-  pagosOriginal: any[] = [];
-  usuarios: Entrenador[] = [];
-  expandedRows = {};
-  loading: boolean = true;
-  terminoBusqueda: string = '';
-  formSave!: FormGroup;
-  formUpdate!: FormGroup;
-  visibleSave = false;
-  visibleUpdate = false;
-  visibleDelete = false;
-  idPagoEliminar: number = 0;
-  medi: any;
 
-  submitted = false;
-  maxDate: Date = new Date();
-  fechaActual: Date = new Date();
+      formSave!: FormGroup;
+      visibleSave: boolean = false;
+      pago: pagoEntrenadores[] = [];
+      idPago: number = 0;
+      visibleDelete: boolean = false;
+
+      formUpdate!: FormGroup;
+      pag: any
+      idForUpdate: boolean = false;
+      visibleUpdate: boolean = false;
+      usuarios: Usuario[] = [];
+      estadoPago: EstadoPago[] = [];
+      expandedRows = {};
+      cols: any[] = [];
+      expanded: boolean = false;
+      msgs: ToastMessageOptions[] | null = [];
+
+      submitted: boolean = false;
+      maxDate: Date = new Date();
+      fechaActual: Date = new Date();
+      loading: boolean = true;
+
+      terminoBusqueda: string = '';
+      buscarOriginal: pagoEntrenadores[] = [];
+
 
 
   constructor(
-    private pagoService: PagoEntrenadoresService,
-    private usuarioService: EntrenadorService,
-    private fb: FormBuilder,
-    private messageService: MessageService
-  ) {
-    this.formSave = this.fb.group({
-      id_usuario: ['', Validators.required],
-      monto: ['', Validators.required],
-      fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
-      estado_funcional: [1],  // o según necesites
-    });
-
-    this.formUpdate = this.fb.group({
-      id_usuario: ['', Validators.required],
-      monto: ['', Validators.required],
-      fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
-      estado_funcional: [1],
-    });
-  }
-
-  ngOnInit(): void {
-    this.getPagos();
-    this.getUsuarios();
-  }
-
-      getUsuarios() {
-      this.usuarioService.getAllEntrenadore().subscribe(
-        data => {
-          this.usuarios = data.map((usuario: any) => ({
-            ...usuario,
-            display: `${usuario.nombre} ${usuario.apellido} - ${usuario.cedula}`
-          }));
-          console.log(this.usuarios);
+          private fb: FormBuilder,
+          private pagoEntrenadorService: PagoEntrenadoresService,
+          private messageService: MessageService
+        ) {
+          this.formSave = this.fb.group({
+            id_usuario: ['', [Validators.required]],
+            id_estado_pago: ['', [Validators.required]],
+            monto: ['', [Validators.required]],
+            fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
+            monto_abonado: ['', [Validators.required]],
+            fecha_vencimiento: ['', [Validators.required]]
+            
+          });
+          this.formUpdate = fb.group({
+            id_estado_pago: ['', [Validators.required]],
+            fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
+            id_usuario: ['', [Validators.required]],
+            monto: ['', [Validators.required]],
+            monto_abonado: ['', [Validators.required]],
+            fecha_vencimiento: ['', [Validators.required]]
+          });
         }
-      );
-    }
-
-  getPagos() {
-    this.pagoService.getAllPagoEntrenadore().subscribe({
-      next: (res) => {
-        // Asumo que backend ya agrupa por usuario como en tu método PHP
-        this.pagos = res.data;
-        this.pagosOriginal = res.data;
-        this.loading = false;
-      },
-      error: (err) => {
-        this.loading = false;
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los pagos' });
-        console.error(err);
+    
+        ngOnInit(): void {
+          this.getPago();
+          this.getUsuarios();
+          this.getEstadoPago();
+        }
+  
+        getPago() {
+          this.pagoEntrenadorService.getAllPagoEntrenadore().subscribe(
+            data => {
+              this.pago = data.data
+              this.buscarOriginal = data.data; 
+              this.loading = false;
+            }
+          );
+        }
+  
+        getUsuarios() {
+          this.pagoEntrenadorService.getAllEntrenadore().subscribe(
+            data => {
+              this.usuarios = data.map((usuario: any) => ({
+                ...usuario,
+                display: `${usuario.nombre} ${usuario.apellido} - ${usuario.cedula}`
+              }));
+            }
+          );
+        }
+  
+        getEstadoPago() {
+          this.pagoEntrenadorService.getAllEstadoPago().subscribe(
+            data => {
+              this.estadoPago = data.map((estadoPago: any) => ({
+                ...estadoPago,
+                displayTipo: `${estadoPago.pagos}`
+              }));
+            }
+          );
+        }
+  
+        filtrarBusqueda() {
+          const termino = this.terminoBusqueda.trim().toLowerCase();
+          this.pago = this.buscarOriginal.filter(usuario => {
+            return (
+              usuario.nombre?.toLowerCase().includes(termino) ||
+              usuario.apellido?.toLowerCase().includes(termino) ||
+              usuario.cedula?.toLowerCase().includes(termino)
+            );
+          });
+        }
+  
+        abrirExpand(event: TableRowExpandEvent) {
+          this.messageService.add({ 
+            severity: 'info', 
+            summary: 'Abierto Expandicion de', 
+            detail: event.data.nombre, 
+            life: 3000 });
+        }
+  
+        cerrarCollapse(event: TableRowCollapseEvent) {
+          this.messageService.add({
+              severity: 'success',
+              summary: 'Cerrado Expandicion de ',
+              detail: event.data.nombre,
+              life: 3000
+          });
+        }
+  
+        store() {
+        this.submitted = true;
+    
+        if (this.formSave.invalid) {
+          this.errorMessageToast();
+          this.formSave.markAllAsTouched();
+          return;
+        }
+    
+        if (this.formSave.valid) {
+          const newPago: any = {
+            id_estado_pago: this.formSave.value.id_estado_pago,
+            fecha: this.formatDate(this.formSave.value.fecha),
+            monto: this.formSave.value.monto,
+            fecha_vencimiento: this.formatDate(this.formSave.value.fecha_vencimiento),
+            monto_abonado: this.formSave.value.monto_abonado,
+            id_usuario: this.formSave.value.id_usuario,
+          };
+    
+          this.pagoEntrenadorService.createPagoEntrenadore(newPago).subscribe({
+            next: () => {
+              this.saveMessageToast();
+              this.getPago();
+              this.visibleSave = false;
+            },
+            error: (err) => {
+              console.error('Error al guardar registro del pago:', err);
+              
+            }
+          });
+        }
+        }
+        
+        getNombreEstadoPago(id: number): string {
+          const estado = this.estadoPago.find(ep => ep.id === id);
+          return estado ? estado.pagos : 'Desconocido';
+        }
+  
+        showSaveDialog() {
+          this.formSave.reset();
+          this.visibleSave = true;
+        }
+  
+        formatDate = (date: Date): string => {
+        const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+        return adjustedDate.toISOString().split('T')[0];
       }
-    });
+    
+        saveMessageToast() {
+          this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Guardado correctamente' });
+        }
+  
+        cancelMessageToast() {
+          this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Cancelado!...' });
+        }
+  
+        errorMessageToast() {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al guardar el datos.' });
+        }
+  
+        EliminadoMessageToasts() {
+          this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Eliminado correctamente' });
+        }
+  
+        cancelSave() {
+          this.visibleSave = false;
+          this.cancelMessageToast();
+        }
+  
+        update() {
+          if (this.formUpdate.invalid) {
+            this.errorMessageToast(); 
+            this.formUpdate.markAllAsTouched();
+            return;
+          }
+          if (this.formUpdate.valid) {
+            const updatePago: pagoEntrenadores = {
+              id: this.pag.id,
+              id_estado_pago: this.formUpdate.value.id_estado_pago,
+              monto: this.formUpdate.value.monto,
+              fecha: this.formatDate(this.formUpdate.value.fecha),
+              monto_abonado: this.formUpdate.value.monto_abonado,
+              fecha_vencimiento: this.formatDate(this.formUpdate.value.fecha_vencimiento),
+              id_usuario: this.formUpdate.value.id_usuario,
+            };
+        
+            this.pagoEntrenadorService.updatePagoEntrenadore(this.pag.id, updatePago).subscribe({
+              next: (res) => {
+                this.getPago();
+                this.visibleUpdate = false;
+                this.saveMessageToast();
+              },
+              error: (err) => {
+                console.error('Error actualizando registro del pago:', err);
+                this.errorMessageToast(); 
+              }
+            });
+          }
+        }
+  
+        edit(elasticId: any) {
+          console.log('datos', elasticId)
+          this.idForUpdate = true;
+          this.pag = elasticId
+          if (this.pag) {
+            const parseLocalDate = (dateString: string) => {
+            return dateString ? new Date(dateString + 'T00:00:00') : null;
+          };
+            this.formUpdate.controls['id_estado_pago'].setValue(this.pag?.id_estado_pago)
+            this.formUpdate.controls['id_usuario'].setValue(this.pag?.id_usuario) 
+            this.formUpdate.controls['monto'].setValue(this.pag?.monto) 
+            this.formUpdate.controls['monto_abonado'].setValue(this.pag?.monto_abonado) 
+            this.formUpdate.controls['fecha_vencimiento'].setValue( parseLocalDate(this.pag.fecha_vencimiento));
+            this.formUpdate.controls['fecha'].setValue( parseLocalDate(this.pag.fecha));
+          }
+          this.visibleUpdate = true;
+          
+        }
+  
+        canceUpdate() {
+          this.visibleUpdate = false;
+          this.cancelMessageToast();
+        }
+  
+        delete() {
+          this.pagoEntrenadorService.deletePlanPagoEntrenadore(this.idPago).subscribe({
+            next: () => {
+              this.visibleDelete = false;
+              this.getPago();
+              this.idPago = 0;
+              this.EliminadoMessageToasts(); 
+            },
+            error: (err) => {
+              console.error('Error al eliminar:', err);
+              this.errorMessageToast();
+            }
+          });
+        }
+           
+        showModalDelete(id: number) {
+          this.idPago = id;
+          this.visibleDelete = true
+        }
+  
   }
-
-  filtrarBusqueda() {
-    const termino = this.terminoBusqueda.trim().toLowerCase();
-    this.pagos = this.pagosOriginal.filter(user => 
-      user.nombre?.toLowerCase().includes(termino) ||
-      user.apellido?.toLowerCase().includes(termino) ||
-      user.cedula?.toLowerCase().includes(termino) ||
-      user.genero?.toLowerCase().includes(termino)
-    );
-  }
-
-  abrirExpand(event: TableRowExpandEvent) {
-    this.messageService.add({ severity: 'info', summary: 'Expandido', detail: event.data.nombre, life: 2000 });
-  }
-
-  cerrarCollapse(event: TableRowCollapseEvent) {
-    this.messageService.add({ severity: 'success', summary: 'Colapsado', detail: event.data.nombre, life: 2000 });
-  }
-
-  showSaveDialog() {
-    this.formSave.reset();
-    this.visibleSave = true;
-  }
-
-  store() {
-    this.submitted = true;
-    if (this.formSave.invalid) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Complete los campos requeridos.' });
-      this.formSave.markAllAsTouched();
-      return;
-    }
-
-    const nuevoPago = {
-      ...this.formSave.value,
-      fecha: this.formatDate(this.formSave.value.fecha),
-    };
-
-    this.pagoService.createPagoEntrenadore(nuevoPago).subscribe({
-      next: () => {
-        this.messageService.add({ severity: 'success', summary: 'Guardado', detail: 'Pago registrado correctamente.' });
-        this.getPagos();
-        this.visibleSave = false;
-      },
-      error: (err) => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo guardar el pago.' });
-        console.error(err);
-      }
-    });
-  }
-
-  edit(pago: any) {
-    this.medi = pago;
-    this.formUpdate.patchValue({
-      id_usuario: pago.id_usuario,
-      monto: pago.monto,
-      fecha: new Date(pago.fecha),
-      estado_funcional: pago.estado_funcional,
-    });
-    this.visibleUpdate = true;
-  }
-
-  update() {
-    if (this.formUpdate.invalid) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Complete los campos requeridos.' });
-      this.formUpdate.markAllAsTouched();
-      return;
-    }
-
-    const updatePago = {
-      ...this.formUpdate.value,
-      fecha: this.formatDate(this.formUpdate.value.fecha),
-    };
-
-    this.pagoService.updatePagoEntrenadore(this.medi.id, updatePago).subscribe({
-      next: () => {
-        this.messageService.add({ severity: 'success', summary: 'Actualizado', detail: 'Pago actualizado correctamente.' });
-        this.getPagos();
-        this.visibleUpdate = false;
-      },
-      error: (err) => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el pago.' });
-        console.error(err);
-      }
-    });
-  }
-
-  showModalDelete(id: number) {
-    this.idPagoEliminar = id;
-    this.visibleDelete = true;
-  }
-
-  delete() {
-    this.pagoService.deletePlanPagoEntrenadore(this.idPagoEliminar).subscribe({
-      next: () => {
-        this.messageService.add({ severity: 'success', summary: 'Eliminado', detail: 'Pago eliminado correctamente.' });
-        this.getPagos();
-        this.visibleDelete = false;
-      },
-      error: (err) => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el pago.' });
-        console.error(err);
-      }
-    });
-  }
-
-  cancelSave() {
-    this.visibleSave = false;
-  }
-
-  cancelUpdate() {
-    this.visibleUpdate = false;
-  }
-
-  formatDate(date: any): string {
-    if (!date) return '';
-    const d = new Date(date);
-    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-    return d.toISOString().split('T')[0];
-  }
-}
+  

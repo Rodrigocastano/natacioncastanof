@@ -51,4 +51,16 @@ export class AsistenciaService {
     deleteAsistencia(id: number){
       return this.http.delete(`${this.apisUrl}/destroyAsistencia/${id}`);
     }
+
+  getUsuariosByEntrenados(idGrupo: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apisUrl}/getGruposByEntrenado/${idGrupo}`);
+  }
+
+
+  getUsuariosByGrupoYTurno(idGrupo: number, turno: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apisUrl}/getUsuariosByGrupoYTurno/${turno}/${idGrupo}`);
+  }
+
+
+
 }

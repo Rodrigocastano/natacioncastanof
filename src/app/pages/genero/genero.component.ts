@@ -93,29 +93,34 @@ export class GeneroComponent implements OnInit {
   }
 
   store() {
-    this.submitted = true;
-  
-    if (this.formSave.invalid) {
-      this.errorMessageToast();
-      return;
-    }
-  
-    const newGenero: any = {
-      nombre: this.formSave.value.nombre,
-    };
+      this.submitted = true;
 
-    this.generoService.createGenero(newGenero).subscribe({
-      next: () => {
-        this.saveMessageToast();
-        this.getGenero();
-        this.formSave.reset();
-        this.submitted = false;
-      },
-      error: (err) => {
-        console.error('Error al guardar el género:', err);
-        this.errorMessageToast();
+      if (this.formSave.invalid) {
+          this.errorMessageToast();
+          return;
       }
-    });
+
+      const newGenero: any = {
+          nombre: this.formSave.value.nombre,
+      };
+
+      this.generoService.createGenero(newGenero).subscribe({
+          next: () => {
+              this.saveMessageToast();
+              this.getGenero();
+              this.formSave.reset();
+              this.submitted = false;
+          },
+          error: (err) => {
+              console.error('Error al guardar el género:', err);
+              
+              if (err.status === 409) {
+                  this.errorIngresoMessageToast();
+              } else {
+                  this.errorMessageToast();
+              }
+          }
+      });
   }
 
   edit(genero: Genero) {
@@ -132,33 +137,38 @@ export class GeneroComponent implements OnInit {
     this.cancelMessageToast();
   }
 
-  update() {
+update() {
     this.submitted = true;
     
     if (this.formUpdate.invalid) {
-      this.errorMessageToast();
-      return;
+        this.errorMessageToast();
+        return;
     }
 
     const updateGenero: Genero = {
-      id: this.idForUpdate,
-      nombre: this.formUpdate.value.nombre,
+        id: this.idForUpdate,
+        nombre: this.formUpdate.value.nombre,
     };
 
     this.generoService.updateGenero(this.idForUpdate, updateGenero).subscribe({
-      next: () => {
-        this.saveMessageToast();
-        this.getGenero();
-        this.editing = false;
-        this.formUpdate.reset();
-        this.submitted = false;
-      },
-      error: (err) => {
-        console.error('Error actualizando género:', err);
-        this.errorMessageToast();
-      }
+        next: () => {
+            this.saveMessageToast();
+            this.getGenero();
+            this.editing = false;
+            this.formUpdate.reset();
+            this.submitted = false;
+        },
+        error: (err) => {
+            console.error('Error actualizando género:', err);
+            
+            if (err.status === 409) {
+                this.errorIngresoMessageToast();
+            } else {
+                this.errorMessageToast();
+            }
+        }
     });
-  }
+}
 
   delete() {
     this.generoService.deleteGenero(this.idGenero).subscribe({
@@ -194,5 +204,9 @@ export class GeneroComponent implements OnInit {
 
   errorMessageToast() {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al procesar el género' });
+  }
+
+  errorIngresoMessageToast() {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ya existe un género con ese nombre registrado' });
   }
 }
