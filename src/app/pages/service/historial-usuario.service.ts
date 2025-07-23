@@ -28,11 +28,10 @@ export class HistorialUsuarioService {
     destroyUsuarioGrupo(id: number): Observable<any> {
       return this.http.delete(`${this.apisUrl}/destroyUsuarioGrupos/${id}`);
     }
-    
-/* 
-    updateHistorialUsuarios(id: number, historialUsuario: HistorialUsuario): Observable<any> {
-      return this.http.put(`${this.apisUrl}/updateHistorialUsuario/${id}`, historialUsuario);
-    } */
+
+    cancelarMatricula(id: number): Observable<any> {
+      return this.http.put(`${this.apisUrl}/cancelarMatricula/${id}`, {});
+    }
 
 
 }

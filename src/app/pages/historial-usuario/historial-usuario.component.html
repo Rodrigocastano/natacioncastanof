@@ -74,6 +74,14 @@
                 (click)="edit(registro)"></p-button>
         <p-button icon="pi pi-trash" severity="danger" class="mr-2"  [rounded]="true" [outlined]="true" 
                 (click)="showModalDelete(registro.id)"></p-button>
+         <p-button 
+    icon="pi pi-times-circle" 
+    class="mr-2" 
+    [rounded]="true" 
+    [outlined]="true"
+    (click)="cancelarMatricula(registro.id)" 
+    *ngIf="registro.estado_funcional">
+  </p-button>
         </td>
     </tr>
     </ng-template>
@@ -145,30 +153,21 @@
                 </div>
 
                 <div class="grid grid-cols-12 gap-4">                         
-                    <div class="col-span-6">
+                    <div class="col-span-6 col-start-4">
                         <label for="fecha_inicio" class="block font-bold mb-2">Fecha inicio</label>
-                        <p-datepicker 
-                            [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fecha_inicio" inputId="fecha_inicio" [showIcon]="true" [showButtonBar]="true" 
-                            [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione fecha inicio'" class="w-96" >
-                        </p-datepicker>
-                        <p-message 
-                            *ngIf="formSave.get('fecha_inicio')?.invalid && (formSave.get('fecha_inicio')?.dirty || formSave.get('fecha_inicio')?.touched)"  severity="error"  variant="simple" size="small">
-                            Fecha inicio es requerido
-                        </p-message>
+                        <div class="flex justify-center">
+                            <p-datepicker 
+                                [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fecha_inicio" inputId="fecha_inicio" [showIcon]="true" [showButtonBar]="true" 
+                                [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione fecha inicio'" class="w-96">
+                            </p-datepicker>
+                        </div>
+                        <div class="flex justify-center">
+                            <p-message 
+                                *ngIf="formSave.get('fecha_inicio')?.invalid && (formSave.get('fecha_inicio')?.dirty || formSave.get('fecha_inicio')?.touched)" severity="error" variant="simple" size="small">
+                                Fecha inicio es requerido
+                            </p-message>
+                        </div>
                     </div>
-
-                    <div class="col-span-6">
-                        <label for="fecha_fin" class="block font-bold mb-2">Fecha Fin</label>
-                        <p-datepicker 
-                            formControlName="fecha_fin" inputId="fecha_fin" [showIcon]="true" [showButtonBar]="true" 
-                            [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione fecha inicio'" class="w-96" >
-                        </p-datepicker>
-                        <p-message 
-                            *ngIf="formSave.get('fecha_fin')?.invalid && (formSave.get('fecha_fin')?.dirty || formSave.get('fecha_fin')?.touched)"  severity="error"  variant="simple" size="small">
-                            Fecha inicio es requerido
-                        </p-message>
-                    </div>
-                        
                 </div>
 
             </div>
@@ -193,7 +192,6 @@
         <p-button label="Eliminar" icon="pi pi-check" (click)="delete()" severity="danger" outlined />
     </ng-template>
 </p-dialog>
-
 
  <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar registro plan de pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
     <ng-template #content>

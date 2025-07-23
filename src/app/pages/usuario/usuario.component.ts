@@ -226,7 +226,7 @@ store() {
       fechaInscripcion: this.formatDate(this.formSaveUsuario.value.fechaInscripcion),
       id_ciudad: this.formSaveUsuario.value.id_ciudad,
       id_genero: this.formSaveUsuario.value.id_genero,
-      id_rol: 2
+      id_rol: 3
     };
 
     console.log('Datos enviados al backend:', newEntrenador);

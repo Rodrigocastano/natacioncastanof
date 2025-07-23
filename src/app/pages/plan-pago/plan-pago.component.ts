@@ -122,194 +122,180 @@ planToCancel: any = null;
         });
       }
   
-            ngOnInit(): void {
-              this.getPlanPago();
-              this.getUsuarios();
-              this.getTipoPago();
-            }
-
-   /*          confirmarCancelacion(plan: any) {
-                this.confirmationService.confirm({
-                    message: `¿Estás seguro de cancelar el plan ID: ${plan.id}?`,
-                    header: 'Confirmar cancelación',
-                    icon: 'pi pi-exclamation-triangle',
-                    acceptLabel: 'Sí, cancelar',
-                    rejectLabel: 'No',
-                    accept: () => {
-                        this.cancelarPlan(plan);
-                    }
-                });
-            } */
+          ngOnInit(): void {
+            this.getPlanPago();
+            this.getUsuarios();
+            this.getTipoPago();
+          }
 
           confirmCancel(plan: any) {
-  this.planToCancel = plan;
-  this.visibleCancelDialog = true;
-}
+            this.planToCancel = plan;
+            this.visibleCancelDialog = true;
+          }
 
-cancelarPlan() {
-  if (!this.planToCancel) return;
+          cancelarPlan() {
+          if (!this.planToCancel) return;
 
-  const fechaActual = new Date();
-  const payload = {
-    fecha_fin: this.formatDate(fechaActual),
-    estado_funcional: 0
-  };
+          const fechaActual = new Date();
+          const payload = {
+          fecha_fin: this.formatDate(fechaActual),
+          estado_funcional: 0
+          };
 
-  this.planPagoService.CancelarPlan(this.planToCancel.id, payload).subscribe({
-    next: () => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Éxito',
-        detail: `Plan ID: ${this.planToCancel.id} cancelado correctamente (${this.formatDate(fechaActual)})`
-      });
-      this.getPlanPago();
-    },
-    error: (err) => {
-      console.error('Error al cancelar plan:', err);
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: `No se pudo cancelar el plan ID: ${this.planToCancel.id}`
-      });
-    },
-    complete: () => {
-      this.visibleCancelDialog = false;
-      this.planToCancel = null;
-    }
-  });
-}
+          this.planPagoService.CancelarPlan(this.planToCancel.id, payload).subscribe({
+          next: () => {
+          this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: `Plan ID: ${this.planToCancel.id} cancelado correctamente (${this.formatDate(fechaActual)})`
+          });
+          this.getPlanPago();
+          },
+          error: (err) => {
+          console.error('Error al cancelar plan:', err);
+          this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: `No se pudo cancelar el plan ID: ${this.planToCancel.id}`
+          });
+          },
+          complete: () => {
+          this.visibleCancelDialog = false;
+          this.planToCancel = null;
+          }
+          });
+          }
 
-            cancelarPlanDesdeDialogo() {
-                const planId = this.formUpdate.value.id;
-                
-                this.confirmationService.confirm({
-                    message: `¿Cancelar el plan ID: ${planId}? Se establecerá la fecha fin a hoy.`,
-                    header: 'Confirmar cancelación',
-                    icon: 'pi pi-exclamation-triangle',
-                    acceptLabel: 'Sí, cancelar',
-                    rejectLabel: 'No',
-                    accept: () => {
-                        const fechaActual = new Date();
-                        this.formUpdate.patchValue({
-                            fecha_fin: fechaActual,
-                            estado_funcional: 0
-                        });
-                        
-                        this.messageService.add({
-                            severity: 'info',
-                            summary: 'Cancelación pendiente',
-                            detail: `Plan ID: ${planId} marcado para cancelación. Guarda los cambios.`
-                        });
-                    }
-                });
-            }
-
-            getPlanPago() {
-              this.planPagoService.getAllPlanPago().subscribe(
-                data => {
-                  console.log('Datos recibidos del servicio:', data);
-                  this.planPago = data
-                  this.buscarOriginal = data; 
-                  this.loading = false;
-                }
-              );
-            }     
-
-            formatearFrecuencia(fechaCobro: any): string {
-  if (!fechaCobro) return 'Sin frecuencia';
-
-  try {
-    const obj = typeof fechaCobro === 'string' ? JSON.parse(fechaCobro) : fechaCobro;
-    const frecuencia = obj.frecuencia ? this.capitalizar(obj.frecuencia) : 'Frecuencia desconocida';
-    const dias = obj.dias?.length ? obj.dias.join(', ') : '';
-    return dias ? `${frecuencia} (${dias})` : `${frecuencia}`;
-  } catch {
-    return 'Formato inválido';
-  }
-}
-
-capitalizar(texto: string): string {
-  return texto.charAt(0).toUpperCase() + texto.slice(1);
-}
-
-
-            getUsuarios() {
-              this.usuarioService.getAllUsuarios().subscribe(
-                data => {
-                  this.usuarios = data.map((usuario: any) => ({
-                    ...usuario,
-                    display: `${usuario.nombre} ${usuario.apellido} - ${usuario.cedula}`
-                  }));
-                }
-              );
-            }
-
-            getTipoPago() {
-              this.tipopagoService.getAllTipoPago().subscribe(
-                data => {
-                  this.tipoPago = data.map((tipoPago: any) => ({
-                    ...tipoPago,
-                    displayEstado: `${tipoPago.nombre}`
-                  }));
-                }
-              );
-            }
-
-            filtrarBusqueda() {
-              const termino = this.terminoBusqueda.trim().toLowerCase();
-              this.planPago = this.buscarOriginal.filter(usuario => {
-                return (
-                  usuario.nombre?.toLowerCase().includes(termino) ||
-                  usuario.apellido?.toLowerCase().includes(termino) ||
-                  usuario.cedula?.toLowerCase().includes(termino)
-                );
-              });
-            }
-
-            frecuencia = [
-              { label: 'Diaria', value: 'diaria' },
-              { label: 'Semanal', value: 'semanal' },
-              { label: 'Quincenal', value: 'quincenal' },
-              { label: 'Mensual', value: 'mensual' }
-            ];
-
-            diasDelMes = Array.from({ length: 31 }, (_, i) => ({
-              label: `${i + 1}`, value: i + 1
-            }));
-
-            diasSemana = [
-                { label: 'Lunes', value: 'Lunes' },
-                { label: 'Martes', value: 'Martes' },
-                { label: 'Miercoles', value: 'Miercoles' },
-                { label: 'Jueves', value: 'Jueves' },
-                { label: 'Viernes', value: 'Viernes' },
-                { label: 'Sabado', value: 'Sabado' },
-                { label: 'Domingo', value: 'Domingo' }
-            ];
-
-            opcionDiario = [{ label: 'Diario', value: 'diario' }];
-
-            get opcionesDias() {
-              const frecuencia = this.formSave.get('fecha_cobro.frecuencia')?.value;
+          cancelarPlanDesdeDialogo() {
+              const planId = this.formUpdate.value.id;
               
-              switch(frecuencia) {
-                case 'diario':
-                  return this.opcionDiario;
-                case 'semanal':
-                  return this.diasSemana;
-                case 'mensual':
-                case 'quincenal':
-                default:
-                  return this.diasDelMes;
-              }
-            }
+              this.confirmationService.confirm({
+                  message: `¿Cancelar el plan ID: ${planId}? Se establecerá la fecha fin a hoy.`,
+                  header: 'Confirmar cancelación',
+                  icon: 'pi pi-exclamation-triangle',
+                  acceptLabel: 'Sí, cancelar',
+                  rejectLabel: 'No',
+                  accept: () => {
+                      const fechaActual = new Date();
+                      this.formUpdate.patchValue({
+                          fecha_fin: fechaActual,
+                          estado_funcional: 0
+                      });
+                      
+                      this.messageService.add({
+                          severity: 'info',
+                          summary: 'Cancelación pendiente',
+                          detail: `Plan ID: ${planId} marcado para cancelación. Guarda los cambios.`
+                      });
+                  }
+              });
+          }
 
-            onFrecuenciaChange() {
-              this.formSave.get('fecha_cobro.dias')?.setValue([]);
-              if (this.formSave.get('fecha_cobro.frecuencia')?.value === 'diario') {
-                this.formSave.get('fecha_cobro.dias')?.setValue(['diario']);
+          getPlanPago() {
+            this.planPagoService.getAllPlanPago().subscribe(
+              data => {
+                console.log('Datos recibidos del servicio:', data);
+                this.planPago = data
+                this.buscarOriginal = data; 
+                this.loading = false;
               }
+            );
+          }     
+
+          formatearFrecuencia(fechaCobro: any): string {
+              if (!fechaCobro) return 'Sin frecuencia';
+
+              try {
+                const obj = typeof fechaCobro === 'string' ? JSON.parse(fechaCobro) : fechaCobro;
+                const frecuencia = obj.frecuencia ? this.capitalizar(obj.frecuencia) : 'Frecuencia desconocida';
+                const dias = obj.dias?.length ? obj.dias.join(', ') : '';
+                return dias ? `${frecuencia} (${dias})` : `${frecuencia}`;
+              } catch {
+                return 'Formato inválido';
+}
+          }
+
+          capitalizar(texto: string): string {
+            return texto.charAt(0).toUpperCase() + texto.slice(1);
+          }
+
+          getUsuarios() {
+            this.usuarioService.getAllUsuarios().subscribe(
+              data => {
+                this.usuarios = data.map((usuario: any) => ({
+                  ...usuario,
+                  display: `${usuario.nombre} ${usuario.apellido} - ${usuario.cedula}`
+                }));
+              }
+            );
+          }
+
+          getTipoPago() {
+            this.tipopagoService.getAllTipoPago().subscribe(
+              data => {
+                this.tipoPago = data.map((tipoPago: any) => ({
+                  ...tipoPago,
+                  displayEstado: `${tipoPago.nombre}`
+                }));
+              }
+            );
+          }
+
+          filtrarBusqueda() {
+            const termino = this.terminoBusqueda.trim().toLowerCase();
+            this.planPago = this.buscarOriginal.filter(usuario => {
+              return (
+                usuario.nombre?.toLowerCase().includes(termino) ||
+                usuario.apellido?.toLowerCase().includes(termino) ||
+                usuario.cedula?.toLowerCase().includes(termino)
+              );
+            });
+          }
+
+          frecuencia = [
+            { label: 'Diaria', value: 'diaria' },
+            { label: 'Semanal', value: 'semanal' },
+            { label: 'Quincenal', value: 'quincenal' },
+            { label: 'Mensual', value: 'mensual' }
+          ];
+
+          diasDelMes = Array.from({ length: 31 }, (_, i) => ({
+            label: `${i + 1}`, value: i + 1
+          }));
+
+          diasSemana = [
+              { label: 'Lunes', value: 'Lunes' },
+              { label: 'Martes', value: 'Martes' },
+              { label: 'Miercoles', value: 'Miercoles' },
+              { label: 'Jueves', value: 'Jueves' },
+              { label: 'Viernes', value: 'Viernes' },
+              { label: 'Sabado', value: 'Sabado' },
+              { label: 'Domingo', value: 'Domingo' }
+          ];
+
+          opcionDiario = [{ label: 'Diario', value: 'diario' }];
+
+          get opcionesDias() {
+            const frecuencia = this.formSave.get('fecha_cobro.frecuencia')?.value;
+            
+            switch(frecuencia) {
+              case 'diario':
+                return this.opcionDiario;
+              case 'semanal':
+                return this.diasSemana;
+              case 'mensual':
+              case 'quincenal':
+              default:
+                return this.diasDelMes;
             }
+          }
+
+          onFrecuenciaChange() {
+            this.formSave.get('fecha_cobro.dias')?.setValue([]);
+            if (this.formSave.get('fecha_cobro.frecuencia')?.value === 'diario') {
+              this.formSave.get('fecha_cobro.dias')?.setValue(['diario']);
+            }
+          }
 
             store() {
                   this.submitted = true;

@@ -91,7 +91,7 @@ export class EntrenadorgrupoComponent implements OnInit {
       id_usuario: ['', Validators.required],
       id_grupo: ['', Validators.required],
       fecha_inicio: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
-      fecha_fin: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
+      fecha_fin: [[]],
       estado_funcional: ['', []],
       turno: [null, Validators.required] 
     });
@@ -100,7 +100,7 @@ export class EntrenadorgrupoComponent implements OnInit {
       id_usuario: ['', Validators.required],
       id_grupo: ['', Validators.required],
       fecha_inicio: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
-      fecha_fin: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
+      fecha_fin: [[]],
       estado_funcional: ['', []],
       turno: [null, Validators.required] 
     });
@@ -166,7 +166,7 @@ export class EntrenadorgrupoComponent implements OnInit {
         id_usuario: this.formSave.value.id_usuario,
         id_grupo: this.formSave.value.id_grupo,
         fecha_inicio: this.formatDate(this.formSave.value.fecha_inicio),
-        fecha_fin: this.formatDate(this.formSave.value.fecha_inicio),
+        /* fecha_fin: this.formatDate(this.formSave.value.fecha_inicio), */
         estado_funcional: presenteValue, 
         turno: this.formSave.value.turno, 
       };
@@ -275,7 +275,8 @@ export class EntrenadorgrupoComponent implements OnInit {
         id_usuario: formData.id_usuario,
         id_grupo: formData.id_grupo,
         fecha_inicio: this.formatDate(formData.fecha_inicio),
-        fecha_fin: this.formatDate(formData.fecha_fin),
+        fecha_fin: formData.fecha_fin ? this.formatDate(formData.fecha_fin) : null,
+
         estado_funcional: formData.estado_funcional ? 1 : 0,
         turno: formData.turno,
     };
@@ -298,16 +299,23 @@ export class EntrenadorgrupoComponent implements OnInit {
     });
 }
 
-
-        
-
   getNombreCompleto(registro: HistorialEntrenador): string {
     return `${registro.nombre} ${registro.apellido}`;
   }
 
-  getEstadoFuncional(estado: number): string {
-    return estado === 1 ? 'Activo' : 'Inactivo';
-  }
+   cancelarMatricula(id: number) {
+      this.entrenadorgrupoService.cancelarMatriculaEntrenador(id).subscribe({
+        next: () => {
+          this.getEntrenadorGrupo(); // Recarga la tabla
+          this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Matrícula cancelada correctamente' });
+        },
+        error: (err) => {
+          console.error('Error al cancelar matrícula:', err);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo cancelar la matrícula' });
+        }
+      });
+    }
+
 
 
 }

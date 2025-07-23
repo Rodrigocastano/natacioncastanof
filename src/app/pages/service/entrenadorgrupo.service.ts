@@ -33,5 +33,9 @@ export class EntrenadorgrupoService {
       return this.http.get(`${this.apisUrl}/entrenadores/${entrenadorId}`);
     }
 
+    cancelarMatriculaEntrenador(id: number): Observable<any> {
+      return this.http.put(`${this.apisUrl}/cancelarMatriculaEntrenado/${id}`, {});
+    }
+
 
 }
