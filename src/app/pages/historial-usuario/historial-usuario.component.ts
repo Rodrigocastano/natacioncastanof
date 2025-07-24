@@ -307,5 +307,4 @@ export class HistorialUsuarioComponent implements OnInit {
       });
     }
 
-
 }
