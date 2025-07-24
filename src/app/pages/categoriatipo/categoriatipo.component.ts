@@ -94,12 +94,12 @@ export class CategoriatipoComponent implements OnInit {
 
   store() {
     this.submitted = true;
-  
+
     if (this.formSave.invalid) {
       this.errorMessageToast();
       return;
     }
-  
+
     const newCategoria: any = {
       nombre: this.formSave.value.nombre,
     };
@@ -112,8 +112,12 @@ export class CategoriatipoComponent implements OnInit {
         this.submitted = false;
       },
       error: (err) => {
-        console.error('Error al guardar el tipo de categoría:', err);
-        this.errorMessageToast();
+        
+        if (err.status === 409) {
+          this.errorIngresoMessageToast();
+        } else {
+          this.errorMessageToast();
+        }
       }
     });
   }
@@ -152,10 +156,14 @@ export class CategoriatipoComponent implements OnInit {
         this.editing = false;
         this.formUpdate.reset();
         this.submitted = false;
+
       },
       error: (err) => {
-        console.error('Error actualizando tipo de categoría:', err);
-        this.errorMessageToast();
+        if (err.status === 409) {
+          this.errorIngresoMessageToast();
+        }  else {
+          this.errorMessageToast();
+        }
       }
     });
   }
@@ -194,5 +202,9 @@ export class CategoriatipoComponent implements OnInit {
 
   errorMessageToast() {
     this.messageService.add({ severity: 'error', summary: 'Hubo un problema al procesar el tipo de categoría' });
+  }
+
+  errorIngresoMessageToast() {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ya existe un tipo de categoría con ese nombre registrado' });
   }
 }

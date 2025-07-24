@@ -92,31 +92,34 @@ export class TipopagoComponent implements OnInit {
       : this.buscadorFiltrados.filter(a => a.nombre?.toLowerCase().includes(termino));
   }
 
-  store() {
-    this.submitted = true;
-  
-    if (this.formSave.invalid) {
-      this.errorMessageToast();
-      return;
-    }
-  
-    const newTipoPago: any = {
-      nombre: this.formSave.value.nombre,
-    };
+    store() {
+      this.submitted = true;
 
-    this.tipopagoService.createTipoPago(newTipoPago).subscribe({
-      next: () => {
-        this.saveMessageToast();
-        this.getTipoPago();
-        this.formSave.reset();
-        this.submitted = false;
-      },
-      error: (err) => {
-        console.error('Error al guardar el tipo de pago:', err);
+      if (this.formSave.invalid) {
         this.errorMessageToast();
+        return;
       }
-    });
-  }
+
+      const newTipoPago: any = {
+        nombre: this.formSave.value.nombre,
+      };
+
+      this.tipopagoService.createTipoPago(newTipoPago).subscribe({
+        next: () => {
+          this.saveMessageToast();
+          this.getTipoPago();
+          this.formSave.reset();
+          this.submitted = false;
+        },
+        error: (err) => {
+          if (err.status === 409) {
+            this.errorIngresoMessageToast();
+          } else {
+            this.errorMessageToast();
+          }
+        }
+      });
+    }
 
   edit(tipo: TipoPago) {
     this.editing = true;
@@ -139,12 +142,12 @@ export class TipopagoComponent implements OnInit {
       this.errorMessageToast();
       return;
     }
-
+  
     const updateTipoPago: TipoPago = {
       id: this.idForUpdate,
       nombre: this.formUpdate.value.nombre,
     };
-
+  
     this.tipopagoService.updateTipoPago(this.idForUpdate, updateTipoPago).subscribe({
       next: () => {
         this.saveMessageToast();
@@ -152,10 +155,14 @@ export class TipopagoComponent implements OnInit {
         this.editing = false;
         this.formUpdate.reset();
         this.submitted = false;
+  
       },
       error: (err) => {
-        console.error('Error actualizando tipo de pago:', err);
-        this.errorMessageToast();
+        if (err.status === 409) {
+          this.errorIngresoMessageToast();
+        }  else {
+          this.errorMessageToast();
+        }
       }
     });
   }
@@ -195,4 +202,9 @@ export class TipopagoComponent implements OnInit {
   errorMessageToast() {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al realizar la tipo de pago' });
   }
+
+  errorIngresoMessageToast() {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ya existe un tipo de pago con ese nombre registrado' });
+  }
+
 }

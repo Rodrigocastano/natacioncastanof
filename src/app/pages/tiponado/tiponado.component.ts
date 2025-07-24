@@ -94,12 +94,12 @@ export class TiponadoComponent implements OnInit {
 
   store() {
     this.submitted = true;
-  
+
     if (this.formSave.invalid) {
       this.errorMessageToast();
       return;
     }
-  
+
     const newTipoNado: any = {
       nombre: this.formSave.value.nombre,
     };
@@ -112,8 +112,12 @@ export class TiponadoComponent implements OnInit {
         this.submitted = false;
       },
       error: (err) => {
-        console.error('Error al guardar el tipo de nado:', err);
-        this.errorMessageToast();
+        
+        if (err.status === 409) {
+          this.errorIngresoMessageToast();
+        } else {
+          this.errorMessageToast();
+        }
       }
     });
   }
@@ -152,10 +156,14 @@ export class TiponadoComponent implements OnInit {
         this.editing = false;
         this.formUpdate.reset();
         this.submitted = false;
+
       },
       error: (err) => {
-        console.error('Error actualizando tipo de nado:', err);
-        this.errorMessageToast();
+        if (err.status === 409) {
+          this.errorIngresoMessageToast();
+        }  else {
+          this.errorMessageToast();
+        }
       }
     });
   }
@@ -195,4 +203,9 @@ export class TiponadoComponent implements OnInit {
   errorMessageToast() {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ocurrió un problema al procesar el tipo de nado' });
   }
+
+  errorIngresoMessageToast() {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ya existe un tipo de nado con ese nombre registrado' });
+  }
+
 }

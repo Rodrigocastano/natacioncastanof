@@ -92,14 +92,15 @@ export class AreanadoComponent implements OnInit {
       : this.buscadorFiltrados.filter(a => a.nombre?.toLowerCase().includes(termino));
   }
 
+
   store() {
     this.submitted = true;
-  
+
     if (this.formSave.invalid) {
       this.errorMessageToast();
       return;
     }
-  
+
     const newAreaNado: any = {
       nombre: this.formSave.value.nombre,
     };
@@ -112,8 +113,12 @@ export class AreanadoComponent implements OnInit {
         this.submitted = false;
       },
       error: (err) => {
-        console.error('Error al guardar el área de nado:', err);
-        this.errorMessageToast();
+        
+        if (err.status === 409) {
+          this.errorIngresoMessageToast();
+        } else {
+          this.errorMessageToast();
+        }
       }
     });
   }
@@ -132,33 +137,37 @@ export class AreanadoComponent implements OnInit {
     this.cancelMessageToast();
   }
 
-  update() {
-    this.submitted = true;
-    
-    if (this.formUpdate.invalid) {
-      this.errorMessageToast();
-      return;
-    }
-
-    const updateAreaNado: AreaNado = {
-      id: this.idForUpdate,
-      nombre: this.formUpdate.value.nombre,
-    };
-
-    this.areanadoService.updateAreaNado(this.idForUpdate, updateAreaNado).subscribe({
-      next: () => {
-        this.saveMessageToast();
-        this.getAreaNado();
-        this.editing = false;
-        this.formUpdate.reset();
-        this.submitted = false;
-      },
-      error: (err) => {
-        console.error('Error actualizando área de nado:', err);
+    update() {
+      this.submitted = true;
+      
+      if (this.formUpdate.invalid) {
         this.errorMessageToast();
+        return;
       }
-    });
-  }
+    
+      const updateAreaNado: AreaNado = {
+        id: this.idForUpdate,
+        nombre: this.formUpdate.value.nombre,
+      };
+    
+      this.areanadoService.updateAreaNado(this.idForUpdate, updateAreaNado).subscribe({
+        next: () => {
+          this.saveMessageToast();
+          this.getAreaNado();
+          this.editing = false;
+          this.formUpdate.reset();
+          this.submitted = false;
+    
+        },
+        error: (err) => {
+          if (err.status === 409) {
+            this.errorIngresoMessageToast();
+          }  else {
+            this.errorMessageToast();
+          }
+        }
+      });
+    }
 
   delete() {
     this.areanadoService.deleteAreaNado(this.idAreaNado).subscribe({
@@ -194,5 +203,9 @@ export class AreanadoComponent implements OnInit {
 
   errorMessageToast() {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al procesar el área de nado' });
+  }
+
+  errorIngresoMessageToast() {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ya existe un área de nado con ese nombre registrado' });
   }
 }

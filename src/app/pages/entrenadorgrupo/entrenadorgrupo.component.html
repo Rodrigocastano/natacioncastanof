@@ -48,8 +48,8 @@
     <!-- Cabecera de columnas -->
     <ng-template pTemplate="header">
     <tr>
-        <th pSortableColumn="nombre">Usuario</th>
-        <th pSortableColumn="cedula">Cédula</th>
+        <th pSortableColumn="nombre">Entrenadores</th>
+        <th pSortableColumn="cedula">Identificación</th>
         <th pSortableColumn="grupo">Grupo</th>
         <th pSortableColumn="turno">Turno</th>
         <th pSortableColumn="fecha_inicio">Inicio</th>
@@ -90,7 +90,7 @@
 </p-table>
 </div>
 
-<p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar nuevo plan de pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
+<p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar inscripción del entrenador" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">    
     <ng-template #content>
         <form [formGroup]="formSave" class="formulario">
             <div class="flex flex-col gap-6">
@@ -195,7 +195,7 @@
 </p-dialog>
 
 
- <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar registro plan de pago" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+ <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar inscripción del entrenador" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
     <ng-template #content>
         <form [formGroup]="formUpdate" class="formulario">
             <div class="flex flex-col gap-6">

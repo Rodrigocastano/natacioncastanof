@@ -92,14 +92,15 @@ export class CategoriapruebaComponent implements OnInit {
       : this.buscadorFiltrados.filter(a => a.nombre?.toLowerCase().includes(termino));
   }
 
+
   store() {
     this.submitted = true;
-  
+
     if (this.formSave.invalid) {
       this.errorMessageToast();
       return;
     }
-  
+
     const newCategoria: any = {
       nombre: this.formSave.value.nombre,
     };
@@ -112,8 +113,12 @@ export class CategoriapruebaComponent implements OnInit {
         this.submitted = false;
       },
       error: (err) => {
-        console.error('Error al guardar la categoría de prueba:', err);
-        this.errorMessageToast();
+        
+        if (err.status === 409) {
+          this.errorIngresoMessageToast();
+        } else {
+          this.errorMessageToast();
+        }
       }
     });
   }
@@ -152,10 +157,14 @@ export class CategoriapruebaComponent implements OnInit {
         this.editing = false;
         this.formUpdate.reset();
         this.submitted = false;
+
       },
       error: (err) => {
-        console.error('Error actualizando categoría de prueba:', err);
-        this.errorMessageToast();
+        if (err.status === 409) {
+          this.errorIngresoMessageToast();
+        }  else {
+          this.errorMessageToast();
+        }
       }
     });
   }
@@ -194,5 +203,9 @@ export class CategoriapruebaComponent implements OnInit {
 
   errorMessageToast() {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al procesar la categoría de prueba' });
+  }
+
+  errorIngresoMessageToast() {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ya existe una categoría de prueba con ese nombre registrado' });
   }
 }
