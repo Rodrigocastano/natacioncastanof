@@ -225,7 +225,7 @@
     <p-dialog [(visible)]="visibleDelete" header="Confirmación" [style]="{ width: '350px' }" [modal]="true">
         <div class="flex items-center justify-center">
             <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
-            <span>¿Estás seguro que deseas eliminar este Usuario?</span>
+            <span>¿Estás seguro que deseas eliminar este usuario?</span>
         </div>
         <ng-template #footer>
             <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDelete = false" text severity="secondary" (click)="cancelMessageToast()" />
@@ -233,7 +233,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar Usuario" [modal]="true">
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar usuario" [modal]="true">
         <ng-template #content>
             <form [formGroup]="formUpdateUsuario" class="formulario">
                 <div class="flex flex-col gap-6">

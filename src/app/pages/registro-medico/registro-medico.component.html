@@ -70,7 +70,7 @@
         </p-table>
     </div>
 
-    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar entrenador" [modal]="true">
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '450px' }" header="Agregar médico" [modal]="true">
         
         <ng-template #content>
             <form [formGroup]="formSave" class="formulario">
@@ -213,7 +213,7 @@
     <p-dialog [(visible)]="visibleDelete" header="Confirmación" [style]="{ width: '350px' }" [modal]="true">
         <div class="flex items-center justify-center">
             <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
-            <span>¿Estás seguro que deseas eliminar éste entrenador?</span>
+            <span>¿Estás seguro que deseas eliminar éste médico?</span>
         </div>
         <ng-template #footer>
             <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDelete = false" text severity="secondary" (click)="cancelMessageToast()" />
@@ -221,7 +221,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar entrenador" [modal]="true">
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar médico" [modal]="true">
         
         <ng-template #content>
             <form [formGroup]="formUpdate" class="formulario">
