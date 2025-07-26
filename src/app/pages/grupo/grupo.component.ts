@@ -94,16 +94,13 @@ export class GrupoComponent implements OnInit {
 
   store() {
     this.submitted = true;
-
     if (this.formSave.invalid) {
       this.errorMessageToast();
       return;
     }
-
     const newGrupo: any =  {
       nombre: this.formSave.value.nombre,
     };
-
     this.grupoService.createGrupo(newGrupo).subscribe({
       next: () => {
         this.saveMessageToast();
@@ -112,8 +109,6 @@ export class GrupoComponent implements OnInit {
         this.submitted = false;
       },
       error: (err) => {
-        console.error('Error al guardar el grupo:', err);
-
         if (err.status === 409) {
           this.errorIngresoMessageToast();
         }  else {
@@ -140,17 +135,14 @@ export class GrupoComponent implements OnInit {
 
   update() {
       this.submitted = true;
-      
       if (this.formUpdate.invalid) {
           this.errorMessageToast();
           return;
       }
-
       const updateGrupo: Grupo = {
           id: this.idForUpdate,
           nombre: this.formUpdate.value.nombre,
       };
-
       this.grupoService.updateGrupo(this.idForUpdate, updateGrupo).subscribe({
           next: () => {
               this.saveMessageToast();
@@ -168,6 +160,7 @@ export class GrupoComponent implements OnInit {
       });
   }
 
+
   delete() {
     this.grupoService.deleteGrupo(this.idGrupo).subscribe({
       next: () => {
@@ -176,7 +169,6 @@ export class GrupoComponent implements OnInit {
         this.EliminadoMessageToasts();
       },
       error: (err) => {
-        console.error('Error al eliminar:', err);
         this.errorMessageToast();
       }
     });

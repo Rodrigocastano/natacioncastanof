@@ -27,7 +27,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { GrupoService } from '../service/grupo.service';
 import { GeneroService } from '../service/genero.service';
 import { CiudadService } from '../service/ciudad.service';
-import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-usuario',
@@ -85,50 +84,29 @@ export class UsuarioComponent implements OnInit  {
       private generoService: GeneroService,
       private messageService: MessageService
     ) {
-      this.formSaveUsuario = this.fb.group({
-        id_ciudad: ['', [Validators.required]],
-        id_genero: ['', [Validators.required]],
-        nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-        apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
-        cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-        telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-        direccion: ['', []],
-        edad: [{value: '', disabled: true}, [Validators.required, Validators.pattern('^[0-9]+$')]], 
-        fechaNacimiento: ['', [Validators.required]],
-        fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
-      });
-
-      this.formSaveUsuario.get('fechaNacimiento')?.valueChanges.subscribe((date) => {
-        if (date) {
-          const age = this.calculateAge(new Date(date));
-          this.formSaveUsuario.get('edad')?.setValue(age, {emitEvent: false});
-        }
-      });
+        this.formSaveUsuario = this.fb.group({
+          id_ciudad: ['', [Validators.required]],
+          id_genero: ['', [Validators.required]],
+          nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
+          apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
+          email: ['', [Validators.required, Validators.email]],
+          cedula: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{5,15}$/)]],
+          telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9 ]{7,20}$/)]],
+          direccion: ['', []],
+          fechaNacimiento: ['', [Validators.required]],
+        });
       
       this.formUpdateUsuario = fb.group({
         id_ciudad: ['', [Validators.required]],
         id_genero: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
-        password: ['', []],
         nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-        cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-        telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+        cedula: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{5,15}$/)]],
+        telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9 ]{7,20}$/)]],
         direccion: ['', []],
-        edad: [{ value: '', disabled: true }, [Validators.required, Validators.pattern('^[0-9]+$')]],
         fechaNacimiento: ['', [Validators.required]],
-        fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
       });
-
-      this.formUpdateUsuario.get('fechaNacimiento')?.valueChanges.subscribe((date) => {
-        if (date) {
-          const age = this.calculateAge(new Date(date));
-          this.formUpdateUsuario.get('edad')?.setValue(age, { emitEvent: false });
-        }
-      });
-
   }
     
     ngOnInit(): void {
@@ -155,13 +133,13 @@ export class UsuarioComponent implements OnInit  {
       });
     }
 
-     getGenero() {
+    getGenero() {
       this.generoService.getAllGenero().subscribe(data => {
         this.genero = data
       });
     }
 
-     getCiudad() {
+    getCiudad() {
       this.ciudadService.getAllCiudad().subscribe(data => {
         this.ciudad = data
       });
@@ -171,20 +149,6 @@ export class UsuarioComponent implements OnInit  {
       const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
       return adjustedDate.toISOString().split('T')[0];
     };
-
-    calculateAge(birthDate: Date): number {
-        const today = new Date();
-        const birthDateObj = new Date(birthDate);
-        let age = today.getFullYear() - birthDateObj.getFullYear();
-        const monthDiff = today.getMonth() - birthDateObj.getMonth();
-        
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
-          age--;
-        }
-        
-        return age;
-    }
-
 
     soloNumeros(event: any): boolean {
       const input = event.target as HTMLInputElement;
@@ -198,65 +162,56 @@ export class UsuarioComponent implements OnInit  {
       return false;
     }
 
-store() {
-  this.submitted = true;
-  this.formSaveUsuario.get('edad')?.enable();
+    store() {
+        this.submitted = true;
 
-  if (this.formSaveUsuario.invalid) {
-    this.errorMessageToast();
-    this.formSaveUsuario.markAllAsTouched();
-    this.formSaveUsuario.get('edad')?.disable();
-    return;
-  }
-
-  if (this.formSaveUsuario.valid) {
-    const formValues = this.formSaveUsuario.getRawValue();
-    this.formSaveUsuario.get('edad')?.disable();
-
-    const newEntrenador: any = {
-      nombre: this.formSaveUsuario.value.nombre,
-      apellido: this.formSaveUsuario.value.apellido,
-      cedula: this.formSaveUsuario.value.cedula,
-      email: this.formSaveUsuario.value.email,
-      password: this.formSaveUsuario.value.password,
-      telefono: this.formSaveUsuario.value.telefono,
-      direccion: this.formSaveUsuario.value.direccion,
-      edad: formValues.edad,
-      fechaNacimiento: this.formatDate(this.formSaveUsuario.value.fechaNacimiento),
-      fechaInscripcion: this.formatDate(this.formSaveUsuario.value.fechaInscripcion),
-      id_ciudad: this.formSaveUsuario.value.id_ciudad,
-      id_genero: this.formSaveUsuario.value.id_genero,
-      id_rol: 3
-    };
-
-    console.log('Datos enviados al backend:', newEntrenador);
-
-    this.usuarioService.createUsuario(newEntrenador).subscribe({
-      next: () => {
-        this.saveMessageToast();
-        this.getUsuarios();
-        this.visibleSave = false;
-      },
-      error: (err) => {
-        if (err.status === 422) {
-          const backendErrors = err.error.errors;
-          
-          if (backendErrors.email) {
-            this.errorCorreoMessageToast();
-          }
-          if (backendErrors.cedula) {
-            this.errorCedulaMessageToast();
-          }
-        } 
-        else if (err.status === 409) {
+        if (this.formSaveUsuario.invalid) {
           this.errorMessageToast();
+          this.formSaveUsuario.markAllAsTouched();
+          return;
         }
-      }
-    });
-  }
-}
 
-    
+        if (this.formSaveUsuario.valid) {
+          const formValues = this.formSaveUsuario.getRawValue();
+
+          const newEntrenador: any = {
+            nombre: formValues.nombre,
+            apellido: formValues.apellido,
+            cedula: formValues.cedula,
+            email: formValues.email,
+            telefono: formValues.telefono,
+            direccion: formValues.direccion,
+            fechaNacimiento: this.formatDate(formValues.fechaNacimiento),
+            id_ciudad: formValues.id_ciudad,
+            id_genero: formValues.id_genero,
+            id_rol: 3
+        };
+
+        console.log('Datos enviados al backend:', newEntrenador);
+
+        this.usuarioService.createUsuario(newEntrenador).subscribe({
+          next: () => {
+            this.saveMessageToast();
+            this.getUsuarios();
+            this.visibleSave = false;
+          },
+          error: (err) => {
+            if (err.status === 422) {
+              const backendErrors = err.error.errors;
+
+              if (backendErrors.email) {
+                this.errorCorreoMessageToast();
+              }
+              if (backendErrors.cedula) {
+                this.errorCedulaMessageToast();
+              }
+            } else if (err.status === 409) {
+              this.errorMessageToast();
+            }
+          }
+        });
+      }
+    }
 
     cancelSave() {
       this.visibleSave = false;
@@ -268,14 +223,8 @@ store() {
       this.visibleSave = true;
     }
 
-
-
     errorCedulaMessageToast() {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Identificación duplicada',
-        detail: 'Ya existe un usuario registrado con esta identificación.'
-      });
+      this.messageService.add({ severity: 'error', summary: 'Identificación duplicada', detail: 'Ya existe un usuario registrado con esta identificación.'});
     }
 
     saveMessageToast() {
@@ -294,13 +243,10 @@ store() {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al guardar el usuario.' });
     }
 
-      errorCorreoMessageToast() {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Correo duplicado',
-      detail: 'Ya existe un entrenador registrado con este correo.'
+    errorCorreoMessageToast() {
+      this.messageService.add({ severity: 'error',summary: 'Correo duplicado',detail: 'Ya existe un usuario registrado con este correo.'
     });
-  }
+}
 
     getNombreGrupo(id: number): string {
       const grupoEncontrado = this.grupo.find(g => g.id === id);
@@ -331,56 +277,49 @@ store() {
     }
   
     update() {
-  this.submitted = true;
+      this.submitted = true;
 
-  this.formUpdateUsuario.get('edad')?.enable();
+      if (this.formUpdateUsuario.invalid) {
+        this.errorMessageToast();
+        this.formUpdateUsuario.markAllAsTouched();
+        return;
+      }
 
-  if (this.formUpdateUsuario.invalid) {
-    this.errorMessageToast();
-    this.formUpdateUsuario.markAllAsTouched();
-    this.formUpdateUsuario.get('edad')?.disable();
-    return;
-  }
+      const formValues = this.formUpdateUsuario.getRawValue();
 
-  const formValues = this.formUpdateUsuario.getRawValue();
-  this.formUpdateUsuario.get('edad')?.disable(); 
+      const updateUsuario: Usuario = {
+        id: this.idForUpdate,
+        nombre: formValues.nombre,
+        apellido: formValues.apellido,
+        email: formValues.email,
+        cedula: formValues.cedula,
+        telefono: formValues.telefono,
+        direccion: formValues.direccion,
+        fechaNacimiento: this.formatDate(formValues.fechaNacimiento),
+        id_ciudad: formValues.id_ciudad,
+        id_genero: formValues.id_genero,
+        id_rol: 3
+      };
 
-  const updateUsuario: Usuario = {
-    id: this.idForUpdate,
-    nombre: formValues.nombre,
-    apellido: formValues.apellido,
-    email: formValues.email,
-    password: formValues.password,
-    cedula: formValues.cedula,
-    telefono: formValues.telefono,
-    direccion: formValues.direccion,
-    edad: formValues.edad,
-    fechaNacimiento: this.formatDate(formValues.fechaNacimiento),
-    fechaInscripcion: this.formatDate(formValues.fechaInscripcion),
-    id_ciudad: formValues.id_ciudad,
-    id_genero: formValues.id_genero,
-    id_rol: 3
-  };
-
-  this.usuarioService.updateUsuario(this.idForUpdate, updateUsuario).subscribe({
-    next: () => {
-      this.saveMessageToast();
-      this.getUsuarios();
-      this.visibleUpdate = false;
-      this.idForUpdate = 0;
-    },
-    error: (err) => {
-      if (err.status === 409 && err.error.message === 'Cédula duplicada') {
-        this.errorCedulaMessageToast();
-      } else if (err.status === 422 && err.error.message.includes('email')) {
-            this.errorCorreoMessageToast();
-          } 
-          else {
-            this.errorMessageToast();
-          }
+      this.usuarioService.updateUsuario(this.idForUpdate, updateUsuario).subscribe({
+        next: () => {
+          this.saveMessageToast();
+          this.getUsuarios();
+          this.visibleUpdate = false;
+          this.idForUpdate = 0;
+        },
+        error: (err) => {
+          if (err.status === 409 && err.error.message === 'Cédula duplicada') {
+            this.errorCedulaMessageToast();
+          } else if (err.status === 422 && err.error.message.includes('email')) {
+                this.errorCorreoMessageToast();
+              } 
+              else {
+                this.errorMessageToast();
+              }
+        }
+      });
     }
-  });
-}
 
 
     edit(id: number) {
@@ -394,19 +333,14 @@ store() {
     
         this.formUpdateUsuario.controls['nombre'].setValue(this.user.nombre);
         this.formUpdateUsuario.controls['apellido'].setValue(this.user.apellido);
-        this.formUpdateUsuario.controls['password'].setValue(this.user?.password)
         this.formUpdateUsuario.controls['email'].setValue(this.user?.email)
         this.formUpdateUsuario.controls['cedula'].setValue(this.user?.cedula)
         this.formUpdateUsuario.controls['telefono'].setValue(this.user?.telefono)
         this.formUpdateUsuario.controls['direccion'].setValue(this.user?.direccion)
-        this.formUpdateUsuario.controls['edad'].setValue(this.user?.edad)
         this.formUpdateUsuario.controls['id_ciudad'].setValue(this.user?.id_ciudad)
         this.formUpdateUsuario.controls['id_genero'].setValue(this.user?.id_genero)
         this.formUpdateUsuario.controls['fechaNacimiento'].setValue(
           parseLocalDate(this.user.fechaNacimiento)
-        );
-        this.formUpdateUsuario.controls['fechaInscripcion'].setValue(
-          parseLocalDate(this.user.fechaInscripcion)
         );
       }
       
@@ -438,72 +372,70 @@ store() {
       this.visibleDelete = true
     }  
     
-exportPdf() {
-  if (!this.usuario?.length) return;
+    exportPdf() {
+      if (!this.usuario?.length) return;
 
-  /* 1. Configuración básica */
-  const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
-  const pageWidth  = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-  const marginL = 28, marginT = 50;
+      /* 1. Configuración básica */
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+      const pageWidth  = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const marginL = 28, marginT = 50;
 
-  /* 2. Logo y título */
-  const logo = new Image();
-  logo.src = 'assets/image/natacion-castano1.png';
-  doc.addImage(logo, 'PNG', marginL, 18, 50, 20);
-  doc.setFont('Helvetica', 'bold').setFontSize(14);
-  doc.text('Listado de usuarios', marginL + 60, 30);
+      /* 2. Logo y título */
+      const logo = new Image();
+      logo.src = 'assets/image/natacion-castano1.png';
+      doc.addImage(logo, 'PNG', marginL, 18, 50, 20);
+      doc.setFont('Helvetica', 'bold').setFontSize(14);
+      doc.text('Listado de usuarios', marginL + 60, 30);
 
-  /* 3. Datos ordenados y numeración 1..n */
-  const data = [...this.usuario]
-    .sort((a, b) => a.apellido.localeCompare(b.apellido) || a.nombre.localeCompare(b.nombre))
-    .map((u, idx) => [                  // ← idx + 1 en lugar de u.id
-      idx + 1,
-      u.nombre,
-      u.apellido,
-      u.cedula,
-      u.telefono,
-      this.getNombreCiudad(u.id_ciudad),
-      this.getNombreGenero(u.id_genero),
-      u.edad,
-      u.fechaNacimiento
-    ]);
+      /* 3. Datos ordenados y numeración 1..n */
+      const data = [...this.usuario]
+        .sort((a, b) => a.apellido.localeCompare(b.apellido) || a.nombre.localeCompare(b.nombre))
+        .map((u, idx) => [                  // ← idx + 1 en lugar de u.id
+          idx + 1,
+          u.nombre,
+          u.apellido,
+          u.cedula,
+          u.telefono,
+          this.getNombreCiudad(u.id_ciudad),
+          this.getNombreGenero(u.id_genero),
+          u.fechaNacimiento
+        ]);
 
-  /* 4. Tabla */
-  autoTable(doc, {
-    startY: marginT,
-    head: [[
-      'Nº', 'Nombre', 'Apellido', 'Cédula', 'Teléfono',
-      'Ciudad', 'Género', 'Edad', 'Nacimiento'
-    ]],
-    body: data,
-    theme: 'striped',
-    styles:    { fontSize: 9, halign: 'center', overflow: 'linebreak' },
-    headStyles:{ fillColor: [22,160,133], textColor: 255, fontStyle: 'bold' },
-    columnStyles: {
-      0: { cellWidth: 25 },   // ahora solo ocupa el número secuencial
-      3: { cellWidth: 80 },
-      4: { cellWidth: 75 },
-      5: { cellWidth: 60 },
-      7: { cellWidth: 33 },
-      8: { cellWidth: 65 }
-    },
-    margin: { left: marginL, right: marginL }
-  });
+      /* 4. Tabla */
+      autoTable(doc, {
+        startY: marginT,
+        head: [[
+          'Nº', 'Nombre', 'Apellido', 'Cédula', 'Teléfono',
+          'Ciudad', 'Género', 'Nacimiento'
+        ]],
+        body: data,
+        theme: 'striped',
+        styles:    { fontSize: 9, halign: 'center', overflow: 'linebreak' },
+        headStyles:{ fillColor: [22,160,133], textColor: 255, fontStyle: 'bold' },
+        columnStyles: {
+          0: { cellWidth: 25 },   // ahora solo ocupa el número secuencial
+          3: { cellWidth: 80 },
+          4: { cellWidth: 75 },
+          5: { cellWidth: 60 },
+          7: { cellWidth: 33 },
+          8: { cellWidth: 65 }
+        },
+        margin: { left: marginL, right: marginL }
+      });
 
-  /* 5. Pie de página */
-  const pageCount = doc.getNumberOfPages();
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i);
-    doc.setFontSize(8).setTextColor(100);
-    doc.text(`Página ${i} de ${pageCount}`, pageWidth - marginL - 40, pageHeight - 10);
-    if (i === pageCount) {
-      doc.text(`Generado: ${new Date().toLocaleDateString()}`, marginL, pageHeight - 10);
+      /* 5. Pie de página */
+      const pageCount = doc.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8).setTextColor(100);
+        doc.text(`Página ${i} de ${pageCount}`, pageWidth - marginL - 40, pageHeight - 10);
+        if (i === pageCount) {
+          doc.text(`Generado: ${new Date().toLocaleDateString()}`, marginL, pageHeight - 10);
+        }
+      }
+
+      /* 6. Guardar */
+      doc.save('Usuarios.pdf');
     }
-  }
-
-  /* 6. Guardar */
-  doc.save('Usuarios.pdf');
-}
-
 }

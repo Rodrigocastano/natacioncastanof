@@ -86,49 +86,27 @@ export class EntrenadorComponent implements OnInit  {
       private messageService: MessageService
     ) {
       this.formSave = this.fb.group({
-      /*   id_grupo: ['', [Validators.required]], */
-        id_ciudad: ['', [Validators.required]],
-        id_genero: ['', [Validators.required]],
-        nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-        apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
-        cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-        telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-        direccion: ['', []],
-        edad: [{value: '', disabled: true}, [Validators.required, Validators.pattern('^[0-9]+$')]], 
-        fechaNacimiento: ['', [Validators.required]],
-        fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
-      });
-
-      this.formSave.get('fechaNacimiento')?.valueChanges.subscribe((date) => {
-        if (date) {
-          const age = this.calculateAge(new Date(date));
-          this.formSave.get('edad')?.setValue(age, {emitEvent: false});
-        }
+       id_ciudad: ['', [Validators.required]],
+          id_genero: ['', [Validators.required]],
+          nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
+          apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
+          email: ['', [Validators.required, Validators.email]],
+          cedula: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{5,15}$/)]],
+          telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9 ]{7,20}$/)]],
+          direccion: ['', []],
+          fechaNacimiento: ['', [Validators.required]],
       });
 
       this.formUpdate = fb.group({
-       /*  id_grupo: ['', [Validators.required]], */
         id_ciudad: ['', [Validators.required]],
         id_genero: ['', [Validators.required]],
+        email: ['', [Validators.required, Validators.email]],
         nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', []],
-        cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-        telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+        cedula: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{5,15}$/)]],
+        telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9 ]{7,20}$/)]],
         direccion: ['', []],
-        edad: [{value: '', disabled: true}, [Validators.required, Validators.pattern('^[0-9]+$')]], 
         fechaNacimiento: ['', [Validators.required]],
-        fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
-      });
-
-      this.formUpdate.get('fechaNacimiento')?.valueChanges.subscribe((date) => {
-        if (date) {
-          const age = this.calculateAge(new Date(date));
-          this.formUpdate.get('edad')?.setValue(age, { emitEvent: false });
-        }
       });
     }
 
@@ -169,7 +147,7 @@ export class EntrenadorComponent implements OnInit  {
       });
     }
 
-    soloNumeros(event: any): boolean {
+/*     soloNumeros(event: any): boolean {
   // Obtiene el valor actual del input
   const input = event.target as HTMLInputElement;
   // Elimina cualquier carácter no numérico
@@ -185,20 +163,9 @@ export class EntrenadorComponent implements OnInit  {
   }
   
   return false; // Previene el comportamiento por defecto
-}
+} */
 
-    calculateAge(birthDate: Date): number {
-        const today = new Date();
-        const birthDateObj = new Date(birthDate);
-        let age = today.getFullYear() - birthDateObj.getFullYear();
-        const monthDiff = today.getMonth() - birthDateObj.getMonth();
-        
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
-          age--;
-        }
-        
-        return age;
-    }
+
 
     formatDate = (date: Date): string => {
       const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
@@ -208,30 +175,24 @@ export class EntrenadorComponent implements OnInit  {
 
 store() {
   this.submitted = true;
-  this.formSave.get('edad')?.enable();
 
   if (this.formSave.invalid) {
     this.errorMessageToast();
     this.formSave.markAllAsTouched();
-    this.formSave.get('edad')?.disable();
     return;
   }
 
   if (this.formSave.valid) {
     const formValues = this.formSave.getRawValue();
-    this.formSave.get('edad')?.disable();
 
     const newEntrenador: any = {
       nombre: this.formSave.value.nombre,
       apellido: this.formSave.value.apellido,
       cedula: this.formSave.value.cedula,
       email: this.formSave.value.email,
-      password: this.formSave.value.password,
       telefono: this.formSave.value.telefono,
       direccion: this.formSave.value.direccion,
-      edad: formValues.edad,
       fechaNacimiento: this.formatDate(this.formSave.value.fechaNacimiento),
-      fechaInscripcion: this.formatDate(this.formSave.value.fechaInscripcion),
       id_ciudad: this.formSave.value.id_ciudad,
       id_genero: this.formSave.value.id_genero,
       id_rol: 2
@@ -328,17 +289,13 @@ store() {
     }
       
     update() {
-      this.formUpdate.get('edad')?.enable();
-
       if (this.formUpdate.invalid) {
         this.errorMessageToast(); 
         this.formUpdate.markAllAsTouched();
-        this.formUpdate.get('edad')?.disable();
         return;
       }
 
       const formValues = this.formUpdate.getRawValue();
-      this.formUpdate.get('edad')?.disable();
 
       const updateUsuario: Entrenador = {
         id: this.idForUpdate,
@@ -346,15 +303,11 @@ store() {
         apellido: formValues.apellido,
         cedula: formValues.cedula,
         email: formValues.email,
-        password: formValues.password,
         telefono: formValues.telefono,
         direccion: formValues.direccion,
-        edad: formValues.edad,
         fechaNacimiento: this.formatDate(formValues.fechaNacimiento),
-        fechaInscripcion: this.formatDate(formValues.fechaInscripcion),
         id_ciudad: formValues.id_ciudad,
         id_genero: formValues.id_genero,
-        /* id_grupo: formValues.id_grupo, */
         id_rol: 2
       };
 
@@ -387,24 +340,16 @@ store() {
         const parseLocalDate = (dateString: string) => {
           return dateString ? new Date(dateString + 'T00:00:00') : null;
         };
-
-  
         this.formUpdate.controls['nombre'].setValue(this.user?.nombre)
         this.formUpdate.controls['apellido'].setValue(this.user?.apellido)
         this.formUpdate.controls['cedula'].setValue(this.user?.cedula)
         this.formUpdate.controls['telefono'].setValue(this.user?.telefono)
         this.formUpdate.controls['direccion'].setValue(this.user?.direccion)
-        this.formUpdate.controls['password'].setValue(this.user?.password)
         this.formUpdate.controls['email'].setValue(this.user?.email)
-        this.formUpdate.controls['edad'].setValue(this.user?.edad)
         this.formUpdate.controls['id_ciudad'].setValue(this.user?.id_ciudad)
         this.formUpdate.controls['id_genero'].setValue(this.user?.id_genero)
-      /*   this.formUpdate.controls['id_grupo'].setValue(this.user?.id_grupo) */
         this.formUpdate.controls['fechaNacimiento'].setValue(
           parseLocalDate(this.user.fechaNacimiento)
-        );
-        this.formUpdate.controls['fechaInscripcion'].setValue(
-          parseLocalDate(this.user.fechaInscripcion)
         );
         
       }
@@ -460,7 +405,6 @@ exportPdf() {
       e.telefono,
       this.getNombreCiudad(e.id_ciudad),
       this.getNombreGenero(e.id_genero),
-      e.edad,
       e.fechaNacimiento
     ]);
 
@@ -468,7 +412,7 @@ exportPdf() {
     startY: marginT,
     head: [[
       'Nº', 'Nombre', 'Apellido', 'Cédula', 'Teléfono',
-      'Ciudad', 'Género', 'Edad', 'Nacimiento'
+      'Ciudad', 'Género', 'Nacimiento'
     ]],
     body: data,
     theme: 'striped',

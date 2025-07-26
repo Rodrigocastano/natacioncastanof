@@ -7,13 +7,13 @@ export interface Entrenador {
     nombre: string;
     apellido: string;
     email: string
-    password:string
+    password?:string
     cedula: string;
     telefono: string;
     direccion: string;
-    edad: number;
+    edad?: number;
     fechaNacimiento: string;
-    fechaInscripcion: string;
+    fechaInscripcion?: string;
     estado?: boolean;
    
 }

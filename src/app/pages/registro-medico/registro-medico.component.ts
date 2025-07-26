@@ -79,53 +79,31 @@ export class RegistroMedicoComponent implements OnInit {
         private ciudadService: CiudadService,
         private generoService: GeneroService,
         private messageService: MessageService
-        ) {
-          this.formSave = this.fb.group({
-          /*   id_grupo: ['', [Validators.required]], */
-            id_ciudad: ['', [Validators.required]],
+        )  {
+        this.formSave = this.fb.group({
+        id_ciudad: ['', [Validators.required]],
             id_genero: ['', [Validators.required]],
             nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
             apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
             email: ['', [Validators.required, Validators.email]],
-            password: ['', [Validators.required, Validators.minLength(6)]],
-            cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-            telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+            cedula: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{5,15}$/)]],
+            telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9 ]{7,20}$/)]],
             direccion: ['', []],
-            edad: [{value: '', disabled: true}, [Validators.required, Validators.pattern('^[0-9]+$')]], 
             fechaNacimiento: ['', [Validators.required]],
-            fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
-          });
+        });
 
-          this.formSave.get('fechaNacimiento')?.valueChanges.subscribe((date) => {
-            if (date) {
-              const age = this.calculateAge(new Date(date));
-              this.formSave.get('edad')?.setValue(age, {emitEvent: false});
-            }
-          });
-
-          this.formUpdate = fb.group({
-          /*  id_grupo: ['', [Validators.required]], */
-            id_ciudad: ['', [Validators.required]],
-            id_genero: ['', [Validators.required]],
-            nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-            apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-            email: ['', [Validators.required, Validators.email]],
-            password: ['', []],
-            cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-            telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-            direccion: ['', []],
-            edad: [{value: '', disabled: true}, [Validators.required, Validators.pattern('^[0-9]+$')]], 
-            fechaNacimiento: ['', [Validators.required]],
-            fechaInscripcion: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
-          });
-
-          this.formUpdate.get('fechaNacimiento')?.valueChanges.subscribe((date) => {
-            if (date) {
-              const age = this.calculateAge(new Date(date));
-              this.formUpdate.get('edad')?.setValue(age, { emitEvent: false });
-            }
-          });
-        }
+        this.formUpdate = fb.group({
+          id_ciudad: ['', [Validators.required]],
+          id_genero: ['', [Validators.required]],
+          email: ['', [Validators.required, Validators.email]],
+          nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
+          apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
+          cedula: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{5,15}$/)]],
+          telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9 ]{7,20}$/)]],
+          direccion: ['', []],
+          fechaNacimiento: ['', [Validators.required]],
+        });
+      }
 
         ngOnInit(): void {
           this.getMedicos();
@@ -153,7 +131,7 @@ export class RegistroMedicoComponent implements OnInit {
           });
         }
 
-        soloNumeros(event: any): boolean {
+  /*       soloNumeros(event: any): boolean {
           const input = event.target as HTMLInputElement;
           const newValue = input.value.replace(/[^0-9]/g, '');
           this.formSave.get(event.target.id)?.setValue(newValue, { emitEvent: false });
@@ -162,9 +140,9 @@ export class RegistroMedicoComponent implements OnInit {
             input.value = newValue.slice(0, 10);
           }
           return false;
-        }
+        } */
         
-        calculateAge(birthDate: Date): number {
+/*         calculateAge(birthDate: Date): number {
             const today = new Date();
             const birthDateObj = new Date(birthDate);
             let age = today.getFullYear() - birthDateObj.getFullYear();
@@ -175,7 +153,7 @@ export class RegistroMedicoComponent implements OnInit {
             }
             
             return age;
-        }
+        } */
   
         formatDate = (date: Date): string => {
           const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
@@ -185,30 +163,24 @@ export class RegistroMedicoComponent implements OnInit {
   
         store() {
           this.submitted = true;
-          this.formSave.get('edad')?.enable();
         
           if (this.formSave.invalid) {
             this.errorMessageToast();
             this.formSave.markAllAsTouched();
-            this.formSave.get('edad')?.disable();
             return;
           }
         
           if (this.formSave.valid) {
             const formValues = this.formSave.getRawValue();
-            this.formSave.get('edad')?.disable();
         
             const newEntrenador: any = {
               nombre: this.formSave.value.nombre,
               apellido: this.formSave.value.apellido,
               cedula: this.formSave.value.cedula,
               email: this.formSave.value.email,
-              password: this.formSave.value.password,
               telefono: this.formSave.value.telefono,
               direccion: this.formSave.value.direccion,
-              edad: formValues.edad,
               fechaNacimiento: this.formatDate(this.formSave.value.fechaNacimiento),
-              fechaInscripcion: this.formatDate(this.formSave.value.fechaInscripcion),
               id_ciudad: this.formSave.value.id_ciudad,
               id_genero: this.formSave.value.id_genero,
               id_rol: 4
@@ -299,17 +271,13 @@ export class RegistroMedicoComponent implements OnInit {
         }
         
         update() {
-          this.formUpdate.get('edad')?.enable();
-    
           if (this.formUpdate.invalid) {
             this.errorMessageToast(); 
             this.formUpdate.markAllAsTouched();
-            this.formUpdate.get('edad')?.disable();
             return;
           }
     
           const formValues = this.formUpdate.getRawValue();
-          this.formUpdate.get('edad')?.disable();
     
           const updateUsuario: registroMedicos = {
             id: this.idForUpdate,
@@ -317,15 +285,12 @@ export class RegistroMedicoComponent implements OnInit {
             apellido: formValues.apellido,
             cedula: formValues.cedula,
             email: formValues.email,
-            password: formValues.password,
             telefono: formValues.telefono,
             direccion: formValues.direccion,
             edad: formValues.edad,
             fechaNacimiento: this.formatDate(formValues.fechaNacimiento),
-            fechaInscripcion: this.formatDate(formValues.fechaInscripcion),
             id_ciudad: formValues.id_ciudad,
             id_genero: formValues.id_genero,
-            /* id_grupo: formValues.id_grupo, */
             id_rol: 4
           };
     
@@ -365,17 +330,11 @@ export class RegistroMedicoComponent implements OnInit {
             this.formUpdate.controls['cedula'].setValue(this.user?.cedula)
             this.formUpdate.controls['telefono'].setValue(this.user?.telefono)
             this.formUpdate.controls['direccion'].setValue(this.user?.direccion)
-            this.formUpdate.controls['password'].setValue(this.user?.password)
             this.formUpdate.controls['email'].setValue(this.user?.email)
-            this.formUpdate.controls['edad'].setValue(this.user?.edad)
             this.formUpdate.controls['id_ciudad'].setValue(this.user?.id_ciudad)
             this.formUpdate.controls['id_genero'].setValue(this.user?.id_genero)
-          /*   this.formUpdate.controls['id_grupo'].setValue(this.user?.id_grupo) */
             this.formUpdate.controls['fechaNacimiento'].setValue(
               parseLocalDate(this.user.fechaNacimiento)
-            );
-            this.formUpdate.controls['fechaInscripcion'].setValue(
-              parseLocalDate(this.user.fechaInscripcion)
             );
             
           }
@@ -431,7 +390,6 @@ export class RegistroMedicoComponent implements OnInit {
               e.telefono,
               this.getNombreCiudad(e.id_ciudad),
               this.getNombreGenero(e.id_genero),
-              e.edad,
               e.fechaNacimiento
             ]);
         
@@ -439,7 +397,7 @@ export class RegistroMedicoComponent implements OnInit {
             startY: marginT,
             head: [[
               'Nº', 'Nombre', 'Apellido', 'Cédula', 'Teléfono',
-              'Ciudad', 'Género', 'Edad', 'Nacimiento'
+              'Ciudad', 'Género', 'Nacimiento'
             ]],
             body: data,
             theme: 'striped',
