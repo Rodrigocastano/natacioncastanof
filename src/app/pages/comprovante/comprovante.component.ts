@@ -100,7 +100,7 @@ export class ComprovanteComponent implements OnInit {
       const x = 14, y = 12, logoW = 50, logoH = 20;
 
       doc.addImage(img, 'PNG', x, y, logoW, logoH);
-      doc.setFontSize(16).text('Comprobante de pagos del usuario', x + logoW + 10, y + 5);
+      doc.setFontSize(16).text('Reporte de pagos del usuario', x + logoW + 10, y + 5);
       doc.setFontSize(11).setTextColor(100)
          .text('Club Natación Castaño', x + logoW + 10, y + 12)
          .text(
@@ -145,7 +145,7 @@ export class ComprovanteComponent implements OnInit {
          .text(`Generado el ${new Date().toLocaleDateString()}`,
                14, doc.internal.pageSize.getHeight() - 10);
 
-      doc.save(`comprobante_usuario_${this.usuarioSel.id}.pdf`);
+      doc.save(`Reporte_usuario_${this.usuarioSel.id}.pdf`);
     };
   }
 

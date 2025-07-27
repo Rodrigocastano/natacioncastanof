@@ -29,10 +29,15 @@
     <div *ngFor="let serie of comboChartData | keyvalue" class="card shadow-sm p-2 h-[18rem]">
       <h3 class="text-sm font-medium text-center mb-1 truncate">{{ serie.value.chartTitle }}</h3>
       <div class="h-[10rem]">
-        <p-chart
-          type="bar" [data]="{ labels: serie.value.labels, datasets: serie.value.datasets }"
-          [options]="comboChartOptions" styleClass="w-full h-full">
-        </p-chart>
+<p-chart
+  type="line" 
+  [data]="{ 
+    labels: serie.value.labels, 
+    datasets: serie.value.datasets 
+  }"
+  [options]="serie.value.options || comboChartOptions" 
+  styleClass="w-full h-full">
+</p-chart>
       </div>
     </div>
   </div>

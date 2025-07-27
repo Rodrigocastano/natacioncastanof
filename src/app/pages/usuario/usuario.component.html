@@ -113,7 +113,7 @@
 
                         <div class="col-span-6">
                             <div class="block font-bold mb-1">Fecha nacimiento</div>
-                            <p-datepicker [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Fecha de nacimiento'"> </p-datepicker>
+                            <p-datepicker [maxDate]="maxDate" [appendTo]="'body'" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Fecha de nacimiento'"> </p-datepicker>
                             <p-message 
                                 *ngIf="formSaveUsuario.get('fechaNacimiento')?.invalid && (formSaveUsuario.get('fechaNacimiento')?.dirty || formSaveUsuario.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">
                                 Fecha Nacimiento es requerido
@@ -262,7 +262,7 @@
 
                         <div class="col-span-6">
                             <div class="block font-bold mb-1">Fecha nacimiento</div>
-                                <p-datepicker [maxDate]="maxDate" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
+                                <p-datepicker [maxDate]="maxDate" [appendTo]="'body'" formControlName="fechaNacimiento" inputId="fechaNacimiento" [showIcon]="true" [showButtonBar]="true" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'"> </p-datepicker>
                                 <p-message 
                                     *ngIf="formUpdateUsuario.get('fechaNacimiento')?.invalid && (formUpdateUsuario.get('fechaNacimiento')?.dirty || formUpdateUsuario.get('fechaNacimiento')?.touched)" severity="error" variant="simple"size="small">
                                     Fecha Nacimiento es requerida

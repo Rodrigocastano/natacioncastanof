@@ -74,48 +74,38 @@ export class GraficasComponent implements OnInit {
     });
   }
 
-  prepararDatosParaGrafica(data: DatosUsuario): void {
-    this.comboChartData = {};
-    data.series.forEach(serie => {
-      const colorBarra = this.generarColor();
-      const colorLinea = this.generarColor();
-      const ultimosDatos = serie.data.slice(-10);
+prepararDatosParaGrafica(data: DatosUsuario): void {
+  this.comboChartData = {};
+  data.series.forEach(serie => {
+    const colorLinea = this.generarColor();
+    const ultimosDatos = serie.data.slice(-10);
 
-      const datosConvertidos = ultimosDatos.map(item => ({
-        ...item,
-        y: this.convertirTiempoASegundos(item.tiempo_formateado)
-      }));
+    const datosConvertidos = ultimosDatos.map(item => ({
+      ...item,
+      y: this.convertirTiempoASegundos(item.tiempo_formateado)
+    }));
 
-      this.comboChartData[serie.tipo_nado_id] = {
-        chartTitle: serie.name,
-        labels: datosConvertidos.map(item => item.x),
-        datasets: [
-          {
-            label: `Barras`,
-            data: datosConvertidos.map(item => item.y),
-            backgroundColor: colorBarra + '80',
-            borderColor: colorBarra,
-            borderWidth: 1,
-            type: 'bar',
-            order: 2,
-            borderRadius: 4
-          },
-          {
-            label: `Línea`,
-            data: datosConvertidos.map(item => item.y),
-            borderColor: colorLinea,
-            backgroundColor: 'transparent',
-            borderWidth: 3,
-            tension: 0.4,
-            type: 'line',
-            order: 1,
-            pointRadius: 5,
-            pointHoverRadius: 8
-          }
-        ]
-      };
-    });
-  }
+    this.comboChartData[serie.tipo_nado_id] = {
+      chartTitle: serie.name,
+      labels: datosConvertidos.map(item => item.x),
+      datasets: [
+        {
+          label: `Línea`,
+          data: datosConvertidos.map(item => item.y),
+          borderColor: colorLinea,
+          backgroundColor: 'transparent',
+          borderWidth: 3,
+          tension: 0.4,
+          type: 'line',
+          order: 1,
+          pointRadius: 5,
+          pointHoverRadius: 8
+        }
+      ]
+    };
+  });
+}
+
 
   configurarOpcionesGrafica(): void {
     const style = getComputedStyle(document.documentElement);

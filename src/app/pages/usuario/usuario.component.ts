@@ -418,8 +418,7 @@ export class UsuarioComponent implements OnInit  {
           3: { cellWidth: 80 },
           4: { cellWidth: 75 },
           5: { cellWidth: 60 },
-          7: { cellWidth: 33 },
-          8: { cellWidth: 65 }
+          7: { cellWidth: 80 },
         },
         margin: { left: marginL, right: marginL }
       });

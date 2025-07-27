@@ -104,7 +104,6 @@ export class VerdashboarComponent implements OnInit {
     
     this.comboChartData = {};
     this.datosUsuario.tiemposNado.series.forEach((serie: any) => {
-      const colorBarra = this.generarColor();
       const colorLinea = this.generarColor();
       const ultimosDatos = serie.data.slice(-10);
 
@@ -130,22 +129,12 @@ export class VerdashboarComponent implements OnInit {
             order: 1,
             pointRadius: 5,
             pointHoverRadius: 8
-          },
-          {
-            label: `Barras`,
-            data: datosConvertidos.map((item: any) => item.y),
-            backgroundColor: colorBarra + '80',
-            borderColor: colorBarra,
-            borderWidth: 1,
-            type: 'bar',
-            order: 2,
-            borderRadius: 4,
-            barPercentage: 0.6
           }
         ]
       };
     });
   }
+
 
   actualizarTipoGrafica(serie: any): void {
     const chartData = this.comboChartData[serie.tipo_nado_id];

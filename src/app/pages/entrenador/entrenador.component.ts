@@ -421,10 +421,9 @@ exportPdf() {
     columnStyles: {
       0: { cellWidth: 25 },
       3: { cellWidth: 80 },
-      4: { cellWidth: 75 },
+      4: { cellWidth: 80 },
       5: { cellWidth: 60 },
-      7: { cellWidth: 33 },
-      8: { cellWidth: 65 }
+      7: { cellWidth: 80 },
     },
     margin: { left: marginL, right: marginL }
   });

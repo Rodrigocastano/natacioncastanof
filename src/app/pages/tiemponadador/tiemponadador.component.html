@@ -126,14 +126,16 @@
                     <div class="col-span-6">
                     <label for="tiempo" class="block font-bold mb-1">Tiempo</label>
 
-                    <p-inputMask
-                    formControlName="tiempo"
-                    id="tiempo"
-                    mask="99:99:99"
-                    slotChar="0"
-                    placeholder="00:00:00"
-                    [style]="{ width: '100%', fontSize: '1.00rem', padding: '0.45rem' }">
-                    </p-inputMask>
+                    <input
+                        type="text"
+                        formControlName="tiempo"
+                        id="tiempo"
+                        pInputText
+                        placeholder="00:00:00"
+                        (focus)="prepararTiempo()"
+                        (input)="validarTiempo($event, 'formSave')"
+                        (blur)="corregirTiempo()"
+                        style="width: 100%; font-size: 1.00rem; padding: 0.45rem;">
 
                     <p-message
                         *ngIf="formSave.get('tiempo')?.errors?.['required']
@@ -145,19 +147,28 @@
                     </p-message>
                     </div>
 
-                    <div class="col-span-12 flex justify-center" >
-                        <div class="col-span-6">
-                        <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
-                        <p-datepicker 
-                            [(ngModel)]="fechaActual"  [maxDate]= "maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
-                            [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
-                        </p-datepicker>
-                        <p-message 
-                            *ngIf="formSave.get('fecha')?.invalid && (formSave.get('fecha')?.dirty || formSave.get('fecha')?.touched)"  severity="error"  variant="simple" size="small">
-                            Fecha es requerido
-                        </p-message>
-                        </div>
-                    </div>     
+        <div style="width: 100%; max-width: 350px; margin: 0 auto;">
+            <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
+            <p-datepicker
+                formControlName="fecha"
+                inputId="fecha"
+                [showButtonBar]="true"
+                [appendTo]="'body'"
+                [showIcon]="true"
+                iconDisplay="button"
+                [style]="{'width': '100%'}" 
+                dateFormat="yy-mm-dd"
+                placeholder="Seleccione una fecha"
+            ></p-datepicker>
+            <p-message
+                *ngIf="formSave.get('fecha')?.invalid && (formSave.get('fecha')?.dirty || formSave.get('fecha')?.touched)"
+                severity="error"
+                variant="simple"
+                size="small"
+            >
+                Fecha es requerido
+            </p-message>
+        </div>   
                 </div>
             </form>
         </ng-template>
@@ -210,15 +221,16 @@
         
                     <div class="col-span-6">
                         <label for="tiempo" class="block font-bold mb-1">Tiempo (HH:MM:SS)</label>
-                        <p-inputMask 
-                        formControlName="tiempo" 
-                        id="tiempo" 
-                        mask="99:99:99" 
-                        slotChar="0" 
-                        placeholder="00:00:00" 
-                        class="w-full text-sm px-0 py-2">
-                        </p-inputMask>
-
+                        <input
+                          type="text"
+                          formControlName="tiempo"
+                          id="tiempo"
+                          pInputText
+                          placeholder="00:00:00"
+                          (focus)="prepararTiempo()"
+                          (input)="validarTiempo($event, 'formUpdate')"
+                          (blur)="corregirTiempo()"
+                          style="width: 100%; font-size: 1.00rem; padding: 0.45rem;">
 
                         <p-message
                             *ngIf="formUpdate.get('tiempo')?.errors?.['required'] && (formUpdate.get('tiempo')?.dirty || formUpdate.get('tiempo')?.touched)" 
@@ -230,17 +242,28 @@
                     </div>
 
 
-                    <div class="col-span-12 flex justify-center" >
-                        <div class="col-span-6">
-                        <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
-                        <p-datepicker 
-                            [maxDate]= "maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true" 
-                            [appendTo]="'body'" dateFormat="yy-mm-dd" [placeholder]="'Seleccione una fecha'" class="w-96" >
-                        </p-datepicker>
-                        <p-message 
-                            *ngIf="formUpdate.get('fecha')?.invalid && (formUpdate.get('fecha')?.dirty || formUpdate.get('fecha')?.touched)"  severity="error"  variant="simple" size="small">
-                            Fecha de inscripcion es requerido
-                        </p-message>
+                    <div class="col-span-12 flex justify-center">
+                        <div class="col-span-6" style="max-width: 350px; width: 100%;">
+                            <div class="block font-bold mb-3">Fecha registro</div>
+                            <p-datepicker 
+                            formControlName="fecha" 
+                            inputId="fecha" 
+                            [showIcon]="true" 
+                            [showButtonBar]="true" 
+                            [appendTo]="'body'" 
+                            dateFormat="yy-mm-dd" 
+                            [placeholder]="'Seleccione una fecha'"
+                            [style]="{'width': '100%'}"
+                            >
+                            </p-datepicker>
+                            <p-message 
+                            *ngIf="formUpdate.get('fecha')?.invalid && (formUpdate.get('fecha')?.dirty || formUpdate.get('fecha')?.touched)" 
+                            severity="error" 
+                            variant="simple"
+                            size="small"
+                            >
+                            Fecha es requerido
+                            </p-message>
                         </div>
                     </div>             
                 </div>

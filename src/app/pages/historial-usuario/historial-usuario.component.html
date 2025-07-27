@@ -1,6 +1,6 @@
 <p-toolbar styleClass="mb-6">
     <ng-template #start>
-        <p-button label="Agregar nuevo usuario en su grupo" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
+        <p-button label="Matricular usuario" icon="pi pi-plus" severity="secondary" class="mr-2" (click)="showSaveDialog()" />
     </ng-template>
 </p-toolbar>
 
@@ -31,7 +31,7 @@
     <!-- Encabezado con búsqueda -->
     <ng-template pTemplate="caption">
     <div class="flex items-center justify-between flex-wrap gap-2">
-        <h5 class="m-0 text-base md:text-lg font-semibold">Historial de Entrenadores y Grupos</h5>
+        <h5 class="m-0 text-base md:text-lg font-semibold">Usuarios matriculados</h5>
         <p-iconfield>
         <p-inputicon styleClass="pi pi-search"></p-inputicon>
         <input

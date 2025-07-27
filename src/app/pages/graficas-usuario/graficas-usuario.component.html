@@ -23,12 +23,16 @@
         {{ serie.value?.chartTitle }}
       </h3>
       <div class="h-[10rem]">
-        <p-chart
-          type="bar"
-          [data]="{ labels: serie.value.labels, datasets: serie.value.datasets }"
-          [options]="comboChartOptions"
-          styleClass="w-full h-full">
-        </p-chart>
+        <div class="h-[10rem]">
+<div class="h-[10rem]">
+  <p-chart
+    type="line"  
+    [data]="{ labels: serie.value.labels, datasets: serie.value.datasets }"
+    [options]="serie.value.options || comboChartOptions"
+    styleClass="w-full h-full">
+  </p-chart>
+</div>
+</div>
       </div>
     </div>
   </div>

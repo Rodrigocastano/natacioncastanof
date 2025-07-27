@@ -333,6 +333,62 @@ export class TiemponadadorComponent implements OnInit{
         this.idTiempoNadador = id;
         this.visibleDelete = true
       }
+
+      corregirTiempo() {
+        const value = this.formSave.get('tiempo')?.value;
+        if (!value) return;
+
+        const parts = value.split(':');
+        if (parts.length !== 3) return;
+
+        let [hh, mm, ss] = parts.map(Number);
+
+        if (isNaN(hh)) hh = 0;
+        if (isNaN(mm)) mm = 0;
+        if (isNaN(ss)) ss = 0;
+
+        if (mm > 59) mm = 59;
+        if (ss > 59) ss = 59;
+
+        const tiempoFormateado = `${hh.toString().padStart(2, '0')}:${mm.toString().padStart(2, '0')}:${ss.toString().padStart(2, '0')}`;
+        this.formSave.get('tiempo')?.setValue(tiempoFormateado);
+      }
+
+      validarTiempo(event: any, formName: 'formSave' | 'formUpdate') {
+        const input = event.target as HTMLInputElement;
+        let caretPos = input.selectionStart || 0;
+
+        let rawValue = input.value.replace(/[^0-9]/g, ''); // Solo números
+        rawValue = rawValue.slice(0, 6);
+
+        let hh = rawValue.slice(0, 2);
+        let mm = rawValue.slice(2, 4);
+        let ss = rawValue.slice(4, 6);
+
+        hh = hh.padEnd(2, '0');
+        mm = mm.padEnd(2, '0');
+        ss = ss.padEnd(2, '0');
+
+        if (parseInt(mm) > 59) mm = '59';
+        if (parseInt(ss) > 59) ss = '59';
+
+        const tiempoFormateado = `${hh}:${mm}:${ss}`;
+
+        this[formName].get('tiempo')?.setValue(tiempoFormateado, { emitEvent: false });
+
+        setTimeout(() => {
+          input.selectionStart = input.selectionEnd = caretPos;
+        }, 0);
+      }
+      
+      prepararTiempo() {
+        const control = this.formSave.get('tiempo');
+        let value = control?.value;
+        if (!value || !/^\d{2}:\d{2}:\d{2}$/.test(value)) {
+          control?.setValue('00:00:00', { emitEvent: false });
+        }
+      }
+
       
       }
       
