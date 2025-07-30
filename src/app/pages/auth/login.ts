@@ -54,18 +54,29 @@ export class Login {
 
 
 
-  errorMessageToast() {
-    this.messageService.add({ 
-      severity: 'error', 
-      summary: 'Error de inicio de sesión', 
-      detail: 'El correo electrónico o la contraseña son incorrectos.' 
-    });
-  }
-/* 
-  saveMessageToast() {
-    this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Logueado correctamente' });
-  } */
+  errorCorreoNoRegistrado() {
+  this.messageService.add({ 
+    severity: 'error', 
+    summary: 'Correo no registrado', 
+    detail: 'El correo electrónico no está registrado en el sistema.' 
+  });
+}
 
+errorContrasenaIncorrecta() {
+  this.messageService.add({ 
+    severity: 'error', 
+    summary: 'Contraseña incorrecta', 
+    detail: 'La contraseña ingresada es incorrecta.' 
+  });
+}
+
+errorGeneralLogin() {
+  this.messageService.add({ 
+    severity: 'error', 
+    summary: 'Error de inicio de sesión', 
+    detail: 'El correo electrónico o la contraseña son incorrectos.' 
+  });
+}
 
 login(): void {
   this.loading = true;
@@ -79,7 +90,56 @@ login(): void {
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('rol', user.rol);
 
-        /* this.saveMessageToast(); */
+        this.router.navigate([this.getRedirectRoute(user.rol)]); 
+      } else {
+        console.error('Token o usuario no válidos:', response);
+        this.errorGeneralLogin();
+      }
+      this.loading = false;
+    },
+    error: (err) => {
+      console.error('Login failed', err);
+      
+      if (err.status === 401) {
+        const mensaje = err.error.message;
+
+        if (mensaje === 'Correo electrónico no registrado') {
+          this.errorCorreoNoRegistrado();
+        } else if (mensaje === 'Contraseña incorrecta') {
+          this.errorContrasenaIncorrecta();
+        } else {
+          this.errorGeneralLogin();
+        }
+
+      } else if (err.status === 403) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Acceso denegado',
+          detail: 'No tienes permisos para acceder al sistema.'
+        });
+      } else {
+        this.errorGeneralLogin();
+      }
+
+      this.loading = false;
+    },
+  });
+}
+
+
+
+/* login(): void {
+  this.loading = true;
+  this.loginService.login(this.email, this.password).subscribe({
+    next: (response) => {
+      const token = response.token;
+      const user = response.user;
+
+      if (token && user) {
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('rol', user.rol);
+
         this.router.navigate([this.getRedirectRoute(user.rol)]); 
       } else {
         console.error('Token o usuario no válidos:', response);
@@ -93,40 +153,35 @@ login(): void {
       this.loading = false;
     },
   });
-}
+} */
 
 recuperarContrasena() {
   if (!this.emailRecuperar || this.emailRecuperar.trim() === '') {
-    this.completeMessageToast();  // mostrar error de campo vacío
+    this.completeMessageToast();
     return;
   }
 
   this.authService.recuperarContrasena(this.emailRecuperar).subscribe({
     next: (res) => {
       console.log('Respuesta correcta:', res);
-      this.saveMessageToast();
-      this.emailRecuperar = '';  // resetear campo modal
-      this.mostrarModalRecuperar = false; // cerrar modal
+      this.saveCorreoMessageToast();
+      this.emailRecuperar = ''; 
+      this.mostrarModalRecuperar = false; 
     },
     error: (err) => {
-      console.log('Error capturado:', err);
-      alert('Error capturado: ' + JSON.stringify(err));
-      this.errorMessageToast();
+      this.errorCorreoMessageToast();
     }
   });
 }
 
-
-
-
-
-
-    saveMessageToast() {
-      this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Contraseña cambiada correctamente.' });
+    saveCorreoMessageToast() {
+      this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Correo enviado correctamente.' });
     }
-     errorsMessageToast() {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al cambiar la contraseña.' });
+
+     errorCorreoMessageToast() {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error el correo no es correcto.' });
     }
+
 
     completeMessageToast() {
       this.messageService.add({ severity: 'info', summary: 'Información', detail: 'No se pudieron enviar los datos. Verifique la información e intente nuevamente.', life: 5000});
