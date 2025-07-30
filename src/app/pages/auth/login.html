@@ -25,6 +25,35 @@
                     <label for="password" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
                     <p-password required name="password" id="password" [(ngModel)]="password" placeholder="Password" [toggleMask]="true" styleClass="mb-4" [fluid]="true" [feedback]="false"></p-password>
 
+                    <!-- <div class="mb-6 text-right">
+                        <a href="/recuperar-contrasena" class="text-teal-600 hover:underline font-semibold cursor-pointer">
+                            ¿Olvidaste tu contraseña?
+                        </a>
+                    </div> -->
+
+                    <!-- Link para abrir modal -->
+                    <div class="mb-6 text-right">
+                    <a (click)="mostrarModalRecuperar = true" class="text-teal-600 hover:underline font-semibold cursor-pointer">
+                        ¿Olvidaste tu contraseña?
+                    </a>
+                    </div>
+
+                    <!-- Modal para recuperar contraseña -->
+                    <p-dialog header="Recuperar contraseña" [(visible)]="mostrarModalRecuperar" [modal]="true" [closable]="true" [dismissableMask]="true" [style]="{width: '400px'}">
+                    <form (ngSubmit)="recuperarContrasena()">
+                        <div class="field mb-4">
+                        <label for="emailRecuperar" class="block mb-2 font-semibold">Correo electrónico</label>
+                        <input pInputText id="emailRecuperar" [(ngModel)]="emailRecuperar" name="emailRecuperar" required email placeholder="Tu correo electrónico" class="w-full" />
+                        </div>
+                        <div class="flex justify-end gap-2">
+                        <button pButton type="button" label="Cancelar" class="p-button-text" (click)="mostrarModalRecuperar = false"></button>
+                        <!-- <button pButton type="submit" label="Enviar" [disabled]="!emailRecuperar || !emailRecuperar.includes('@')"></button> -->
+                         <button pButton type="submit" label="Enviar" [disabled]="!emailRecuperar || !emailRecuperar.includes('@')"></button>
+                        </div>
+                    </form>
+                    </p-dialog>
+
+
                   <p-button label="Iniciar sesión" styleClass="w-full login-button" type="submit" [disabled]="loading"></p-button>
 
                 </div>

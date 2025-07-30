@@ -8,15 +8,18 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { LoginService } from '../../pages/service/login.service';
+import { AuthService } from '../service/auth.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner'; 
 import { BlockUIModule } from 'primeng/blockui'; 
+import { DialogModule } from 'primeng/dialog';
+
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [CommonModule,ButtonModule,BlockUIModule, CheckboxModule, ProgressSpinnerModule, InputTextModule, PasswordModule, ToastModule, FormsModule, RouterModule, RippleModule],
+    imports: [CommonModule,ButtonModule,BlockUIModule, CheckboxModule, DialogModule, ProgressSpinnerModule, InputTextModule, PasswordModule, ToastModule, FormsModule, RouterModule, RippleModule],
     providers: [MessageService],
     templateUrl: '/login.html'
 })
@@ -25,12 +28,17 @@ export class Login {
   email: string = '';
   password: string = '';
   loading: boolean = false;
+  mostrarModalRecuperar: boolean = false;
+  emailRecuperar: string = '';
+
 
  constructor(
   private loginService: LoginService,
   private router: Router,
-  private messageService: MessageService
+  private messageService: MessageService,
+  private authService: AuthService,
 ) {
+
   const token = localStorage.getItem('token');
   const rol   = localStorage.getItem('rol');
 
@@ -42,6 +50,7 @@ export class Login {
     this.router.navigate([destino]);
   }
 }
+
 
 
 
@@ -85,6 +94,44 @@ login(): void {
     },
   });
 }
+
+recuperarContrasena() {
+  if (!this.emailRecuperar || this.emailRecuperar.trim() === '') {
+    this.completeMessageToast();  // mostrar error de campo vacío
+    return;
+  }
+
+  this.authService.recuperarContrasena(this.emailRecuperar).subscribe({
+    next: (res) => {
+      console.log('Respuesta correcta:', res);
+      this.saveMessageToast();
+      this.emailRecuperar = '';  // resetear campo modal
+      this.mostrarModalRecuperar = false; // cerrar modal
+    },
+    error: (err) => {
+      console.log('Error capturado:', err);
+      alert('Error capturado: ' + JSON.stringify(err));
+      this.errorMessageToast();
+    }
+  });
+}
+
+
+
+
+
+
+    saveMessageToast() {
+      this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Contraseña cambiada correctamente.' });
+    }
+     errorsMessageToast() {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al cambiar la contraseña.' });
+    }
+
+    completeMessageToast() {
+      this.messageService.add({ severity: 'info', summary: 'Información', detail: 'No se pudieron enviar los datos. Verifique la información e intente nuevamente.', life: 5000});
+    }
+
 
 /* getRedirectRoute(rol: string): string {
   switch (rol.toLowerCase()) {

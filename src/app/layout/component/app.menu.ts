@@ -57,6 +57,9 @@ export class AppMenu implements OnInit {
             { label: 'Gráficas', icon: 'pi pi-chart-bar', routerLink: ['/pages/graficasUsuario'] },
             { label: 'Asistencias', icon: 'pi pi-calendar', routerLink: ['/pages/asistenciaUsuario'] },
             { label: 'Medidas', icon: 'pi pi-calendar', routerLink: ['/pages/medidaUsuario'] },
+            { label: 'Cambiar contraseña', icon: 'pi pi-calendar', routerLink: ['/pages/cambiarcontraseña'] },
+
+            
           ]
         }
       ];

@@ -46,6 +46,7 @@ import { EntrenadorgrupoComponent } from './entrenadorgrupo/entrenadorgrupo.comp
 import { VerentrenadorusuarioComponent } from './verentrenadorusuario/verentrenadorusuario.component';
 import { ReporteentrenadoresComponent } from './reporteentrenadores/reporteentrenadores.component';
 import { ReporteentrenadorComponent } from './reporteentrenador/reporteentrenador.component';
+import { CambiarContrasenaComponent } from './cambiar-contrasena/cambiar-contrasena.component';
 
 
 
@@ -96,5 +97,6 @@ export default [
     { path: 'Verentrenadorusuario', component: VerentrenadorusuarioComponent },
     { path: 'reporteentrenadores', component: ReporteentrenadoresComponent },
     { path: 'reporteentrenador', component: ReporteentrenadorComponent },
+    { path: 'cambiarcontraseña', component: CambiarContrasenaComponent },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;
