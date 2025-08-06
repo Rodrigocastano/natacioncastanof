@@ -131,16 +131,15 @@
         </p-table>
     </div>
 
-    <p-dialog [(visible)]="visibleUserMeasureDialog" [style]="{ width: '400px' }" [header]="'Nueva medida para ' + (selectedUser?.nombre || 'Usuario')" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">   
+    <p-dialog [(visible)]="visibleUserMeasureDialog" [style]="{ width: '400px' }" [header]="'Nueva medida  '" [modal]="true" >   
         <ng-template #content>
-            <form [formGroup]="formSave" class="flex flex-col gap-5 p-3">
+            <form [formGroup]="formSave" class="flex flex-col gap-5 p-0">
 
-                <div class="field">
-                    <label class="block font-bold mb-2 text-gray-700">Usuario</label>
-                    <div class="p-3 bg-gray-100 rounded-md">
-                        <p class="font-semibold">{{selectedUser?.nombre}} {{selectedUser?.apellido}}-{{selectedUser?.cedula}}</p>
-
-                    </div>
+                <div class="col-span-6">
+                    <label for="id_usuario" class="block font-bold mb-3">Usuario</label>   
+                    <p-select 
+                        [options]="usuarios" formControlName="id_usuario" optionLabel="display" optionValue="id" [readonly]="true" [style]="{'background-color': '#e0e0e0'}" class="w-full md:w-70 ">
+                    </p-select>
                 </div>
                 
                 <div class="col-span-6">
@@ -153,7 +152,7 @@
                 </div>
                 
 
-                <div class="col-span-12 flex justify-center">
+                <!-- <div class="col-span-12 flex justify-center">
                     <div class="col-span-6">
                         <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                         <p-datepicker 
@@ -165,7 +164,7 @@
                             Fecha es requerida
                         </p-message>
                     </div>
-                </div>
+                </div> -->
 
             </form>
         </ng-template>
@@ -214,7 +213,7 @@
                         </p-message>
                     </div>
 
-                    <div class="col-span-12 flex justify-center" >
+                 <!--    <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
                         <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                         <p-datepicker 
@@ -226,7 +225,7 @@
                             Fecha es requerida
                         </p-message>
                         </div>
-                    </div>      
+                    </div> -->      
                 </div>
             </form>
         </ng-template>
@@ -251,7 +250,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '450px' }" header="Actualizar medida elasticida" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">  
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '350px' }" header="Actualizar medida elasticida" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">  
         <ng-template #content>
             <form [formGroup]="formUpdate" class="formulario">
                 <div class="flex flex-col gap-6">      
@@ -271,7 +270,7 @@
                         </p-message>
                     </div>
     
-                    <div class="col-span-12 flex justify-center" >
+                    <!-- <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
                             <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                             <p-datepicker 
@@ -283,7 +282,7 @@
                                 Fecha nacimiento es requerido
                             </p-message>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </form>
         </ng-template>

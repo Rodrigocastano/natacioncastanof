@@ -1,7 +1,7 @@
 export interface Antropometrica {
     id: number;
     id_usuario: any;
-    fecha: string;
+    fecha?: string;
     peso: number;
     talla: number;
     envergadura: number;

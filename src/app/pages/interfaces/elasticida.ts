@@ -1,7 +1,7 @@
 export interface Elasticida {
     id: number;
     id_usuario: any;
-    fecha: string;
+    fecha?: string;
     medida_elasticida: number;
     estado?: boolean;
     nombre?: string;

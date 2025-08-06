@@ -252,19 +252,19 @@
 
     <p-dialog [(visible)]="visibleUserMeasureDialog" 
             [style]="{ width: '450px' }" 
-            [header]="'Nueva medida para ' + (selectedUser?.nombre || 'Usuario')" 
-            [modal]="true" 
-            [breakpoints]="{ '960px': '75vw', '640px': '90vw' }">   
+            [header]="'Agregar nueva medida' " 
+            [modal]="true" >   
 
     <ng-template #content>
-        <form [formGroup]="formSave" class="flex flex-col gap-5 p-3">
+        <form [formGroup]="formSave" class="flex flex-col gap-5 p-1">
 
-        <div class="field">
-            <label class="block font-bold mb-2 text-gray-700">Usuario</label>
-            <div class="p-3 bg-gray-100 rounded-md">
-            <p class="font-semibold">{{selectedUser?.nombre}} {{selectedUser?.apellido}} - {{selectedUser?.cedula}}</p>
-            </div>
-        </div>
+        <div class="col-span-12 md:col-span-12">
+            <label for="id_usuario" class="block font-bold mb-1">Usuario</label>
+            <p-select
+            [options]="usuarios" formControlName="id_usuario" optionLabel="display" optionValue="id"
+            [readonly]="true" [style]="{'background-color': '#e0e0e0'}" class="w-full">
+            </p-select>
+        </div> 
 
         <div class="grid grid-cols-12 gap-4">     
             <div class="col-span-12 md:col-span-6">
@@ -324,7 +324,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-12 gap-4">
+<!--         <div class="grid grid-cols-12 gap-4">
             <div class="col-span-12">
             <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
             <p-datepicker 
@@ -345,7 +345,7 @@
                 Fecha es requerida
             </p-message>
             </div>
-        </div>
+        </div> -->
 
         </form>
     </ng-template>
@@ -367,14 +367,14 @@
     </p-dialog>
 
 
-    <p-dialog [(visible)]="visibleSave" [style]="{ width: '468px' }" header="Agregar nueva antropométricas" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">  
+    <p-dialog [(visible)]="visibleSave" [style]="{ width: '400px' }" header="Agregar nueva antropométricas" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">  
     <ng-template #content>
         <form [formGroup]="formSave" class="formulario">
         <div class="flex flex-col gap-6">
 
             <!-- Usuario y Peso -->
-            <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-12 md:col-span-6">
+
+            <div class="col-span-12 md:col-span-12">
                 <label for="id_usuario" class="block font-bold mb-3">Usuario</label>             
                 <p-select 
                 [options]="usuarios" [appendTo]="'body'" formControlName="id_usuario" inputId="id_usuario"
@@ -390,69 +390,69 @@
                 </div>
             </div>
 
-            <div class="col-span-12 md:col-span-6">
-                <label for="peso" class="block font-bold mb-1">Pesó</label>
-                <p-inputnumber formControlName="peso" id="peso" placeholder="Ingrese el peso" required class="w-full text-sm px-0 py-2" />             
-                <p-message
-                *ngIf="formSave.get('peso')?.errors?.['required'] && (formSave.get('peso')?.dirty || formSave.get('peso')?.touched)"
-                severity="error" variant="simple" size="small">
-                Pesó es requerida
-                </p-message>
-            </div>
-            </div>
-
             <!-- Talla y Envergadura -->
             <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-12 md:col-span-6">
-                <label for="talla" class="block font-bold mb-1">Talla</label>
-                <p-inputnumber formControlName="talla" id="talla" placeholder="Ingrese la talla" required class="w-full text-sm px-0 py-1" />             
-                <p-message
-                *ngIf="formSave.get('talla')?.errors?.['required'] && (formSave.get('talla')?.dirty || formSave.get('talla')?.touched)"
-                severity="error" variant="simple" size="small">
-                Talla es requerida
-                </p-message>
-            </div>
+                <div class="col-span-12 md:col-span-6">
+                    <label for="peso" class="block font-bold mb-1">Pesó</label>
+                    <p-inputnumber formControlName="peso" id="peso" placeholder="Ingrese el peso" required class="w-full text-sm px-0 py-2" />             
+                    <p-message
+                    *ngIf="formSave.get('peso')?.errors?.['required'] && (formSave.get('peso')?.dirty || formSave.get('peso')?.touched)"
+                    severity="error" variant="simple" size="small">
+                    Pesó es requerida
+                    </p-message>
+                </div>
 
-            <div class="col-span-12 md:col-span-6">
-                <label for="envergadura" class="block font-bold mb-1">Envergadura</label>
-                <p-inputnumber formControlName="envergadura" id="envergadura" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
-            </div>
+                <div class="col-span-12 md:col-span-6">
+                    <label for="talla" class="block font-bold mb-1">Talla</label>
+                    <p-inputnumber formControlName="talla" id="talla" placeholder="Ingrese la talla" required class="w-full text-sm px-0 py-1" />             
+                    <p-message
+                    *ngIf="formSave.get('talla')?.errors?.['required'] && (formSave.get('talla')?.dirty || formSave.get('talla')?.touched)"
+                    severity="error" variant="simple" size="small">
+                    Talla es requerida
+                    </p-message>
+                </div>
             </div>
 
             <!-- Circuferencia braquial y Pliegue cutáneo -->
             <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-12 md:col-span-6">
-                <label for="circuferencia_braquial" class="block font-bold mb-1">Circuferencia braquial</label>
-                <p-inputnumber formControlName="circuferencia_braquial" id="circuferencia_braquial" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
-            </div>
+                <div class="col-span-12 md:col-span-6">
+                    <label for="envergadura" class="block font-bold mb-1">Envergadura</label>
+                    <p-inputnumber formControlName="envergadura" id="envergadura" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
+                </div>
 
-            <div class="col-span-12 md:col-span-6">
-                <label for="pliegue_cutanio" class="block font-bold mb-1">Pliegue cutáneo</label>
-                <p-inputnumber formControlName="pliegue_cutanio" id="pliegue_cutanio" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
-            </div>
+                <div class="col-span-12 md:col-span-6">
+                    <label for="circuferencia_braquial" class="block font-bold mb-1">Circuferencia braquial</label>
+                    <p-inputnumber formControlName="circuferencia_braquial" id="circuferencia_braquial" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
+                </div>
             </div>
 
             <!-- Perímetro cintura y cadera -->
             <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-12 md:col-span-6">
-                <label for="perimetro_cintura" class="block font-bold mb-1">Perímetro cintura</label>
-                <p-inputnumber formControlName="perimetro_cintura" id="perimetro_cintura" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
-            </div>
+                <div class="col-span-12 md:col-span-6">
+                    <label for="pliegue_cutanio" class="block font-bold mb-1">Pliegue cutáneo</label>
+                    <p-inputnumber formControlName="pliegue_cutanio" id="pliegue_cutanio" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
+                </div>
 
-            <div class="col-span-12 md:col-span-6">
-                <label for="perimetro_cadera" class="block font-bold mb-1">Perímetro cadera</label>
-                <p-inputnumber formControlName="perimetro_cadera" id="perimetro_cadera" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
-            </div>
+                <div class="col-span-12 md:col-span-6">
+                    <label for="perimetro_cintura" class="block font-bold mb-1">Perímetro cintura</label>
+                    <p-inputnumber formControlName="perimetro_cintura" id="perimetro_cintura" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
+                </div>
             </div>
 
             <!-- Diámetro sagital y Fecha -->
             <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-12 md:col-span-6">
-                <label for="diametro_sagital" class="block font-bold mb-1">Diámetro sagital</label>
-                <p-inputnumber formControlName="diametro_sagital" id="diametro_sagital" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-0" />
+                <div class="col-span-12 md:col-span-6">
+                    <label for="perimetro_cadera" class="block font-bold mb-1">Perímetro cadera</label>
+                    <p-inputnumber formControlName="perimetro_cadera" id="perimetro_cadera" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
+                </div>
+
+                <div class="col-span-12 md:col-span-6">
+                    <label for="diametro_sagital" class="block font-bold mb-1">Diámetro sagital</label>
+                    <p-inputnumber formControlName="diametro_sagital" id="diametro_sagital" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-0" />
+                </div>
             </div>
 
-            <div class="col-span-12 md:col-span-6">
+                     <!--    <div class="col-span-12 md:col-span-6">
                 <label for="fecha" class="block font-bold mb-1">Fecha registro</label>
                 <p-datepicker
                 [(ngModel)]="fechaActual" [maxDate]="maxDate" formControlName="fecha" inputId="fecha"
@@ -464,8 +464,7 @@
                 severity="error" variant="simple" size="small">
                 Fecha es requerido
                 </p-message>
-            </div>
-            </div>
+            </div> -->
 
         </div>
         </form>
@@ -491,93 +490,92 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '468px' }" header="Actualización de antropométricas" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+    <p-dialog [(visible)]="visibleUpdate" [style]="{ width: '400px' }" header="Actualización de antropométricas" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
     <ng-template #content>
         <form [formGroup]="formUpdate" class="formulario">
-        <div class="flex flex-col gap-6">
+            <div class="flex flex-col gap-6">
 
-            <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-12 md:col-span-6">
-                <label for="id_usuario" class="block font-bold mb-3">Usuario</label>
-                <p-select
-                [options]="usuarios" formControlName="id_usuario" optionLabel="display" optionValue="id"
-                [readonly]="true" [style]="{'background-color': '#e0e0e0'}" class="w-full">
-                </p-select>
-            </div>
+            
+                <div class="col-span-12 md:col-span-12">
+                    <label for="id_usuario" class="block font-bold mb-3">Usuario</label>
+                    <p-select
+                    [options]="usuarios" formControlName="id_usuario" optionLabel="display" optionValue="id"
+                    [readonly]="true" [style]="{'background-color': '#e0e0e0'}" class="w-full">
+                    </p-select>
+                </div>           
+                
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-12 md:col-span-6">
+                        <label for="peso" class="block font-bold mb-1">Peso</label>
+                        <p-inputnumber formControlName="peso" id="peso" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-2" />
+                        <p-message
+                        *ngIf="formUpdate.get('peso')?.errors?.['required'] && (formUpdate.get('peso')?.dirty || formUpdate.get('peso')?.touched)"
+                        severity="error" variant="simple" size="small">
+                        Peso es requerido
+                        </p-message>
+                    </div>
 
-            <div class="col-span-12 md:col-span-6">
-                <label for="peso" class="block font-bold mb-1">Peso</label>
-                <p-inputnumber formControlName="peso" id="peso" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-2" />
-                <p-message
-                *ngIf="formUpdate.get('peso')?.errors?.['required'] && (formUpdate.get('peso')?.dirty || formUpdate.get('peso')?.touched)"
-                severity="error" variant="simple" size="small">
-                Peso es requerido
-                </p-message>
-            </div>
-            </div>
+                    <div class="col-span-12 md:col-span-6">
+                        <label for="talla" class="block font-bold mb-1">Talla</label>
+                        <p-inputnumber formControlName="talla" id="talla" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-1" />
+                        <p-message
+                        *ngIf="formUpdate.get('talla')?.errors?.['required'] && (formUpdate.get('talla')?.dirty || formUpdate.get('talla')?.touched)"
+                        severity="error" variant="simple" size="small">
+                        Talla es requerida
+                        </p-message>
+                    </div>
+                </div>
 
-            <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-12 md:col-span-6">
-                <label for="talla" class="block font-bold mb-1">Talla</label>
-                <p-inputnumber formControlName="talla" id="talla" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-1" />
-                <p-message
-                *ngIf="formUpdate.get('talla')?.errors?.['required'] && (formUpdate.get('talla')?.dirty || formUpdate.get('talla')?.touched)"
-                severity="error" variant="simple" size="small">
-                Talla es requerida
-                </p-message>
-            </div>
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-12 md:col-span-6">
+                        <label for="envergadura" class="block font-bold mb-1">Envergadura</label>
+                        <p-inputnumber formControlName="envergadura" id="envergadura" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
+                    </div>
 
-            <div class="col-span-12 md:col-span-6">
-                <label for="envergadura" class="block font-bold mb-1">Envergadura</label>
-                <p-inputnumber formControlName="envergadura" id="envergadura" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
-            </div>
-            </div>
+                    <div class="col-span-12 md:col-span-6">
+                        <label for="circuferencia_braquial" class="block font-bold mb-1">Circunferencia braquial</label>
+                        <p-inputnumber formControlName="circuferencia_braquial" id="circuferencia_braquial" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
+                    </div>         
+                </div>
 
-            <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-12 md:col-span-6">
-                <label for="circuferencia_braquial" class="block font-bold mb-1">Circunferencia braquial</label>
-                <p-inputnumber formControlName="circuferencia_braquial" id="circuferencia_braquial" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
-            </div>
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-12 md:col-span-6">
+                        <label for="pliegue_cutanio" class="block font-bold mb-1">Pliegue cutáneo</label>
+                        <p-inputnumber formControlName="pliegue_cutanio" id="pliegue_cutanio" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
+                    </div>
 
-            <div class="col-span-12 md:col-span-6">
-                <label for="pliegue_cutanio" class="block font-bold mb-1">Pliegue cutáneo</label>
-                <p-inputnumber formControlName="pliegue_cutanio" id="pliegue_cutanio" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
-            </div>
-            </div>
+                    <div class="col-span-12 md:col-span-6">
+                        <label for="perimetro_cintura" class="block font-bold mb-1">Perímetro cintura</label>
+                        <p-inputnumber formControlName="perimetro_cintura" id="perimetro_cintura" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
+                    </div>
+                </div>
 
-            <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-12 md:col-span-6">
-                <label for="perimetro_cintura" class="block font-bold mb-1">Perímetro cintura</label>
-                <p-inputnumber formControlName="perimetro_cintura" id="perimetro_cintura" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
-            </div>
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-12 md:col-span-6">
+                        <label for="perimetro_cadera" class="block font-bold mb-1">Perímetro cadera</label>
+                        <p-inputnumber formControlName="perimetro_cadera" id="perimetro_cadera" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
+                    </div>
 
-            <div class="col-span-12 md:col-span-6">
-                <label for="perimetro_cadera" class="block font-bold mb-1">Perímetro cadera</label>
-                <p-inputnumber formControlName="perimetro_cadera" id="perimetro_cadera" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-1" />
-            </div>
-            </div>
+                    <div class="col-span-12 md:col-span-6">
+                        <label for="diametro_sagital" class="block font-bold mb-1">Diámetro sagital</label>
+                        <p-inputnumber formControlName="diametro_sagital" id="diametro_sagital" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-0" />
+                    </div>
+                </div>
 
-            <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-12 md:col-span-6">
-                <label for="diametro_sagital" class="block font-bold mb-1">Diámetro sagital</label>
-                <p-inputnumber formControlName="diametro_sagital" id="diametro_sagital" placeholder="Ingrese la medida" class="w-full text-sm px-0 py-0" />
-            </div>
+                <!--   <div class="col-span-12 md:col-span-6">
+                    <label for="fecha" class="block font-bold mb-1">Fecha registro</label>
+                    <p-datepicker
+                    [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true"
+                    [appendTo]="'body'" dateFormat="yy-mm-dd" placeholder="Seleccione una fecha" class="w-full">
+                    </p-datepicker>
+                    <p-message
+                    *ngIf="formUpdate.get('fecha')?.invalid && (formUpdate.get('fecha')?.dirty || formUpdate.get('fecha')?.touched)"
+                    severity="error" variant="simple" size="small">
+                    Fecha registro es requerida
+                    </p-message>
+                </div> -->
 
-            <div class="col-span-12 md:col-span-6">
-                <label for="fecha" class="block font-bold mb-1">Fecha registro</label>
-                <p-datepicker
-                [maxDate]="maxDate" formControlName="fecha" inputId="fecha" [showIcon]="true" [showButtonBar]="true"
-                [appendTo]="'body'" dateFormat="yy-mm-dd" placeholder="Seleccione una fecha" class="w-full">
-                </p-datepicker>
-                <p-message
-                *ngIf="formUpdate.get('fecha')?.invalid && (formUpdate.get('fecha')?.dirty || formUpdate.get('fecha')?.touched)"
-                severity="error" variant="simple" size="small">
-                Fecha registro es requerida
-                </p-message>
             </div>
-            </div>
-
-        </div>
         </form>
     </ng-template>
 

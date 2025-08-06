@@ -164,7 +164,7 @@ export class ElasticidaComponent implements OnInit{
       if (this.formSave.valid) {
         const newUsuario: any = {
           medida_elasticida: this.formSave.value.medida_elasticida,
-          fecha: this.formatDate(this.formSave.value.fecha),
+          /* fecha: this.formatDate(this.formSave.value.fecha), */
           id_usuario: this.formSave.value.id_usuario,
         };
   
@@ -259,7 +259,7 @@ export class ElasticidaComponent implements OnInit{
         const updateElasticida: Elasticida = {
           id: this.elastic.id,
           medida_elasticida: this.formUpdate.value.medida_elasticida,
-          fecha: this.formatDate(this.formUpdate.value.fecha),
+          /* fecha: this.formatDate(this.formUpdate.value.fecha), */
           id_usuario: this.formUpdate.value.id_usuario,
         };
     
@@ -286,9 +286,9 @@ export class ElasticidaComponent implements OnInit{
         };
         this.formUpdate.controls['medida_elasticida'].setValue(this.elastic?.medida_elasticida)
         this.formUpdate.controls['id_usuario'].setValue(this.elastic?.id_usuario) 
-         this.formUpdate.controls['fecha'].setValue(
+    /*      this.formUpdate.controls['fecha'].setValue(
           parseLocalDate(this.elastic.fecha)
-        );
+        ); */
       }
       this.visibleUpdate = true;
       

@@ -79,6 +79,12 @@ export class PsicologoComponent implements OnInit{
   terminoBusqueda: string = '';
   buscarOriginal: Psicologo[] = [];
 
+  aptoOptions = [
+    { label: 'Sí', value: true },
+    { label: 'No', value: false }
+  ];
+  
+
   constructor(
       private fb: FormBuilder,
       private psicologoService: PsicologoService,
@@ -88,14 +94,14 @@ export class PsicologoComponent implements OnInit{
       this.formSave = this.fb.group({
         id_usuario: ['', [Validators.required]],
         diagnostico: ['', []],
-        apto: ['', []],
-        fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
+         apto: [true],
+        /* fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')] */
         
       });
       this.formUpdate = fb.group({
         diagnostico: ['', []],
-        apto: ['', []],
-        fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
+        apto: [true, []],
+        /* fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')], */
         id_usuario: ['', [Validators.required]]
       });
     }
@@ -173,7 +179,7 @@ export class PsicologoComponent implements OnInit{
         const newUsuario: any = {
           apto: presenteValue,
           diagnostico: this.formSave.value.diagnostico,
-          fecha: this.formatDate(this.formSave.value.fecha),
+          /* fecha: this.formatDate(this.formSave.value.fecha), */
           id_usuario: this.formSave.value.id_usuario,
         };
   
@@ -233,7 +239,7 @@ export class PsicologoComponent implements OnInit{
           id: this.psico.id,
           diagnostico: this.formUpdate.value.diagnostico,
           apto: this.formUpdate.value.apto ? 1 : 0,
-          fecha: this.formatDate(this.formUpdate.value.fecha),
+          /* fecha: this.formatDate(this.formUpdate.value.fecha), */
           id_usuario: this.formUpdate.value.id_usuario,
         };
     
@@ -256,18 +262,12 @@ export class PsicologoComponent implements OnInit{
       this.idForUpdate = true;
       this.psico = elasticId
        if (this.psico) {
-        const parseLocalDate = (dateString: string) => {
-          return dateString ? new Date(dateString + 'T00:00:00') : null;
-        };
-
-        
         this.formUpdate.controls['diagnostico'].setValue(this.psico?.diagnostico)
         this.formUpdate.controls['apto'].setValue(this.psico?.apto)
-        this.formUpdate.controls['fecha'].setValue(new Date(this.psico?.fecha))
-        this.formUpdate.controls['id_usuario'].setValue(this.psico?.id_usuario) 
-        this.formUpdate.controls['fecha'].setValue(
+        this.formUpdate.controls['id_usuario'].setValue(this.psico?.id_usuario)
+   /*      this.formUpdate.controls['fecha'].setValue(
           parseLocalDate(this.psico.fecha)
-        );
+        ); */
       }
       this.visibleUpdate = true;
       

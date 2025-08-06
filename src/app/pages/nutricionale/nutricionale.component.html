@@ -152,16 +152,15 @@
     </div>
 
     
-    <p-dialog [(visible)]="visibleUserMeasureDialog" [style]="{ width: '400px' }" [header]="'Nueva medida para ' + (selectedUser?.nombre || 'Usuario')" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">   
+    <p-dialog [(visible)]="visibleUserMeasureDialog" [style]="{ width: '400px' }" [header]="'Agregar nueva medida'" [modal]="true" >   
         <ng-template #content>
-            <form [formGroup]="formSave" class="flex flex-col gap-5 p-3">
+            <form [formGroup]="formSave" class="flex flex-col gap-5 p-0">
 
-                <div class="field">
-                    <label class="block font-bold mb-2 text-gray-700">Usuario</label>
-                    <div class="p-3 bg-gray-100 rounded-md">
-                        <p class="font-semibold">{{selectedUser?.nombre}} {{selectedUser?.apellido}}-{{selectedUser?.cedula}}</p>
-
-                    </div>
+                <div class="col-span-6">
+                    <label for="id_usuario" class="block font-bold mb-3">Usuario</label>   
+                    <p-select 
+                        [options]="usuarios" formControlName="id_usuario" optionLabel="display" optionValue="id" [readonly]="true" [style]="{'background-color': '#e0e0e0'}" class="w-full md:w-70 ">
+                    </p-select>
                 </div>
                 
                  <div class="col-span-6">
@@ -183,7 +182,7 @@
                     </div>
                 
 
-                <div class="col-span-12 flex justify-center">
+                <!-- <div class="col-span-12 flex justify-center">
                     <div class="col-span-6">
                         <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                         <p-datepicker 
@@ -195,7 +194,7 @@
                             Fecha es requerida
                         </p-message>
                     </div>
-                </div>
+                </div> -->
 
             </form>
         </ng-template>
@@ -253,7 +252,7 @@
                         </p-message>
                     </div>
 
-                    <div class="col-span-12 flex justify-center" >
+                  <!--   <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
                         <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                         <p-datepicker 
@@ -265,7 +264,7 @@
                             Fecha es requerida
                         </p-message>
                         </div>
-                    </div>  
+                    </div>  --> 
                 </div>
             </form>
         </ng-template>
@@ -302,6 +301,15 @@
                             [options]="usuarios" formControlName="id_usuario" optionLabel="display" optionValue="id" [readonly]="true" [style]="{'background-color': '#e0e0e0'}" class="w-full md:w-70 ">
                         </p-select>
                     </div>
+
+                    <div class="col-span-6">
+                        <label for="proteina_consumida" class="block font-bold mb-2 ">Proteína consumida</label>
+                        <p-inputnumber formControlName="proteina_consumida" id="proteina_consumida" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-1" />             
+                        <p-message
+                            *ngIf="formUpdate.get('proteina_consumida')?.errors?.['required'] && (formUpdate.get('proteina_consumida')?.dirty || formUpdate.get('medida_elasticida')?.touched)" severity="error" variant="simple" size="small" >
+                            Proteína consumida es requerida
+                        </p-message>
+                    </div>
                      
                     <div class="col-span-6">
                         <label for="caloria_consumida" class="block font-bold mb-2 ">Caloría consumida</label>
@@ -312,16 +320,9 @@
                         </p-message>
                     </div>
 
-                    <div class="col-span-6">
-                        <label for="proteina_consumida" class="block font-bold mb-2 ">Proteína consumida</label>
-                        <p-inputnumber formControlName="proteina_consumida" id="proteina_consumida" placeholder="Ingrese la medida" required class="w-full text-sm px-0 py-1" />             
-                        <p-message
-                            *ngIf="formUpdate.get('proteina_consumida')?.errors?.['required'] && (formUpdate.get('proteina_consumida')?.dirty || formUpdate.get('medida_elasticida')?.touched)" severity="error" variant="simple" size="small" >
-                            Proteína consumida es requerida
-                        </p-message>
-                    </div>
+                    
     
-                    <div class="col-span-12 flex justify-center" >
+                 <!--    <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
                             <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                             <p-datepicker 
@@ -333,7 +334,7 @@
                                 Fecha es requerido
                             </p-message>
                         </div>
-                    </div>
+                    </div> -->
 
                 </div>
             </form>

@@ -168,7 +168,7 @@ selectedUser: any;
         const newUsuario: any = {
           caloria_consumida: this.formSave.value.caloria_consumida,
           proteina_consumida: this.formSave.value.proteina_consumida,
-          fecha: this.formatDate(this.formSave.value.fecha),
+        /*   fecha: this.formatDate(this.formSave.value.fecha), */
           id_usuario: this.formSave.value.id_usuario,
         };
   
@@ -276,7 +276,7 @@ compararProteinaAnterior(medidasOrdenadas: any[], index: number): string {
           id: this.nutric.id,
           proteina_consumida: this.formUpdate.value.proteina_consumida,
           caloria_consumida: this.formUpdate.value.caloria_consumida,
-          fecha: this.formatDate(this.formUpdate.value.fecha),
+          /* fecha: this.formatDate(this.formUpdate.value.fecha), */
           id_usuario: this.formUpdate.value.id_usuario,
         };
     
@@ -298,15 +298,12 @@ compararProteinaAnterior(medidasOrdenadas: any[], index: number): string {
       this.idForUpdate = true;
       this.nutric = nutricionaId
       if (this.nutric) {
-         const parseLocalDate = (dateString: string) => {
-          return dateString ? new Date(dateString + 'T00:00:00') : null;
-        };
         this.formUpdate.controls['proteina_consumida'].setValue(this.nutric?.proteina_consumida)
         this.formUpdate.controls['caloria_consumida'].setValue(this.nutric?.caloria_consumida)
         this.formUpdate.controls['id_usuario'].setValue(this.nutric?.id_usuario) 
-        this.formUpdate.controls['fecha'].setValue(
+    /*     this.formUpdate.controls['fecha'].setValue(
           parseLocalDate(this.nutric.fecha)
-        );
+        ); */
       }
       this.visibleUpdate = true;
       

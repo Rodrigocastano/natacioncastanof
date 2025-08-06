@@ -78,6 +78,11 @@ export class MedicoComponent implements OnInit{
 
       terminoBusqueda: string = '';
       buscarOriginal: Medico[] = [];
+
+      aptoOptions = [
+        { label: 'Sí', value: true },
+        { label: 'No', value: false }
+      ];
   
   constructor(
       private fb: FormBuilder,
@@ -88,14 +93,14 @@ export class MedicoComponent implements OnInit{
       this.formSave = this.fb.group({
         id_usuario: ['', [Validators.required]],
         diagnostico: ['', []],
-        apto: ['', []],
-        fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
+        apto: [true],
+  /*       fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')] */
         
       });
       this.formUpdate = fb.group({
         diagnostico: ['', []],
-        apto: ['', []],
-        fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
+        apto: [true, []],
+       /*  fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')], */
         id_usuario: ['', [Validators.required]]
       });
     }
@@ -138,6 +143,8 @@ export class MedicoComponent implements OnInit{
       });
     }
 
+    
+
     abrirExpand(event: TableRowExpandEvent) {
       this.messageService.add({ 
         severity: 'info', 
@@ -155,41 +162,40 @@ export class MedicoComponent implements OnInit{
       });
     }
 
-    store() {
-      this.submitted = true;
-  
-      if (this.formSave.invalid) {
-        this.errorMessageToast();
-        this.formSave.markAllAsTouched();
-        return;
-      }
-  
-      if (this.formSave.valid) {
-           const presenteValue = this.formSave.value.apto !== null && this.formSave.value.apto !== undefined 
-          ? this.formSave.value.apto 
-          : true; 
+store() {
+  this.submitted = true;
 
-        const newUsuario: any = {
-          diagnostico: this.formSave.value.diagnostico,
-          apto: presenteValue,
-          fecha: this.formatDate(this.formSave.value.fecha),
-          id_usuario: this.formSave.value.id_usuario,
-        };
-        console.log('Datos a guardar:', newUsuario); 
-  
-        this.medicoService.createMedico(newUsuario).subscribe({
-          next: () => {
-            this.saveMessageToast();
-            this.getMedico();
-            this.visibleSave = false;
-          },
-          error: (err) => {
-            console.error('Error al guardar registro psicologo:', err);
-            
-          }
-        });
+  if (this.formSave.invalid) {
+    this.errorMessageToast();
+    this.formSave.markAllAsTouched();
+    return;
+  }
+
+  if (this.formSave.valid) {
+    // Si no se selecciona nada, se guarda como true ("Sí")
+    const aptoValue = this.formSave.value.apto ?? true;
+
+    const newUsuario: any = {
+      diagnostico: this.formSave.value.diagnostico,
+      apto: aptoValue,  // true si no se selecciona nada
+   /*    fecha: this.formatDate(this.formSave.value.fecha), */
+      id_usuario: this.formSave.value.id_usuario,
+    };
+
+    console.log('Datos a guardar:', newUsuario);
+
+    this.medicoService.createMedico(newUsuario).subscribe({
+      next: () => {
+        this.saveMessageToast();
+        this.getMedico();
+        this.visibleSave = false;
+      },
+      error: (err) => {
+        console.error('Error al guardar registro médico:', err);
       }
-    }
+    });
+  }
+}
 
     showSaveDialog() {
       this.formSave.reset();
@@ -233,7 +239,7 @@ export class MedicoComponent implements OnInit{
           id: this.medi.id,
           diagnostico: this.formUpdate.value.diagnostico,
           apto: this.formUpdate.value.apto ? 1 : 0,
-          fecha: this.formatDate(this.formUpdate.value.fecha),
+         /*  fecha: this.formatDate(this.formUpdate.value.fecha), */
           id_usuario: this.formUpdate.value.id_usuario,
         };
     
@@ -256,15 +262,12 @@ export class MedicoComponent implements OnInit{
       this.idForUpdate = true;
       this.medi = elasticId
       if (this.medi) {
-         const parseLocalDate = (dateString: string) => {
-          return dateString ? new Date(dateString + 'T00:00:00') : null;
-        };
         this.formUpdate.controls['diagnostico'].setValue(this.medi?.diagnostico)
         this.formUpdate.controls['apto'].setValue(this.medi?.apto)
         this.formUpdate.controls['id_usuario'].setValue(this.medi?.id_usuario) 
-         this.formUpdate.controls['fecha'].setValue(
+      /*    this.formUpdate.controls['fecha'].setValue(
           parseLocalDate(this.medi.fecha)
-        );
+        ); */
       }
       this.visibleUpdate = true;
       

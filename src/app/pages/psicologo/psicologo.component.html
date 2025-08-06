@@ -142,14 +142,20 @@
                     </div>
 
                     <div class="col-span-6">
-                        <label for="apto" class="block font-bold mb-2">Apto</label>
-                        <div class="flex items-center gap-2 justify-center ml-6">
-                            <p-radiobutton name="apto" [value]="false" formControlName="apto" inputId="aptoNo" />
-                            <label for="aptoNo">No</label>
-                        </div>
+                      <label for="apto" class="block font-bold mb-2">Apto</label>
+                      <p-dropdown 
+                        [options]="aptoOptions" 
+                        formControlName="apto"
+                        optionLabel="label"
+                        optionValue="value" 
+                        [showClear]="false"
+                        [appendTo]="'body'"
+                        placeholder="Sí"
+                        class="w-full md:w-70">
+                      </p-dropdown>
                     </div>
                              
-                    <div class="col-span-12 flex justify-center" >
+                    <!-- <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
                             <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                             <p-datepicker 
@@ -161,7 +167,7 @@
                                 Fecha es requerido
                             </p-message>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </form>
         </ng-template>
@@ -206,20 +212,20 @@
 
                     <div class="col-span-6">
                         <label for="apto" class="block font-bold mb-2">Apto</label>
-                        <div class="grid grid-cols-12 gap-4">
-                            <div class="flex items-center gap-2 col-span-6 justify-center">
-                                <p-radiobutton name="apto" [value]="true" formControlName="apto" inputId="aptoSi" />
-                                <label for="aptoSi">Sí</label>
-                            </div>
-                            <div class="flex items-center gap-2 col-span-6 justify-center ml-6">
-                                <p-radiobutton name="apto" [value]="false" formControlName="apto" inputId="aptoNo" />
-                                <label for="aptoNo">No</label>
-                            </div>
-                        </div>
+                        <p-dropdown 
+                            [options]="aptoOptions" 
+                            formControlName="apto" 
+                            placeholder="Seleccione"
+                            optionLabel="label"
+                            optionValue="value"
+                            [showClear]="false"
+                            [appendTo]="'body'"
+                            class="w-full md:w-70">
+                        </p-dropdown>
                     </div>
                     
                     
-                    <div class="col-span-12 flex justify-center" >
+<!--                     <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
                             <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                             <p-datepicker 
@@ -231,7 +237,7 @@
                                 Fecha es requerido
                             </p-message>
                         </div>
-                    </div>
+                    </div> -->
      
                 </div>
             </form>

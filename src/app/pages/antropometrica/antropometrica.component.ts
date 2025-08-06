@@ -99,7 +99,7 @@ export class AntropometricaComponent implements OnInit{
             perimetro_cintura: ['', []],
             perimetro_cadera: ['', []],
             diametro_sagital: ['', []],
-            fecha: ['', [Validators.required]]
+            fecha: ['', []]
             
           });
           this.formUpdate = fb.group({
@@ -192,7 +192,7 @@ export class AntropometricaComponent implements OnInit{
           perimetro_cintura: formValues.perimetro_cintura || null,
           perimetro_cadera: formValues.perimetro_cadera || null,
           diametro_sagital: formValues.diametro_sagital || null,
-          fecha: this.formatDate(formValues.fecha),
+          /* fecha: this.formatDate(formValues.fecha), */
           id_usuario: formValues.id_usuario,
         };
     
@@ -352,7 +352,7 @@ compararSagital(medidasOrdenadas: any[], index: number): string {
           perimetro_cintura: this.formUpdate.value.perimetro_cintura,
           perimetro_cadera: this.formUpdate.value.perimetro_cadera,
           diametro_sagital: this.formUpdate.value.diametro_sagital,
-          fecha: this.formatDate(this.formUpdate.value.fecha),
+          /* fecha: this.formatDate(this.formUpdate.value.fecha), */
           id_usuario: this.formUpdate.value.id_usuario,
         };
     
@@ -387,9 +387,9 @@ compararSagital(medidasOrdenadas: any[], index: number): string {
         this.formUpdate.controls['perimetro_cadera'].setValue(this.antropome?.perimetro_cadera)
         this.formUpdate.controls['diametro_sagital'].setValue(this.antropome?.diametro_sagital)
         this.formUpdate.controls['id_usuario'].setValue(this.antropome?.id_usuario) 
-        this.formUpdate.controls['fecha'].setValue(
+     /*    this.formUpdate.controls['fecha'].setValue(
           parseLocalDate(this.antropome.fecha)
-        );
+        ); */
       }
       this.visibleUpdate = true;
       

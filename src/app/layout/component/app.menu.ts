@@ -165,7 +165,7 @@ export class AppMenu implements OnInit {
             { label: 'Elasticida', icon: 'pi pi-id-card', routerLink: ['/pages/elasticida'] },
             { label: 'Nutricionales', icon: 'pi pi-id-card', routerLink: ['/pages/nutricionales'] },
             { label: 'Antropométrica', icon: 'pi pi-id-card', routerLink: ['/pages/antropometrica'] },
-            { label: 'Ver Medidas usuario', icon: 'pi pi-file', routerLink: ['/pages/VerMedidasUsuario'] }
+            { label: 'Ver medidas usuario', icon: 'pi pi-file', routerLink: ['/pages/VerMedidasUsuario'] }
           ]
         },
         {
