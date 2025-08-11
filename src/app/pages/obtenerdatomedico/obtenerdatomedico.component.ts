@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { DatosUsuarioService } from '../service/datos-usuario.service';
+import { MedicoService } from '../service/medico.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
@@ -12,10 +13,9 @@ import { DropdownModule } from 'primeng/dropdown';
   standalone: true,
   imports: [CommonModule, FormsModule, ProgressSpinnerModule, ToastModule, DropdownModule],
   providers: [MessageService],
-  templateUrl: './medico-usuario.component.html',
-
+  templateUrl: './obtenerdatomedico.component.html',
 })
-export class MedicoUsuarioComponent implements OnInit {
+export class ObtenerdatomedicoComponent implements OnInit {
 
   usuarios: any[] = [];
   idUsuarioSeleccionado: number | null = null;
@@ -28,6 +28,7 @@ export class MedicoUsuarioComponent implements OnInit {
 
   constructor(
     private datosUsuarioService: DatosUsuarioService,
+    private Medicoservice: MedicoService,
     private messageService: MessageService
   ) {}
 
@@ -59,7 +60,7 @@ cargarControles(): void {
   this.loading = true;
   this.error = false;
 
-  this.datosUsuarioService.obtenerDatoMedicoUsuario(this.idUsuarioSeleccionado).subscribe({
+  this.Medicoservice.obtenerDatoMedico(this.idUsuarioSeleccionado).subscribe({
     next: (res) => {
       const usuario = res.usuario ?? [];
 

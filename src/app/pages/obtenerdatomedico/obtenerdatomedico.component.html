@@ -1,0 +1,58 @@
+<div class="card p-6 shadow-md rounded-2xl">
+  <h2 class="text-2xl font-extrabold text-center mb-6 text-gray-900 dark:text-gray-100">
+    Controles por usuario</h2>
+
+  <!-- Selector de usuario -->
+  <div *ngIf="!loading && usuarios.length > 0" class="mb-6">
+    <p-dropdown
+      [options]="usuarios"
+      [(ngModel)]="idUsuarioSeleccionado"
+      optionLabel="nombreCompleto"
+      optionValue="id"
+      placeholder="Seleccione un usuario"
+      filter="true"
+      filterBy="nombreCompleto"
+      (onChange)="cargarControles()"
+      class="w-full md:w-40rem"
+    ></p-dropdown>
+  </div>
+
+  <!-- Mostrar controles solo si se selecciona un usuario -->
+  <ng-container *ngIf="idUsuarioSeleccionado">
+    <!-- ======================== CONTROLES MÉDICOS ======================== -->
+    <div class="mb-10">
+
+      <div *ngIf="loading" class="text-center text-sm py-4">Cargando datos médicos...</div>
+
+      <div *ngIf="error" class="bg-red-100 text-red-800 text-sm p-3 rounded-md mb-4 text-center">
+        Error al cargar los controles médicos.
+      </div>
+
+      <div *ngIf="!loading && !error && controlesMedicos.length > 0" class="overflow-x-auto">
+        <table class="min-w-full text-center border rounded-md">
+          <thead class="bg-gray-200">
+            <tr>
+              <th class="p-2 border">Fecha</th>
+              <th class="p-2 border">Diagnóstico</th>
+              <th class="p-2 border">Apto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of controlesMedicos" class="hover:bg-gray-50">
+              <td class="p-2 border">{{ formatDate(c.fecha) }}</td>
+              <td class="p-2 border">{{ c.diagnostico ?? 'Sin diagnóstico' }}</td>
+              <td class="p-2 border">{{ mostrarApto(c.apto) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+<div *ngIf="!loading && !error && controlesMedicos.length === 0" class="text-center text-neutral-700 dark:text-neutral-300 mt-4 italic text-base">
+  <i class="pi pi-info-circle mr-2"></i>
+  No se han registrado controles médicos.
+</div>
+
+    </div>
+
+  </ng-container>
+</div>

@@ -1,4 +1,4 @@
-/* elasticida-usuario.component.ts */
+
 import { Component, OnInit } from '@angular/core';
 import { MedidasService } from '../service/medidas.service';
 import { CommonModule } from '@angular/common';
@@ -87,8 +87,17 @@ export class MedidasUsuarioComponent implements OnInit {
   }
 
 
-  formatDate(iso: string): string {
+  /* formatDate(iso: string): string {
     const [y, m, d] = iso.split('-');
     return `${d}-${m}-${y}`;
+  } */
+
+    formatDate(fecha?: string): string {
+  if (!fecha) {
+    return '';
   }
+  const date = new Date(fecha);
+  return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
 }

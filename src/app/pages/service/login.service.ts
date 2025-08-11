@@ -103,8 +103,14 @@ export class LoginService {
     return Date.now() < exp;
   }
 
-  logout(): void {
-    localStorage.removeItem(this.tokenKey);
-    this.router.navigate(['/login']);
-  }
+
+logout(): void {
+  localStorage.clear();
+  this.router.navigate(['/landing']);
+}
+
+
+
+
+
 }

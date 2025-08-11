@@ -49,5 +49,10 @@ export class MedicoService {
       return this.http.delete(`${this.apisUrl}/destroyControlMedico/${id}`);
     }
 
+    obtenerDatoMedico(idUsuario: number): Observable<any> {
+      return this.http.get(`${this.apisUrl}/obtenerDatoMedico/${idUsuario}`);
+    }
+
+
 }
 

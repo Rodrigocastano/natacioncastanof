@@ -73,14 +73,14 @@ export class RepresentanteComponent implements OnInit  {
     this.formSave = this.fb.group({
       nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
       apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-      cedula: ['', [Validators.required, Validators.pattern('^[0-9]{10}$') , Validators.minLength(10), Validators.maxLength(10)]],
-      telefono: ['', [Validators.pattern(/^$|^\d{10}$/), Validators.minLength(10), Validators.maxLength(10)]],
+      cedula: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{6,10}$/)]],
+      telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9 ]{7,15}$/)]],
     });
     this.formUpdate = fb.group({
       nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
       apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-      cedula: ['', [Validators.required, Validators.pattern('^[0-9]{10}$') , Validators.minLength(10), Validators.maxLength(10)]],
-      telefono: ['', [Validators.pattern(/^$|^\d{10}$/) , Validators.minLength(10), Validators.maxLength(10)]],
+      cedula: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{6,10}$/)]],
+      telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9 ]{7,15}$/)]],
     });
   }
 

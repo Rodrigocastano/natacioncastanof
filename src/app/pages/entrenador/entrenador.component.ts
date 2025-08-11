@@ -91,8 +91,8 @@ export class EntrenadorComponent implements OnInit  {
           nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
           apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
           email: ['', [Validators.required, Validators.email]],
-          cedula: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{5,15}$/)]],
-          telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9 ]{7,20}$/)]],
+          cedula: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{6,10}$/)]],
+          telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9 ]{7,15}$/)]],
           direccion: ['', []],
           fechaNacimiento: ['', [Validators.required]],
       });
@@ -103,8 +103,8 @@ export class EntrenadorComponent implements OnInit  {
         email: ['', [Validators.required, Validators.email]],
         nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
         apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-        cedula: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{5,15}$/)]],
-        telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9 ]{7,20}$/)]],
+        cedula: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{6,10}$/)]],
+        telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9 ]{7,15}$/)]],
         direccion: ['', []],
         fechaNacimiento: ['', [Validators.required]],
       });

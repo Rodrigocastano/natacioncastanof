@@ -59,14 +59,12 @@
                     <td>{{ usuario.nombre }}</td>
                     <td>{{ usuario.apellido }}</td>
                     <td>{{ usuario.email }}</td>
-                    <!-- <td>{{ usuario.password }} No visible</td> -->
                     <td>{{ usuario.cedula }}</td>
                     <td>{{ usuario.telefono }}</td>
                     <td>{{ usuario.direccion }}</td>
                     <td>{{ getNombreCiudad(usuario.id_ciudad) }}</td>
                     <td>{{ getNombreGenero(usuario.id_genero) }}</td>
                     <td>{{ usuario.edad }}</td>
-                    <!-- <td>{{ getNombreGrupo(usuario.id_grupo) }}</td> -->
                     <td>{{ usuario.fechaNacimiento }}</td>
                     <td>{{ usuario.fechaInscripcion }}</td>
                     <td>
@@ -124,7 +122,6 @@
                     </div>
 
                     <div class="grid grid-cols-12 gap-4">
-                        <!-- Cédula / Identificación -->
                         <div class="col-span-6">
                             <label for="cedula" class="block font-bold mb-1">Identificación</label>
                             <input type="text"
@@ -134,8 +131,6 @@
                                 placeholder="Número de identificación" 
                                 class="w-full text-sm px-0 py-2"
                                 maxlength="15">
-
-                            <!-- Mensajes de validación para cédula -->
                             <div class="mt-1">
                                 <p-message *ngIf="formSave.get('cedula')?.hasError('required') && (formSave.get('cedula')?.touched)" 
                                         severity="error" variant="simple" size="small">
@@ -143,7 +138,7 @@
                                 </p-message>
                                 <p-message *ngIf="formSave.get('cedula')?.hasError('pattern')" 
                                         severity="error" variant="simple" size="small">
-                                    Identificación inválida, solo letras y números permitidos (5-15 caracteres)
+                                    Identificación inválida, solo letras y números permitidos (6-10 caracteres)
                                 </p-message>
                             </div>
                         </div>
@@ -167,7 +162,7 @@
                                 </p-message>
                                 <p-message *ngIf="formSave.get('telefono')?.hasError('pattern')" 
                                         severity="error" variant="simple" size="small">
-                                    Teléfono inválido, debe ser tipo +593 987654321
+                                    Teléfono inválida, números permitidos de (7-15)
                                 </p-message>
                             </div>
                         </div>
@@ -293,7 +288,7 @@
 
                             <p-message *ngIf="formUpdate.get('cedula')?.hasError('pattern') && (formUpdate.get('cedula')?.dirty || formUpdate.get('cedula')?.touched)" 
                                         severity="error" variant="simple" size="small">
-                                Identificación inválida, solo letras y números permitidos (5-15 caracteres)
+                                Identificación inválida, solo letras y números permitidos (6-10 caracteres)
                             </p-message>
                         </div>
 
@@ -314,7 +309,7 @@
 
                             <p-message *ngIf="formUpdate.get('telefono')?.hasError('pattern') && (formUpdate.get('telefono')?.dirty || formUpdate.get('telefono')?.touched)" 
                                         severity="error" variant="simple" size="small">
-                                Teléfono inválido, debe ser tipo +593 987654321
+                                Teléfono inválida, números permitidos de (7-15)
                             </p-message>
                         </div>
 

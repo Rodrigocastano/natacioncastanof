@@ -135,7 +135,7 @@
                                 </p-message>
                                 <p-message *ngIf="formSave.get('cedula')?.hasError('pattern')" 
                                         severity="error" variant="simple" size="small">
-                                    Identificación inválida, solo letras y números permitidos (5-15 caracteres)
+                                    Identificación inválida, solo letras y números permitidos (6-10 caracteres)
                                 </p-message>
                             </div>
                         </div>
@@ -159,7 +159,7 @@
                                 </p-message>
                                 <p-message *ngIf="formSave.get('telefono')?.hasError('pattern')" 
                                         severity="error" variant="simple" size="small">
-                                    Teléfono inválido, debe ser tipo +593 987654321
+                                    Teléfono inválida, números permitidos de (7-15)
                                 </p-message>
                             </div>
                         </div>
@@ -286,7 +286,7 @@
 
                             <p-message *ngIf="formUpdate.get('cedula')?.hasError('pattern') && (formUpdate.get('cedula')?.dirty || formUpdate.get('cedula')?.touched)" 
                                         severity="error" variant="simple" size="small">
-                                Identificación inválida, solo letras y números permitidos (5-15 caracteres)
+                                Identificación inválida, solo letras y números permitidos (6-10 caracteres)
                             </p-message>
                         </div>
 
@@ -307,7 +307,7 @@
 
                             <p-message *ngIf="formUpdate.get('telefono')?.hasError('pattern') && (formUpdate.get('telefono')?.dirty || formUpdate.get('telefono')?.touched)" 
                                         severity="error" variant="simple" size="small">
-                                Teléfono inválido, debe ser tipo +593 987654321
+                                Teléfono inválida, números permitidos de (7-15)
                             </p-message>
                         </div>
 

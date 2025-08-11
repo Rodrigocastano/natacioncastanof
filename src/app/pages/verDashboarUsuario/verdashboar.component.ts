@@ -12,6 +12,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ButtonModule } from 'primeng/button';
+import { PanelModule } from 'primeng/panel';
 
 @Component({
   selector: 'app-verdashboar',
@@ -27,7 +28,8 @@ import { ButtonModule } from 'primeng/button';
     ProgressSpinnerModule,
     CardModule,
     SelectButtonModule,
-    ButtonModule
+    ButtonModule,
+    PanelModule
   ],
   templateUrl: './verdashboar.component.html',
   providers: [MessageService]
@@ -44,6 +46,19 @@ export class VerdashboarComponent implements OnInit {
   objectKeys = Object.keys;
   datosCargados: boolean = false;
 
+  mostrarPagos = false;
+mostrarPruebas = false;
+mostrarTiemposNado = false;
+
+/* mostrarPagos = false;
+mostrarPruebas = false;
+mostrarTiemposNado = false;
+
+toggleSeccion(seccion: string) {
+  this[seccion] = !this[seccion];
+}
+ */
+
 
 
   constructor(
@@ -55,6 +70,7 @@ export class VerdashboarComponent implements OnInit {
     this.cargarUsuarios();
     this.configurarOpcionesGrafica();
   }
+
 
   configurarOpcionesGrafica(): void {
     this.chartOptions = {

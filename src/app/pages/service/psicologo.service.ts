@@ -47,4 +47,8 @@ export class PsicologoService {
    deletePsicologos(id: number){
      return this.http.delete(`${this.apisUrl}/destroyControlPsicologo/${id}`);
    }
+
+    obtenerDatoPsicologo(idUsuario: number): Observable<any> {
+      return this.http.get(`${this.apisUrl}/obtenerDatoPsicologo/${idUsuario}`);
+    }
 }

@@ -84,8 +84,8 @@ export class RegistroPsicologoComponent implements OnInit {
           nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
           apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
           email: ['', [Validators.required, Validators.email]],
-          cedula: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{5,15}$/)]],
-          telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9 ]{7,20}$/)]],
+          cedula: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{6,10}$/)]],
+          telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9 ]{7,15}$/)]],
           direccion: ['', []],
           fechaNacimiento: ['', [Validators.required]],
         });
@@ -96,8 +96,8 @@ export class RegistroPsicologoComponent implements OnInit {
           email: ['', [Validators.required, Validators.email]],
           nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
           apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-          cedula: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{5,15}$/)]],
-          telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9 ]{7,20}$/)]],
+          cedula: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{6,10}$/)]],
+          telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9 ]{7,15}$/)]],
           direccion: ['', []],
           fechaNacimiento: ['', [Validators.required]],
         });
@@ -128,30 +128,6 @@ export class RegistroPsicologoComponent implements OnInit {
             this.ciudad = data
           });
         }
-
-/*         soloNumeros(event: any): boolean {
-          const input = event.target as HTMLInputElement;
-          const newValue = input.value.replace(/[^0-9]/g, '');
-          this.formSave.get(event.target.id)?.setValue(newValue, { emitEvent: false });
-          if (newValue.length > 10) {
-            this.formSave.get(event.target.id)?.setValue(newValue.slice(0, 10), { emitEvent: false });
-            input.value = newValue.slice(0, 10);
-          }
-          return false;
-        } */
-        
-      /*   calculateAge(birthDate: Date): number {
-            const today = new Date();
-            const birthDateObj = new Date(birthDate);
-            let age = today.getFullYear() - birthDateObj.getFullYear();
-            const monthDiff = today.getMonth() - birthDateObj.getMonth();
-            
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
-              age--;
-            }
-            
-            return age;
-        } */
   
         formatDate = (date: Date): string => {
           const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));

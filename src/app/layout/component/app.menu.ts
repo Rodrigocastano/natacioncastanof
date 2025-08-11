@@ -57,9 +57,7 @@ export class AppMenu implements OnInit {
             { label: 'Gráficas', icon: 'pi pi-chart-bar', routerLink: ['/pages/graficasUsuario'] },
             { label: 'Asistencias', icon: 'pi pi-calendar', routerLink: ['/pages/asistenciaUsuario'] },
             { label: 'Medidas', icon: 'pi pi-calendar', routerLink: ['/pages/medidaUsuario'] },
-            { label: 'Cambiar contraseña', icon: 'pi pi-calendar', routerLink: ['/pages/cambiarcontraseña'] },
-
-            
+           
           ]
         }
       ];
@@ -85,9 +83,8 @@ export class AppMenu implements OnInit {
                 { label: 'Representantes', icon: 'pi pi-user-plus', routerLink: ['/pages/representante'] },
                 { label: 'Representantes nadador', icon: 'pi pi-users', routerLink: ['/pages/representantenadador'] },
                 { label: 'Matriculas de usuario', icon: 'pi pi-users', routerLink: ['/pages/historiaUsuario'] },
-                { label: 'Matriculas de entrenador', icon: 'pi pi-users', routerLink: ['/pages/Entrenadorgrupo'] },
+                { label: 'Horario de entrenador', icon: 'pi pi-users', routerLink: ['/pages/Entrenadorgrupo'] },
                 { label: 'Ver entrenador con usuario', icon: 'pi pi-users', routerLink: ['/pages/Verentrenadorusuario'] },
-
                 
               ]
             },
@@ -139,8 +136,8 @@ export class AppMenu implements OnInit {
         {
           label: 'Home',
           items: [
-            { label: 'Dashboard', icon: 'pi pi-home', routerLink: ['/dashboard'] },
-            { label: 'Psicólogo', icon: 'pi pi-book', routerLink: ['/pages/psicologo'] }
+            { label: 'Psicólogo', icon: 'pi pi-book', routerLink: ['/pages/psicologo'] },
+            { label: 'Datos del usuario', icon: 'pi pi-book', routerLink: ['/pages/datosPsicologo'] }
           ]
         }
       ];
@@ -151,8 +148,8 @@ export class AppMenu implements OnInit {
         {
           label: 'Home',
           items: [
-            { label: 'Dashboard', icon: 'pi pi-home', routerLink: ['/dashboard'] },
-            { label: 'Médico', icon: 'pi pi-book', routerLink: ['/pages/medico'] }
+            { label: 'Médico', icon: 'pi pi-book', routerLink: ['/pages/medico'] },
+            { label: 'Datos del usuario', icon: 'pi pi-book', routerLink: ['/pages/datosMedico'] }
           ]
         }
       ];

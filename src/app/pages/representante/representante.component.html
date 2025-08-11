@@ -112,59 +112,50 @@
                             Apellido es requerido
                         </p-message>
                     </div>
-            
-                    <div class="col-span-6">
-                    <label for="cedula" class="block font-bold mb-1">Identificación</label>
-                    <input type="tel"
-                            pInputText 
-                            formControlName="cedula" 
-                            id="cedula" 
-                            placeholder="Número de identificación" 
-                            class="w-full text-sm px-0 py-2"
-                            (input)="soloNumeros($event)"
-                            maxlength="10"
-                            pattern="[0-9]*"
-                            inputmode="numeric">
-                    
-                    <!-- Mensajes de validación para cédula -->
-                    <div class="mt-1">
-                        <p-message *ngIf="formSave.get('cedula')?.hasError('required') && (formSave.get('cedula')?.touched || submitted)" 
-                                severity="error" variant="simple" size="small">
-                        La identificación es requerida
-                        </p-message>
-                        <p-message *ngIf="formSave.get('cedula')?.hasError('pattern') || formSave.get('cedula')?.hasError('minlength') || formSave.get('cedula')?.hasError('maxlength')" 
-                                severity="error" variant="simple" size="small">
-                        Debe contener exactamente 10 dígitos numéricos
-                        </p-message>
-                    </div>
-                    </div>
 
                     <div class="col-span-6">
-                    <label for="telefono" class="block font-bold mb-1">Teléfono</label>
-                    <input type="tel"
-                            pInputText 
-                            formControlName="telefono" 
-                            id="telefono" 
-                            placeholder="Número de teléfono" 
-                            class="w-full text-sm px-0 py-2"
-                            (input)="soloNumeros($event)"
-                            maxlength="10"
-                            pattern="[0-9]*"
-                            inputmode="numeric">
-                    
-                    <!-- Mensajes de validación para teléfono -->
-                    <div class="mt-1">
-                        <p-message *ngIf="formSave.get('telefono')?.hasError('required') && (formSave.get('telefono')?.touched || submitted)" 
-                                severity="error" variant="simple" size="small">
-                        El teléfono es requerido
-                        </p-message>
-                        <p-message *ngIf="formSave.get('telefono')?.hasError('pattern') || formSave.get('telefono')?.hasError('minlength') || formSave.get('telefono')?.hasError('maxlength')" 
-                                severity="error" variant="simple" size="small">
-                        Debe contener exactamente 10 dígitos numéricos
-                        </p-message>
-                    </div>
-                    </div>
-                
+                            <label for="cedula" class="block font-bold mb-1">Identificación</label>
+                            <input type="text"
+                                pInputText 
+                                formControlName="cedula" 
+                                id="cedula" 
+                                placeholder="Número de identificación" 
+                                class="w-full text-sm px-0 py-2"
+                                maxlength="15">
+                            <div class="mt-1">
+                                <p-message *ngIf="formSave.get('cedula')?.hasError('required') && (formSave.get('cedula')?.touched)" 
+                                        severity="error" variant="simple" size="small">
+                                    La identificación es requerida
+                                </p-message>
+                                <p-message *ngIf="formSave.get('cedula')?.hasError('pattern')" 
+                                        severity="error" variant="simple" size="small">
+                                    Identificación inválida, solo letras y números permitidos (6-10 caracteres)
+                                </p-message>
+                            </div>
+                        </div>
+
+              <div class="col-span-6">
+                            <label for="telefono" class="block font-bold mb-1">Teléfono</label>
+                            <input type="tel"
+                                pInputText 
+                                formControlName="telefono" 
+                                id="telefono" 
+                                placeholder="Número de teléfono" 
+                                class="w-full text-sm px-0 py-2"
+                                maxlength="25">
+
+                            <!-- Mensajes de validación para teléfono -->
+                            <div class="mt-1">
+                                <p-message *ngIf="formSave.get('telefono')?.hasError('required') && (formSave.get('telefono')?.touched)" 
+                                        severity="error" variant="simple" size="small">
+                                    El teléfono es requerido
+                                </p-message>
+                                <p-message *ngIf="formSave.get('telefono')?.hasError('pattern')" 
+                                        severity="error" variant="simple" size="small">
+                                    Teléfono inválida, números permitidos de (7-15)
+                                </p-message>
+                            </div>
+                        </div>  
                 </div>
             </form>
         </ng-template>
@@ -214,53 +205,45 @@
                     </div>
                                         
                     <div class="col-span-6">
-                    <label for="cedula" class="block font-bold mb-3">Identificación</label>
-                    <input type="tel" 
+                        <label for="cedula" class="block font-bold mb-3">Identificación</label>
+                        <input type="text" 
                             formControlName="cedula" 
                             pInputText 
                             id="cedula" 
                             placeholder="Número de Identificación"
                             class="w-full text-sm px-0 py-2"
-                            (input)="soloNumeros($event)"
-                            maxlength="10"
-                            pattern="[0-9]*"
-                            inputmode="numeric">
-                    
-                    <p-message *ngIf="formUpdate.get('cedula')?.hasError('required') && (formUpdate.get('cedula')?.dirty || formUpdate.get('cedula')?.touched)" 
-                                severity="error" variant="simple" size="small">
-                        Identificación es requerida
-                    </p-message>
-                    
-                    <p-message *ngIf="(formUpdate.get('cedula')?.hasError('pattern') || formUpdate.get('cedula')?.hasError('minlength') || formUpdate.get('cedula')?.hasError('maxlength')) 
-                                    && (formUpdate.get('cedula')?.dirty || formUpdate.get('cedula')?.touched)"
-                                severity="error" variant="simple" size="small">
-                        Debe contener exactamente 10 dígitos numéricos
-                    </p-message>
+                            maxlength="15">
+
+                        <p-message *ngIf="formUpdate.get('cedula')?.hasError('required') && (formUpdate.get('cedula')?.dirty || formUpdate.get('cedula')?.touched)" 
+                                    severity="error" variant="simple" size="small">
+                            Identificación es requerida
+                        </p-message>
+
+                        <p-message *ngIf="formUpdate.get('cedula')?.hasError('pattern') && (formUpdate.get('cedula')?.dirty || formUpdate.get('cedula')?.touched)" 
+                                    severity="error" variant="simple" size="small">
+                            Identificación inválida, solo letras y números permitidos (6-10 caracteres)
+                        </p-message>
                     </div>
 
                     <div class="col-span-6">
-                    <label for="telefono" class="block font-bold mb-3">Teléfono</label>
-                    <input type="tel" 
+                        <label for="telefono" class="block font-bold mb-3">Teléfono</label>
+                        <input type="tel" 
                             formControlName="telefono" 
                             pInputText 
                             id="telefono" 
                             placeholder="Número de teléfono"
                             class="w-full text-sm px-0 py-2"
-                            (input)="soloNumeros($event)"
-                            maxlength="10"
-                            pattern="[0-9]*"
-                            inputmode="numeric">
-                    
-                    <p-message *ngIf="formUpdate.get('telefono')?.hasError('required') && (formUpdate.get('telefono')?.dirty || formUpdate.get('telefono')?.touched)" 
-                                severity="error" variant="simple" size="small">
-                        Teléfono es requerido
-                    </p-message>
-                    
-                    <p-message *ngIf="(formUpdate.get('telefono')?.hasError('pattern') || formUpdate.get('telefono')?.hasError('minlength') || formUpdate.get('telefono')?.hasError('maxlength')) 
-                                    && (formUpdate.get('telefono')?.dirty || formUpdate.get('telefono')?.touched)"
-                                severity="error" variant="simple" size="small">
-                        Debe contener exactamente 10 dígitos numéricos
-                    </p-message>
+                            maxlength="20">
+
+                        <p-message *ngIf="formUpdate.get('telefono')?.hasError('required') && (formUpdate.get('telefono')?.dirty || formUpdate.get('telefono')?.touched)" 
+                                    severity="error" variant="simple" size="small">
+                            Teléfono es requerido
+                        </p-message>
+
+                        <p-message *ngIf="formUpdate.get('telefono')?.hasError('pattern') && (formUpdate.get('telefono')?.dirty || formUpdate.get('telefono')?.touched)" 
+                                    severity="error" variant="simple" size="small">
+                            Teléfono inválida, números permitidos de (7-15)
+                        </p-message>
                     </div>
                     
                 </div>
