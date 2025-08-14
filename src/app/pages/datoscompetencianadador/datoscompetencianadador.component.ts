@@ -4,15 +4,14 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
-import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
-  selector: 'app-datospsicologonadador',
+  selector: 'app-datoscompetencianadador',
   standalone: true,
-  imports: [CommonModule, TableModule, CardModule, TagModule, TooltipModule],
-  templateUrl: './datospsicologonadador.component.html',
+  imports: [CommonModule, TableModule, CardModule, TagModule],
+  templateUrl: './datoscompetencianadador.component.html',
 })
-export class DatospsicologonadadorComponent implements OnInit {
+export class DatoscompetencianadadorComponent implements OnInit {
 
   datosUsuario: any = null;
   cargando: boolean = true;
@@ -21,32 +20,34 @@ export class DatospsicologonadadorComponent implements OnInit {
   constructor(private medidasUsuarioService: MedidasusuarioService) {}
 
   ngOnInit(): void {
-    this.obtenerDatosPsicologos();
+    this.obtenerDatosCompetencia();
   }
 
-  obtenerDatosPsicologos() {
-    this.medidasUsuarioService.getMisDatosPsicologo().subscribe({
+  obtenerDatosCompetencia() {
+    this.medidasUsuarioService.getMisDatosCompetencias().subscribe({
       next: (respuesta) => {
         console.log('Respuesta API:', respuesta);
         this.datosUsuario = respuesta.usuario;
         this.cargando = false;
       },
       error: (err) => {
-        this.error = 'No se pudo obtener la información de psicologo';
+        this.error = 'No se pudo obtener la información de competencias';
         this.cargando = false;
         console.error(err);
       }
     });
   }
 
+  formatFecha(fecha: string): string {
+    return new Date(fecha).toLocaleDateString(); // Puedes cambiar formato si quieres
+  }
+
   getAptoLabel(apto: boolean): string {
     return apto ? 'Sí' : 'No';
   }
 
-
-
   getAptoSeverity(apto: boolean): 'success' | 'danger' {
-  return apto ? 'success' : 'danger';
-}
+    return apto ? 'success' : 'danger';
+  }
 
 }

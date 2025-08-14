@@ -1,0 +1,40 @@
+<div class="card p-6 shadow-md rounded-2xl">
+  <h2 class="text-2xl font-extrabold text-center mb-6">
+    Torneos participados
+  </h2>
+
+  <!-- Estados -->
+  <div *ngIf="cargando" class="text-center text-sm py-4">
+    Cargando datos de tus pruebas...
+  </div>
+
+  <div *ngIf="error" class="bg-red-100 text-red-800 text-sm p-3 rounded-md mb-4 text-center">
+    {{ error }}
+  </div>
+
+  <!-- Tabla de pruebas -->
+  <div *ngIf="!cargando && !error && datosUsuario?.pruebas?.length > 0" class="overflow-x-auto">
+    <table class="min-w-full text-center border rounded-md">
+      <thead class="bg-gray-200 dark:bg-gray-800">
+        <tr>
+          <th class="p-2 border">Prueba y Torneo</th>
+          <th class="p-2 border">Tiempo</th>
+          <th class="p-2 border">Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let prueba of datosUsuario?.pruebas" class="hover:bg-gray-50">
+          <td class="p-2 border">{{ prueba.pruebaTorneo }}</td>
+          <td class="p-2 border">{{ prueba.tiempo }}</td>
+          <td class="p-2 border">{{ formatFecha(prueba.fecha) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mensaje cuando no hay pruebas -->
+  <div *ngIf="!cargando && !error && (!datosUsuario?.pruebas || datosUsuario?.pruebas.length === 0)" class="text-center text-neutral-700 dark:text-neutral-300 mt-4 italic text-base">
+    <i class="pi pi-info-circle mr-2"></i>
+    No se encontraron registros de pruebas.
+  </div>
+</div>

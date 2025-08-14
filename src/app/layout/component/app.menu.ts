@@ -57,8 +57,10 @@ export class AppMenu implements OnInit {
             { label: 'Gráficas', icon: 'pi pi-chart-bar', routerLink: ['/pages/graficasUsuario'] },
             { label: 'Asistencias', icon: 'pi pi-verified', routerLink: ['/pages/asistenciaUsuario'] },
             { label: 'Medidas', icon: 'pi pi-id-card', routerLink: ['/pages/medidaUsuario'] },
-            { label: 'Datos médico', icon: 'pi pi-inbox', routerLink: ['/pages/datoMedicosUsuario'] },
-            { label: 'Datos psicólogo', icon: 'pi pi-inbox', routerLink: ['/pages/datoPsicologoUsuario'] },
+            { label: 'Datos médico', icon: 'pi pi-book', routerLink: ['/pages/datoMedicosUsuario'] },
+            { label: 'Datos psicólogo', icon: 'pi pi-book', routerLink: ['/pages/datoPsicologoUsuario'] },
+            { label: 'Torneos participados', icon: 'pi pi-trophy', routerLink: ['/pages/datocompetenciaUsuario'] },
+
             
           ]
         }

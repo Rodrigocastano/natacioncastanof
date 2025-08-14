@@ -25,5 +25,9 @@ export class MedidasusuarioService {
     getMisDatosPsicologo(): Observable<any> {
       return this.http.get<any>(`${this.apisUrl}/obtenerMisDatosPsicologo`, { headers: this.headers });
     }
+
+    getMisDatosCompetencias(): Observable<any> {
+      return this.http.get<any>(`${this.apisUrl}/obtenerPruebasUsuario`, { headers: this.headers });
+    }
     
 }

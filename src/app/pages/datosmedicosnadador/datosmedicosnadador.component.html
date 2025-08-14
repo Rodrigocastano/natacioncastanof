@@ -20,7 +20,10 @@
     <ng-template pTemplate="body" let-control>
       <tr style="background: var(--surface-card); color: var(--text-color)">
         <td class="p-3 border text-left">{{ control.fecha | date: 'dd-MM-yyyy' }}</td>
-        <td class="p-3 border text-left">{{ control.diagnostico || 'Sin diagnóstico' }}</td>
+        <td class="p-3 border text-left" style="max-width: 250px; overflow-x: auto; white-space: nowrap;">
+          {{ control.diagnostico || 'Sin diagnóstico' }}
+        </td>
+
         <td class="p-3 border text-center">
           <span [ngStyle]="{ color: control.apto ? 'green' : 'red', 'font-weight': 'bold' }" > {{ control.apto ? 'Apto' : 'No Apto' }} </span>
         </td>
