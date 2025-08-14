@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environments';
 @Injectable({
   providedIn: 'root'
 })
-export class MedidasService {
+export class MedidasusuarioService {
 
     private apisUrl = environment.apisUrls; 
    
@@ -18,16 +18,12 @@ export class MedidasService {
       });
 
 
-    getMisMedidasElasticidad(): Observable<any> {
-      return this.http.get<any>(`${this.apisUrl}/misMedidasElasticidad`, { headers: this.headers });
+    getMisDatosMedico(): Observable<any> {
+      return this.http.get<any>(`${this.apisUrl}/obtenerMisDatosMedico`, { headers: this.headers });
     }
-  
-    getMisMedidasNutricionales(): Observable<any> {
-      return this.http.get<any>(`${this.apisUrl}/misMedidasNutricionale`, { headers: this.headers });
-    }
-  
-    getMisMedidasAntropometricas(): Observable<any> {
-      return this.http.get<any>(`${this.apisUrl}/misMedidasAntropometrica`, { headers: this.headers });
+
+    getMisDatosPsicologo(): Observable<any> {
+      return this.http.get<any>(`${this.apisUrl}/obtenerMisDatosPsicologo`, { headers: this.headers });
     }
     
 }

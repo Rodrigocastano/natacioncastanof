@@ -48,6 +48,8 @@ import { ReporteentrenadoresComponent } from './reporteentrenadores/reporteentre
 import { ReporteentrenadorComponent } from './reporteentrenador/reporteentrenador.component';
 import { ObtenerdatomedicoComponent } from './obtenerdatomedico/obtenerdatomedico.component';
 import { ObtenerdatopsicologoComponent } from './obtenerdatopsicologo/obtenerdatopsicologo.component';
+import { DatosmedicosnadadorComponent } from './datosmedicosnadador/datosmedicosnadador.component';
+import { DatospsicologonadadorComponent } from './datospsicologonadador/datospsicologonadador.component';
 
 
 
@@ -100,6 +102,8 @@ export default [
     { path: 'reporteentrenador', component: ReporteentrenadorComponent },
     { path: 'datosMedico', component: ObtenerdatomedicoComponent },
     { path: 'datosPsicologo', component: ObtenerdatopsicologoComponent },
+    { path: 'datoMedicosUsuario', component: DatosmedicosnadadorComponent },
+    { path: 'datoPsicologoUsuario', component: DatospsicologonadadorComponent },
 
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;
