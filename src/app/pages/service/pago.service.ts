@@ -19,12 +19,20 @@ export class PagoService {
       return this.http.get<any>(`${this.apisUrl}/indexRegistroPagosPorEstado`);
     }
 
-    getAllRegistroPago() {
-      return this.http.get<any>(`${this.apisUrl}/indexRegistroPago`);
+    getAllRegistroPago(): Observable<Pago[]> {
+      return this.http.get<Pago[]>(`${this.apisUrl}/indexRegistroPago`);
     }
- 
+
+    getAllRegistroPendiente(): Observable<Pago[]> {
+      return this.http.get<Pago[]>(`${this.apisUrl}/indexRegistroPendiente`);
+    }
+
     createPago(pago: Pago): Observable<any> {
       return this.http.post(`${this.apisUrl}/storeRegistroPago`, pago);
+    }
+
+    getPlanPorUsuario(idUsuario: number) {
+      return this.http.get<any>(`${this.apisUrl}/planes-usuario/${idUsuario}`);
     }
  
     updatePago(id: number, pago: Pago) { 

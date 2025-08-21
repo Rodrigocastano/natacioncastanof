@@ -91,11 +91,11 @@ export class PagoComponent implements OnInit{
         this.formSave = this.fb.group({
           id_usuario: ['', [Validators.required]],
           id_tipo_pago: ['', [Validators.required]],
-          id_estado_pago: ['', [Validators.required]],
+
           monto: ['', [Validators.required]],
           fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
-          monto_abonado: ['', [Validators.required]],
-          fecha_vencimiento: ['', [Validators.required]]
+          monto_abonado: [''],
+          fecha_vencimiento: ['', []]
           
         });
         this.formUpdate = fb.group({
@@ -187,26 +187,24 @@ export class PagoComponent implements OnInit{
         });
       }
 
-      store() {
+    store() {
       this.submitted = true;
-  
+
       if (this.formSave.invalid) {
         this.errorMessageToast();
         this.formSave.markAllAsTouched();
         return;
       }
-  
+
       if (this.formSave.valid) {
         const newPago: any = {
           id_tipo_pago: this.formSave.value.id_tipo_pago,
-          id_estado_pago: this.formSave.value.id_estado_pago,
           fecha: this.formatDate(this.formSave.value.fecha),
           monto: this.formSave.value.monto,
-          fecha_vencimiento: this.formatDate(this.formSave.value.fecha_vencimiento),
-          monto_abonado: this.formSave.value.monto_abonado,
+          monto_abonado: this.formSave.value.monto_abonado ?? 0,
           id_usuario: this.formSave.value.id_usuario,
         };
-  
+
         this.pagoService.createPago(newPago).subscribe({
           next: () => {
             this.saveMessageToast();
@@ -214,12 +212,16 @@ export class PagoComponent implements OnInit{
             this.visibleSave = false;
           },
           error: (err) => {
-            console.error('Error al guardar registro del pago:', err);
-            
+            if (err.status === 422) {
+               this.errorMontoMessageToast();
+            } else {
+              console.error('Error al guardar registro del pago:', err);
+              this.errorMessageToast();
+            }
           }
         });
       }
-      }
+    }
 
       getNombreTipoPago(id: number): string {
         const tipo = this.tipoPago.find(tp => tp.id === id);
@@ -255,6 +257,9 @@ export class PagoComponent implements OnInit{
 
       EliminadoMessageToasts() {
         this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Eliminado correctamente' });
+      }
+       errorMontoMessageToast() {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'El monto abonado no puede ser mayor que el monto total del plan.' });
       }
 
       cancelSave() {
@@ -339,5 +344,34 @@ export class PagoComponent implements OnInit{
         this.idPago = id;
         this.visibleDelete = true
       }
+
+onUsuarioChange(idUsuario: number) {
+  this.pagoService.getPlanPorUsuario(idUsuario).subscribe({
+    next: (plan) => {
+      const parseDate = (dateString: string | null) => {
+        if (!dateString) return null;
+        const [year, month, day] = dateString.split('-').map(Number);
+        return new Date(year, month - 1, day); // mes 0-indexado
+      };
+
+      this.formSave.patchValue({
+        id_tipo_pago: plan.id_tipo_pago,
+        monto: plan.monto,
+        fecha: parseDate(plan.fecha_inicio) || new Date(),
+        fecha_vencimiento: parseDate(plan.fecha_fin) || null
+      });
+    },
+    error: (err) => {
+      this.formSave.patchValue({
+        id_tipo_pago: null,
+        monto: null,
+        fecha: new Date(),
+        fecha_vencimiento: null
+      });
+      console.error('El usuario no tiene plan activo', err);
+    }
+  });
+}
+
 
 }

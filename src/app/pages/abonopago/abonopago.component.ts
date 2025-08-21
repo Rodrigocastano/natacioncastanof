@@ -79,6 +79,10 @@ export class AbonopagoComponent implements OnInit{
       buscarOriginal: AbonoPago[] = [];
       pagosParaEditar: Pago[] = [];
 
+      pagoTodos: any[] = [];       // Para edición
+      pagoPendientes: any[] = [];  // Para registro de nuevos abonos
+
+
       constructor(
         private fb: FormBuilder,
         private pagoService: PagoService,
@@ -88,22 +92,27 @@ export class AbonopagoComponent implements OnInit{
         this.formSave = this.fb.group({
           id_registro_pago: ['', [Validators.required]],
           monto: ['', [Validators.required]],
-          fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
+          fecha: []
           
         });
         this.formUpdate = fb.group({
           id_registro_pago: ['', [Validators.required]],
           monto: ['', [Validators.required]],
-          fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
+          fecha: []
         });
       }
   
       ngOnInit(): void {
         this.getAbonoPago();
         this.getPagos();
+        this.getPendientes();
 
           setInterval(() => {
-          this.getPagos();
+            this.getPendientes();
+          }, 30000);
+
+          setInterval(() => {
+            this.getPagos();
           }, 30000);
       }
 
@@ -125,22 +134,27 @@ export class AbonopagoComponent implements OnInit{
         });
       }
 
-
       getPagos() {
         this.pagoService.getAllRegistroPago().subscribe(data => {
-          console.log('Datos recibidos:', data);
-
-          this.pago = data.map((pago: any) => ({
-            ...pago,
-           displayPago: `${pago.nombre} ${pago.apellido} | ${pago.fecha} | Monto: $${pago.monto} | Abonado: $${pago.monto_abonado}`
-
-
+          this.pagoTodos = data.map(p => ({
+            ...p,
+            id_registro_pago: p.id,
+            displayPago: `${p.nombre} ${p.apellido} | ${p.fecha} | Monto: $${p.monto} | Abonado: $${p.monto_abonado}`
           }));
-
-          console.log('Datos para el select:', this.pago);
+          console.log('Todos los pagos para editar:', this.pagoTodos);
         });
       }
 
+      getPendientes() {
+        this.pagoService.getAllRegistroPendiente().subscribe(data => {
+          this.pagoPendientes = data.map(p => ({
+            ...p,
+            id_registro_pago: p.id,
+            displayPendiente: `${p.nombre} ${p.apellido} | ${p.fecha} | Monto: $${p.monto} | Abonado: $${p.monto_abonado}`
+          }));
+          console.log('Pagos pendientes para registrar:', this.pagoPendientes);
+        });
+      }
 
 
       filtrarBusqueda() {
@@ -172,33 +186,33 @@ export class AbonopagoComponent implements OnInit{
       }
 
       store() {
-      this.submitted = true;
-  
-      if (this.formSave.invalid) {
-        this.errorMessageToast();
-        this.formSave.markAllAsTouched();
-        return;
-      }
-  
-      if (this.formSave.valid) {
-        const newPago: any = {
-          id_registro_pago: this.formSave.value.id_registro_pago,
-          fecha: this.formatDate(this.formSave.value.fecha),
-          monto: this.formSave.value.monto,
-        };
-  
-        this.abonopagoService.createAbonoPago(newPago).subscribe({
-          next: () => {
-            this.saveMessageToast();
-            this.getAbonoPago();
-            this.visibleSave = false;
-          },
-          error: (err) => {
-            console.error('Error al guardar registro del pago:', err);
-            
-          }
-        });
-      }
+        this.submitted = true;
+    
+        if (this.formSave.invalid) {
+          this.errorMessageToast();
+          this.formSave.markAllAsTouched();
+          return;
+        }
+    
+        if (this.formSave.valid) {
+          const newPago: any = {
+            id_registro_pago: this.formSave.value.id_registro_pago,
+            /* fecha: this.formatDate(this.formSave.value.fecha), */
+            monto: this.formSave.value.monto,
+          };
+    
+          this.abonopagoService.createAbonoPago(newPago).subscribe({
+            next: () => {
+              this.saveMessageToast();
+              this.getAbonoPago();
+              this.visibleSave = false;
+            },
+            error: (err) => {
+              console.error('Error al guardar registro del pago:', err);
+              
+            }
+          });
+        }
       }
 
       getNombrePago(id: number): string {
@@ -211,11 +225,11 @@ export class AbonopagoComponent implements OnInit{
         this.visibleSave = true;
       }
 
-    formatDate = (date: Date): string => {
-      const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
-      return adjustedDate.toISOString().split('T')[0];
-    }
-  
+      formatDate = (date: Date): string => {
+        const adjustedDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+        return adjustedDate.toISOString().split('T')[0];
+      }
+    
       saveMessageToast() {
         this.messageService.add({ severity: 'success', summary: 'Éxitos', detail: 'Guardado correctamente' });
       }
@@ -237,57 +251,50 @@ export class AbonopagoComponent implements OnInit{
         this.cancelMessageToast();
       }
 
+      edit(elasticId: any) {
+        this.idForUpdate = true;
+        this.abonoPa = elasticId;
+
+        if (this.abonoPa) {
+          const pagoRelacionado = this.pagoTodos.find(p => p.id_registro_pago === this.abonoPa.id_registro_pago);
+
+          this.pagosParaEditar = pagoRelacionado ? [pagoRelacionado] : [];
+
+          this.formUpdate.patchValue({
+            id_registro_pago: this.abonoPa.id_registro_pago,
+            monto: this.abonoPa.monto,
+            fecha: new Date(this.abonoPa.fecha)
+          });
+        }
+
+        this.visibleUpdate = true;
+      }
+
       update() {
         if (this.formUpdate.invalid) {
-          this.errorMessageToast(); 
+          this.errorMessageToast();
           this.formUpdate.markAllAsTouched();
           return;
         }
-        if (this.formUpdate.valid) {
-          const updatePago: AbonoPago = {
-            id: this.abonoPa.id,
-            id_registro_pago: this.formUpdate.value.id_registro_pago,
-            monto: this.formUpdate.value.monto,
-            fecha: this.formatDate(this.formUpdate.value.fecha),
-          };
-      
-          this.abonopagoService.updateAbonoPago(this.abonoPa.id, updatePago).subscribe({
-            next: (res) => {
-              this.getAbonoPago();
-              this.visibleUpdate = false;
-              this.saveMessageToast();
-            },
-            error: (err) => {
-              console.error('Error actualizando el abono pago:', err);
-              this.errorMessageToast(); 
-            }
-          });
-        }
+
+        const updatePago: AbonoPago = {
+          id: this.abonoPa.id,
+          id_registro_pago: this.formUpdate.value.id_registro_pago,
+          monto: this.formUpdate.value.monto,
+        };
+
+        this.abonopagoService.updateAbonoPago(this.abonoPa.id, updatePago).subscribe({
+          next: (res) => {
+            this.getAbonoPago();
+            this.visibleUpdate = false;
+            this.saveMessageToast();
+          },
+          error: (err) => {
+            console.error('Error actualizando el abono pago:', err.error);
+            this.errorMessageToast();
+          }
+        });
       }
-
-
-      
-      // En la función edit()
-edit(elasticId: any) {
-  this.idForUpdate = true;
-  this.abonoPa = elasticId;
-
-  if (this.abonoPa) {
-    const pagoRelacionado = this.pago.find(p => p.id_registro_pago === this.abonoPa.id_registro_pago);
-    // Crea un arreglo con solo ese pago
-    this.pagosParaEditar = pagoRelacionado ? [pagoRelacionado] : [];
-
-    this.formUpdate.patchValue({
-      id_registro_pago: this.abonoPa.id_registro_pago,
-      monto: this.abonoPa.monto,
-      fecha: new Date(this.abonoPa.fecha)
-    });
-  }
-  this.visibleUpdate = true;
-}
-
-
-
 
       canceUpdate() {
         this.visibleUpdate = false;

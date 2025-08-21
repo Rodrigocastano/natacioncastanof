@@ -99,10 +99,19 @@
 
                         <div class="col-span-6">
                             <label for="id_registro_pago" class="block font-bold mb-3">Pago</label>             
-                              <p-select
-                                [options]="pago" formControlName="id_registro_pago" optionLabel="displayPago" optionValue="id_registro_pago"
-                                placeholder="Seleccione un pago" [filter]="true" filterBy="displayPago" [showClear]="true" [appendTo]="'body'" class="w-full md:w-70">
+                            <p-select
+                                [options]="pagoPendientes"
+                                formControlName="id_registro_pago"
+                                optionLabel="displayPendiente"
+                                optionValue="id_registro_pago"
+                                placeholder="Seleccione un pago"
+                                [filter]="true"
+                                filterBy="displayPendiente"
+                                [showClear]="true"
+                                [appendTo]="'body'"
+                                class="w-full md:w-70">
                             </p-select>
+
                             <div class="mt-2">
                                 <p-message
                                     *ngIf="formSave.get('id_registro_pago')?.invalid && (formSave.get('id_registro_pago')?.dirty || formSave.get('id_registro_pago')?.touched)" severity="error" variant="simple" size="small" >
@@ -123,7 +132,7 @@
                             </p-message>
                         </div>
                     
-                        <div class="col-span-12 flex justify-center" >
+                    <!--     <div class="col-span-12 flex justify-center" >
                             <div class="col-span-6">
                                 <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                                 <p-datepicker 
@@ -135,7 +144,7 @@
                                     Fecha registro es requerido
                                 </p-message>
                             </div>
-                        </div>
+                        </div> -->
 
                 </div>
             </form>
@@ -166,21 +175,20 @@
             <form [formGroup]="formUpdate" class="formulario">
                 <div class="flex flex-col gap-6">
     
-                    <div class="col-span-6">
-                        <label class="block font-bold mb-3">Estado pago</label>
+                <div class="col-span-6">
+                    <label class="block font-bold mb-3">Estado pago</label>
 
-                        <p-select
-                            [options]="pago"                 
-                            formControlName="id_registro_pago"
-                            optionLabel="displayPago"
-                            optionValue="id_registro_pago"
-                            [disabled]="true"      
-                            [readonly]="true"     
-                            [style]="{'background-color': '#e0e0e0'}"      
-                            class="w-full md:w-70">
-                        </p-select>
-                    </div>
+                    <p-select
+                        [options]="pagoTodos"
+                        formControlName="id_registro_pago"
+                        optionLabel="displayPago"
+                        optionValue="id_registro_pago"
+                        [readonly]="true"
+                        [style]="{'background-color': '#e0e0e0'}"
+                        class="w-full md:w-70">
+                    </p-select>
 
+                </div>
 
                         <div class="col-span-6">
                             <label for="monto" class="block font-bold mb-1">Monto</label>
@@ -194,7 +202,7 @@
                             </p-message>
                         </div>
 
-                    <div class="col-span-12 flex justify-center" >
+             <!--        <div class="col-span-12 flex justify-center" >
                         <div class="col-span-6">
                             <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                             <p-datepicker 
@@ -206,7 +214,7 @@
                                 Fecha registró es requerido
                             </p-message>
                         </div>
-                    </div>
+                    </div> -->
        
                 </div>
             </form>
