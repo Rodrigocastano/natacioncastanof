@@ -24,8 +24,10 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { formatDate } from '@angular/common';
 import { GrupoService } from '../service/grupo.service';
+import { HorarioService } from '../service/horario.service';
 import { CheckboxModule } from 'primeng/checkbox';
 import { Grupo } from '../interfaces/grupo';
+import { Horario } from '../interfaces/horario';
 import { EntrenadorService } from '../service/entrenador.service';
 import { Entrenador } from '../interfaces/entrenador';
 
@@ -84,9 +86,9 @@ export class AsistenciaComponent implements OnInit {
   loading: boolean = true;
 
   grupos: Grupo[] = [];
+  horarios: Horario[] = [];
   selectedGrupo: number | null = null;
-  turnos: string[] = ['Mañana', 'Tarde', 'Noche'];
-  selectedTurno: string | null = null;
+  selectedHorario: string | null = null;
   usuariosParaAsistencia: any[] = [];
   fechaAsistencias: Date = new Date();
   filtroBusqueda: string = '';
@@ -105,6 +107,7 @@ export class AsistenciaComponent implements OnInit {
     private usuarioService: UsuarioService,
     private messageService: MessageService,
     private grupoService: GrupoService,
+    private horarioService: HorarioService,
     private entrenadorService: EntrenadorService
   ) {
     this.formSave = this.fb.group({
@@ -124,6 +127,7 @@ export class AsistenciaComponent implements OnInit {
       this.getAsistencia();
       this.getUsuarios();
       this.loadGrupos();
+      this.loadHorarios();
       this.loadEntrenadores(); 
     }
 
@@ -159,10 +163,24 @@ export class AsistenciaComponent implements OnInit {
         }
       });
     }
+    loadHorarios() {
+      this.horarioService.getAllHorario().subscribe({
+        next: (horarios) => {
+          this.horarios = horarios;
+        },
+        error: (err) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Error al cargar los horarios'
+          });
+        }
+      });
+    }
 
     onEntrenadorChange() {
         this.selectedGrupo = null;
-        this.selectedTurno = null;
+        this.selectedHorario = null;
         this.usuariosParaAsistencia = [];
         
         if (this.selectedEntrenador) {
@@ -171,7 +189,7 @@ export class AsistenciaComponent implements OnInit {
             this.gruposDelEntrenador = grupos.map((g: any) => ({
               id: g.grupo_id,
               nombre: g.grupo_nombre,
-              turno: g.turno
+              horario: g.horario
             }));
           },
           error: (err) => {
@@ -186,23 +204,23 @@ export class AsistenciaComponent implements OnInit {
     }
 
     onGrupoChange() {
-      this.selectedTurno = null;
+      this.selectedHorario = null;
       this.usuariosParaAsistencia = [];
-      if (this.selectedGrupo && this.selectedTurno) {
+      if (this.selectedGrupo && this.selectedHorario) {
         this.loadUsuariosForAsistencia();
       }
     }
 
     onTurnoChange() {
       this.usuariosParaAsistencia = [];
-      if (this.selectedGrupo && this.selectedTurno) {
+      if (this.selectedGrupo && this.selectedHorario) {
         this.loadUsuariosForAsistencia();
       }
     }
 
     loadUsuariosForAsistencia() {
-      if (this.selectedGrupo !== null && this.selectedTurno) {
-        this.asistenciaService.getUsuariosByGrupoYTurno(this.selectedGrupo, this.selectedTurno).subscribe({
+      if (this.selectedGrupo !== null && this.selectedHorario) {
+        this.asistenciaService.getUsuariosByGrupoYHorario(this.selectedGrupo, this.selectedHorario).subscribe({
           next: (usuarios) => {
             this.usuariosParaAsistencia = usuarios.map(usuario => ({
               ...usuario,
@@ -259,7 +277,7 @@ export class AsistenciaComponent implements OnInit {
     resetAsistenciaForm() {
       this.selectedEntrenador = null;
       this.selectedGrupo = null;
-      this.selectedTurno = null;
+      this.selectedHorario = null;
       this.usuariosParaAsistencia = [];
       this.filtroBusqueda = '';
       this.fechaAsistencias = new Date();
@@ -300,7 +318,7 @@ export class AsistenciaComponent implements OnInit {
           const gruposMap = new Map<string, Asistencia[]>();
 
           this.asistencia.forEach((asi) => {
-            const key = `${asi.grupo} - ${asi.turno}`; 
+            const key = `${asi.grupo} - ${asi.horario}`; 
             if (!gruposMap.has(key)) {
               gruposMap.set(key, []);
             }

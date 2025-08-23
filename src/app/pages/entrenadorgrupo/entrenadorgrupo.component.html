@@ -51,7 +51,7 @@
         <th pSortableColumn="nombre">Entrenadores</th>
         <th pSortableColumn="cedula">Identificación</th>
         <th pSortableColumn="grupo">Grupo</th>
-        <th pSortableColumn="turno">Turno</th>
+        <th pSortableColumn="turno">Horario</th>
         <th pSortableColumn="fecha_inicio">Inicio</th>
         <th pSortableColumn="fecha_fin">Fin</th>
         <th pSortableColumn="estado_funcional">Estado</th>
@@ -65,7 +65,7 @@
         <td>{{ getNombreCompleto(registro) }}</td>
         <td class="text-center">{{ registro.cedula }}</td>
         <td class="text-center">{{ registro.grupo }}</td>
-        <td class="text-center">{{ registro.turno }}</td>
+        <td class="text-center">{{ registro.hora }}</td>
         <td class="text-center">{{ registro.fecha_inicio | date: 'dd/MM/yyyy' }}</td>
         <td class="text-center">{{ registro.fecha_fin ? (registro.fecha_fin | date: 'dd/MM/yyyy') : 'Activo' }}</td>
         <td class="text-center">{{ registro.estado_funcional ? 'Activo' : 'Inactivo' }}</td>
@@ -125,32 +125,19 @@
                     </div>
 
                     <div class="col-span-6">
-                        <label for="turno" class="block font-bold mb-3">Turno</label>
-                        <p-dropdown
-                            inputId="turno"
-                            [options]="[
-                            { label: 'Mañana', value: 'mañana' },
-                            { label: 'Tarde', value: 'tarde' },
-                            { label: 'Noche', value: 'noche' }
-                            ]"
-                            formControlName="turno"
-                            placeholder="Seleccione un turno"
-                            [showClear]="true"
-                            [appendTo]="'body'"
-                            class="w-full md:w-70"
-                        ></p-dropdown>
-
+                        <label for="id_grupo" class="block font-bold mb-3">Horario</label>             
+                        <p-select
+                            [options]="horario" formControlName="id_fecha" optionLabel="hora"optionValue="id" placeholder="Seleccione un horario" 
+                            inputId="hora" [showClear]="true" [appendTo]="'body'" class="w-full md:w-70">
+                        </p-select>
                         <div class="mt-2">
                             <p-message
-                            *ngIf="formSave.get('turno')?.invalid && (formSave.get('turno')?.dirty || formSave.get('turno')?.touched)"
-                            severity="error"
-                            variant="simple"
-                            size="small"
-                            >
-                            El turno es requerido
+                                *ngIf="formSave.get('id_fecha')?.invalid && (formSave.get('id_fecha')?.dirty || formSave.get('id_fecha')?.touched)" severity="error" variant="simple" size="small" >
+                                Entrenador es requerido
                             </p-message>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="grid grid-cols-12 gap-4">                         
@@ -223,30 +210,17 @@
                         </div>
                     </div>
 
-                    <div class="col-span-6">
-                        <label for="turno" class="block font-bold mb-3">Turno</label>
-                        <p-dropdown
-                            inputId="turno"
-                            [options]="[
-                            { label: 'Mañana', value: 'mañana' },
-                            { label: 'Tarde', value: 'tarde' },
-                            { label: 'Noche', value: 'noche' }
-                            ]"
-                            formControlName="turno"
-                            placeholder="Seleccione un turno"
-                            [showClear]="true"
-                            [appendTo]="'body'"
-                            class="w-full md:w-70"
-                        ></p-dropdown>
+                    <div class="col-span-6 gap-4">
 
+                        <label for="id_grupo" class="block font-bold mb-3">Horario</label>             
+                        <p-select
+                            [options]="horario" formControlName="id_fecha" optionLabel="hora"optionValue="id" placeholder="Seleccione un horario" 
+                            inputId="hora" [showClear]="true" [appendTo]="'body'" class="w-full md:w-70">
+                        </p-select>
                         <div class="mt-2">
                             <p-message
-                            *ngIf="formUpdate.get('turno')?.invalid && (formUpdate.get('turno')?.dirty || formUpdate.get('turno')?.touched)"
-                            severity="error"
-                            variant="simple"
-                            size="small"
-                            >
-                            El turno es requerido
+                                *ngIf="formUpdate.get('id_fecha')?.invalid && (formUpdate.get('id_fecha')?.dirty || formUpdate.get('id_fecha')?.touched)" severity="error" variant="simple" size="small" >
+                                Horario es requerido
                             </p-message>
                         </div>
                     </div>

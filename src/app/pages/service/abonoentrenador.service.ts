@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AbonoEntrenador } from '../interfaces/abonoentrenador';
 import { environment } from '../../../environments/environments';
+import { pagoEntrenadores } from '../interfaces/pagoentrenadores';
 
 @Injectable({
   providedIn: 'root'
@@ -17,9 +18,25 @@ export class AbonoentrenadorService {
       return this.http.get<any>(`${this.apisUrl}/indexAbonoEntrenador`);
     }
 
-    getAllRegistroPago() {
+/*     getAllRegistroPago() {
       return this.http.get<any>(`${this.apisUrl}/indexRegistroEntrenador`);
-    }
+    } */
+
+/*     getAllAbonoPagos() {
+      return this.http.get<any>(`${this.apisUrl}/indexRegistroPago`);
+    } */
+
+        getAllAbonoPagos(): Observable<pagoEntrenadores[]> {
+          return this.http.get<pagoEntrenadores[]>(`${this.apisUrl}/indexRegistroPago`);
+        }
+
+                getAllAbonoPendiente(): Observable<pagoEntrenadores[]> {
+          return this.http.get<pagoEntrenadores[]>(`${this.apisUrl}/indexRegistrosPendiente`);
+        }
+
+/*     getAllAbonoPendiente() {
+      return this.http.get<any>(`${this.apisUrl}/indexRegistrosPendiente`);
+    } */
  
     createAbonoEntrenador(abonoPago: AbonoEntrenador): Observable<any> {
       return this.http.post(`${this.apisUrl}/storeAbonoEntrenador`, abonoPago);

@@ -14,6 +14,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { GrupoService } from '../service/grupo.service';
+import { HorarioService } from '../service/horario.service';
 import { CalendarModule } from 'primeng/calendar';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TooltipModule } from 'primeng/tooltip';
@@ -61,6 +62,7 @@ export class HistorialUsuarioComponent implements OnInit {
   loading: boolean = true;
   filtro: string = '';
   grupos: any[] = [];
+  horario: any[] = [];
   formUpdate!: FormGroup;
   usuarios: Usuario[] = [];
   idGrupoUsuario: number = 0;
@@ -77,23 +79,24 @@ export class HistorialUsuarioComponent implements OnInit {
     private messageService: MessageService,
     private grupoService: GrupoService,
     private usuarioService: UsuarioService,
+    private horarioService:HorarioService,
   ) {
          this.formSave = this.fb.group({
             id_usuario: ['', Validators.required],
             id_grupo: ['', Validators.required],
+            id_fecha: ['', Validators.required],
             fecha_inicio: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
             fecha_fin: [[]],
             estado_funcional: ['', []],
-            turno: [null, Validators.required] 
           });
 
           this.formUpdate = this.fb.group({
             id_usuario: ['', Validators.required],
             id_grupo: ['', Validators.required],
+            id_fecha: ['', Validators.required],
             fecha_inicio: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
             fecha_fin: [[]],
             estado_funcional: ['', []],
-            turno: [null, Validators.required] 
           });
         }
   
@@ -102,6 +105,7 @@ export class HistorialUsuarioComponent implements OnInit {
     this.getUsuarioGrupo();
     this.getUsuario();
     this.loadGrupos();
+    this.loadHorario();
   }
 
     getUsuarioGrupo(): void {
@@ -125,6 +129,12 @@ export class HistorialUsuarioComponent implements OnInit {
     loadGrupos() {
       this.grupoService.getAllGrupo().subscribe(grupos => {
           this.grupos = grupos;
+      });
+    }
+
+    loadHorario() {
+      this.horarioService.getAllHorario().subscribe(horario => {
+          this.horario = horario;
       });
     }
 
@@ -157,10 +167,9 @@ export class HistorialUsuarioComponent implements OnInit {
         const newPago: any = {
           id_usuario: this.formSave.value.id_usuario,
           id_grupo: this.formSave.value.id_grupo,
+          id_fecha: this.formSave.value.id_fecha,
           fecha_inicio: this.formatDate(this.formSave.value.fecha_inicio),
-          /* fecha_fin: this.formatDate(this.formSave.value.fecha_fin), */
           estado_funcional: presenteValue, 
-          turno: this.formSave.value.turno, 
         };
         console.log('Datos enviados al backend:', newPago);
 
@@ -241,10 +250,10 @@ export class HistorialUsuarioComponent implements OnInit {
             this.formUpdate.patchValue({
                 id_usuario: this.pag.id_usuario,
                 id_grupo: this.pag.id_grupo,
+                id_fecha: this.pag.id_fecha,
                 estado_funcional: this.pag.estado_funcional === 1,
                 fecha_inicio: parseLocalDate(this.pag.fecha_inicio),
                 fecha_fin: parseLocalDate(this.pag.fecha_fin),
-                turno: this.pag.turno ?? null,
             });
 
         }
@@ -266,10 +275,10 @@ export class HistorialUsuarioComponent implements OnInit {
           id: this.pag.id,
           id_usuario: formData.id_usuario,
           id_grupo: formData.id_grupo,
+          id_fecha: formData.id_fecha,
           fecha_inicio: this.formatDate(formData.fecha_inicio),
           fecha_fin: formData.fecha_fin ? this.formatDate(formData.fecha_fin) : null,
           estado_funcional: formData.estado_funcional ? 1 : 0,
-          turno: formData.turno,
       };
 
       console.log('Payload completo:', JSON.stringify(payload, null, 2));

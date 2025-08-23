@@ -1,4 +1,5 @@
 export interface Asistencia {
+    hora?: any;
     id: number;
     id_usuario: any;
     fecha: string;
@@ -8,5 +9,5 @@ export interface Asistencia {
     apellido?: string
     cedula?: string
     grupo?: string;
-    turno?: string;
+    horario?: string;
 }

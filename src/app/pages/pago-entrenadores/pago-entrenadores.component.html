@@ -132,12 +132,13 @@
                 <div class="flex flex-col gap-6">
 
 
-                    <div class="grid grid-cols-12 gap-4">
-                        <div class="col-span-6">
+                    
+                        <div class="col-span-12">
                             <label for="id_usuario" class="block font-bold mb-3">Entrenador</label>             
                             <p-select
                                 [options]="usuarios" [appendTo]="'body'" formControlName="id_usuario"inputId="id_usuario"optionLabel="display"optionValue="id"
-                                placeholder="Seleccione un usuario" [filter]="true" filterBy="display" [showClear]="true" class="w-full md:w-70">
+                                placeholder="Seleccione un usuario" [filter]="true" filterBy="display" [showClear]="true" class="w-full md:w-70"
+                                (onChange)="onUsuarioChange($event.value)"> 
                             </p-select>
                             <div class="mt-2">
                                 <p-message
@@ -147,7 +148,7 @@
                             </div>
                         </div>
 
-                        <div class="col-span-6">
+                      <!--   <div class="col-span-6">
                             <label for="id_estado_pago" class="block font-bold mb-3">Estado pago</label>             
                             <p-select
                                 [options]="estadoPago" [appendTo]="'body'" formControlName="id_estado_pago" inputId="id_estado_pago" optionLabel="displayTipo" optionValue="id"
@@ -159,8 +160,8 @@
                                     Estado pago es requerido
                                 </p-message>
                             </div>
-                        </div>
-                    </div>
+                        </div> -->
+                  
 
                     <div class="grid grid-cols-12 gap-4 w-full">
                         <div class="col-span-12 md:col-span-6">
@@ -190,7 +191,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-12 gap-4">
+          <!--           <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-6">
                             <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                             <p-datepicker 
@@ -214,7 +215,7 @@
                                 Fecha vencimiento es requerido
                             </p-message>
                         </div>
-                    </div>
+                    </div> -->
 
                 </div>
             </form>
@@ -246,14 +247,14 @@
                 <div class="flex flex-col gap-6">
 
 
-                    <div class="grid grid-cols-12 gap-4">  
-                        <div class="col-span-6">
+                     
+                        <div class="col-span-12">
                             <label for="id_usuario" class="block font-bold mb-3">Entrenador</label>   
                             <p-select 
                                 [options]="usuarios" formControlName="id_usuario" optionLabel="display" optionValue="id" [readonly]="true" [style]="{'background-color': '#e0e0e0'}" class="w-full md:w-70 ">
                             </p-select>
                         </div>
-    
+                 <!--    <div class="grid grid-cols-12 gap-4"> 
                         <div class="col-span-6">
                             <label for="id_estado_pago"  class="block font-bold mb-3">Estado pago</label>             
                             <p-select
@@ -267,7 +268,7 @@
                                 </p-message>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="grid grid-cols-12 gap-4">
                         <!-- Campo Monto -->
@@ -328,7 +329,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-12 gap-4"> 
+                   <!--  <div class="grid grid-cols-12 gap-4"> 
                         <div class="col-span-6">
                             <label for="fecha" class="block font-bold mb-2">Fecha registro</label>
                             <p-datepicker 
@@ -352,7 +353,7 @@
                                 Fecha vencimiento es requerido
                             </p-message>
                         </div>
-                    </div>
+                    </div> -->
        
                 </div>
             </form>

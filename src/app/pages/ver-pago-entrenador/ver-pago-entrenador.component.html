@@ -1,0 +1,57 @@
+<div class="card p-6 shadow-md rounded-2xl">
+  <h2 class="text-2xl font-extrabold text-center mb-6 text-gray-900 dark:text-gray-100">
+    Pagos de entrenadores
+  </h2>
+
+  <!-- Selector de usuario -->
+  <div *ngIf="!loading && entrenador.length > 0" class="mb-6">
+    <p-dropdown
+      [options]="entrenador"
+      [(ngModel)]="idUsuarioSeleccionado"
+      optionLabel="nombreCompleto"
+      optionValue="id"
+      placeholder="Seleccione un entrenador"
+      filter="true"
+      filterBy="nombreCompleto"
+      (onChange)="cargarPagos()"
+      class="w-full md:w-40rem"
+    ></p-dropdown>
+  </div>
+
+  <!-- Tabla de pagos -->
+  <div *ngIf="loading" class="text-center text-sm py-4">Cargando datos de pagos...</div>
+
+  <div *ngIf="error" class="bg-red-100 text-red-800 text-sm p-3 rounded-md mb-4 text-center">
+    Error al cargar los datos de pagos.
+  </div>
+
+  <div *ngIf="!loading && !error && pagos.length > 0" class="overflow-x-auto">
+    <table class="min-w-full text-center border rounded-md">
+      <thead class="bg-gray-200 dark:bg-gray-800">
+        <tr>
+          <th class="p-2 border">Mes</th>
+          <th class="p-2 border">Cantidad de Pagos</th>
+          <th class="p-2 border">Total Abonado</th>
+          <th class="p-2 border">Pendiente</th>
+          <th class="p-2 border">Monto Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pago of pagos" class="hover:bg-gray-50">
+          <td class="p-2 border">{{ formatDate(pago.fecha) }}</td>
+          <td class="p-2 border">{{ pago.cantidad_pagos }}</td>
+          <td class="p-2 border">{{ pago.total_abonado }}</td>
+          <td class="p-2 border">{{ pago.total_pendiente }}</td>
+          <td class="p-2 border">{{ pago.total_monto }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+<div *ngIf="!loading && !error && pagos.length === 0 && consultaRealizada" class="text-center text-neutral-700 dark:text-neutral-300 mt-4 italic text-base">
+  <i class="pi pi-info-circle mr-2"></i>
+  No se encontraron registros de pagos.
+</div>
+
+
+</div>

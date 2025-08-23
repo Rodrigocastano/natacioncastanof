@@ -29,5 +29,9 @@ export class MedidasusuarioService {
     getMisDatosCompetencias(): Observable<any> {
       return this.http.get<any>(`${this.apisUrl}/obtenerPruebasUsuario`, { headers: this.headers });
     }
+
+    obtenerMisPagos(): Observable<any> {
+      return this.http.get<any>(`${this.apisUrl}/obtenerMisPago`, { headers: this.headers });
+    }
     
 }

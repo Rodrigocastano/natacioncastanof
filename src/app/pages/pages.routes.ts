@@ -51,6 +51,10 @@ import { ObtenerdatopsicologoComponent } from './obtenerdatopsicologo/obtenerdat
 import { DatosmedicosnadadorComponent } from './datosmedicosnadador/datosmedicosnadador.component';
 import { DatospsicologonadadorComponent } from './datospsicologonadador/datospsicologonadador.component';
 import { DatoscompetencianadadorComponent } from './datoscompetencianadador/datoscompetencianadador.component';
+import { PlanPagoEntrenadorComponent } from './plan-pago-entrenador/plan-pago-entrenador.component';
+import { HorarioComponent } from './horario/horario.component';
+import { VerPagoEntrenadorComponent } from './ver-pago-entrenador/ver-pago-entrenador.component';
+import { DatosPagoNadadorComponent } from './datos-pago-nadador/datos-pago-nadador.component';
 
 
 
@@ -106,6 +110,9 @@ export default [
     { path: 'datoMedicosUsuario', component: DatosmedicosnadadorComponent },
     { path: 'datoPsicologoUsuario', component: DatospsicologonadadorComponent },
     { path: 'datocompetenciaUsuario', component: DatoscompetencianadadorComponent },
-
+    { path: 'planPagoEntrenador', component: PlanPagoEntrenadorComponent },
+    { path: 'verPagoEntrenador', component: VerPagoEntrenadorComponent },
+    { path: 'horario', component: HorarioComponent },
+    { path: 'pagoUsuario', component: DatosPagoNadadorComponent },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

@@ -60,7 +60,7 @@ export class AppMenu implements OnInit {
             { label: 'Datos médico', icon: 'pi pi-book', routerLink: ['/pages/datoMedicosUsuario'] },
             { label: 'Datos psicólogo', icon: 'pi pi-book', routerLink: ['/pages/datoPsicologoUsuario'] },
             { label: 'Torneos participados', icon: 'pi pi-trophy', routerLink: ['/pages/datocompetenciaUsuario'] },
-
+            { label: 'Dato de Pagos', icon: 'pi pi-trophy', routerLink: ['/pages/pagoUsuario'] },
             
           ]
         }
@@ -86,6 +86,7 @@ export class AppMenu implements OnInit {
                 { label: 'Psicólogo', icon: 'pi pi-user-plus', routerLink: ['/pages/psicologos'] },
                 { label: 'Representantes', icon: 'pi pi-user-plus', routerLink: ['/pages/representante'] },
                 { label: 'Representantes nadador', icon: 'pi pi-users', routerLink: ['/pages/representantenadador'] },
+                { label: 'Horario', icon: 'pi pi-book', routerLink: ['/pages/horario'] },
                 { label: 'Matriculas de usuario', icon: 'pi pi-users', routerLink: ['/pages/historiaUsuario'] },
                 { label: 'Horario de entrenador', icon: 'pi pi-users', routerLink: ['/pages/Entrenadorgrupo'] },
                 { label: 'Ver entrenador con usuario', icon: 'pi pi-users', routerLink: ['/pages/Verentrenadorusuario'] },
@@ -105,14 +106,15 @@ export class AppMenu implements OnInit {
               ]
             },
             
-              {
+            {
               label: 'Egreso de pago', icon: 'pi pi-dollar', items: [
-            
-            { label: 'Pagar a entrenadores', icon: 'pi pi-money-bill', routerLink: ['/pages/pagoEntrenadores'] },
-            { label: 'Pagar abono', icon: 'pi pi-money-bill', routerLink: ['/pages/pagarAbono'] },
-            { label: 'Reporte general', icon: 'pi pi-file', routerLink: ['/pages/reporteentrenadores'] },
-            { label: 'Reporte por entrenador', icon: 'pi pi-file', routerLink: ['/pages/reporteentrenador'] },
-          ]
+                { label: 'Plan pago', icon: 'pi pi-credit-card', routerLink: ['/pages/planPagoEntrenador'] },
+                { label: 'Pagar a entrenadores', icon: 'pi pi-money-bill', routerLink: ['/pages/pagoEntrenadores'] },
+                { label: 'Pagar abono', icon: 'pi pi-money-bill', routerLink: ['/pages/pagarAbono'] },
+                { label: 'Ver pago entrenador', icon: 'pi pi-credit-card', routerLink: ['/pages/verPagoEntrenador'] },
+                { label: 'Reporte general', icon: 'pi pi-file', routerLink: ['/pages/reporteentrenadores'] },
+                { label: 'Reporte por entrenador', icon: 'pi pi-file', routerLink: ['/pages/reporteentrenador'] },
+              ]
             },
             
 

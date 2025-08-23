@@ -80,6 +80,9 @@ export class AbonoentrenadorComponent implements OnInit{
       buscarOriginal: AbonoEntrenador[] = [];
       pagosParaEditar: pagoEntrenadores[] = [];
 
+      pagoTodos: any[] = [];       // Para edición
+      pagoPendientes: any[] = [];  // Para registro de nuevos abonos
+
       constructor(
         private fb: FormBuilder,
         private abonoentrenadorService: AbonoentrenadorService,
@@ -88,22 +91,27 @@ export class AbonoentrenadorComponent implements OnInit{
         this.formSave = this.fb.group({
           id_pago_entrenador: ['', [Validators.required]],
           monto: ['', [Validators.required]],
-          fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
+          fecha: []
           
         });
         this.formUpdate = fb.group({
           id_pago_entrenador: ['', [Validators.required]],
           monto: ['', [Validators.required]],
-          fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')]
+          fecha: []
         });
       }
   
       ngOnInit(): void {
         this.getAbonoPago();
         this.getPagos();
+        this.getPendientes();
 
           setInterval(() => {
-          this.getPagos();
+            this.getPendientes();
+          }, 30000);
+
+          setInterval(() => {
+            this.getPagos();
           }, 30000);
       }
 
@@ -126,18 +134,27 @@ export class AbonoentrenadorComponent implements OnInit{
       }
 
 
-      getPagos() {
-        this.abonoentrenadorService.getAllRegistroPago().subscribe(data => {
-          console.log('Datos recibidos:', data);
-
-          this.pago = data.map((pago: any) => ({
-            ...pago,
-           displayPago: `${pago.nombre} ${pago.apellido} | ${pago.fecha} | Monto: $${pago.monto} | Abonado: $${pago.monto_abonado}`
 
 
+            getPagos() {
+        this.abonoentrenadorService.getAllAbonoPagos().subscribe(data => {
+          this.pagoTodos = data.map(p => ({
+            ...p,
+            id_registro_pago: p.id,
+            displayPago: `${p.nombre} ${p.apellido} | ${p.fecha} | Monto: $${p.monto} | Abonado: $${p.monto_abonado}`
           }));
+          console.log('Todos los pagos para editar:', this.pagoTodos);
+        });
+      }
 
-          console.log('Datos para el select:', this.pago);
+      getPendientes() {
+        this.abonoentrenadorService.getAllAbonoPendiente().subscribe(data => {
+          this.pagoPendientes = data.map(p => ({
+            ...p,
+            id_registro_pago: p.id,
+            displayPendiente: `${p.nombre} ${p.apellido} | ${p.fecha} | Monto: $${p.monto} | Abonado: $${p.monto_abonado}`
+          }));
+          console.log('Pagos pendientes para registrar:', this.pagoPendientes);
         });
       }
 
@@ -183,7 +200,7 @@ export class AbonoentrenadorComponent implements OnInit{
       if (this.formSave.valid) {
         const newPago: any = {
           id_pago_entrenador: this.formSave.value.id_pago_entrenador,
-          fecha: this.formatDate(this.formSave.value.fecha),
+        /*   fecha: this.formatDate(this.formSave.value.fecha), */
           monto: this.formSave.value.monto,
         };
   
@@ -248,7 +265,7 @@ export class AbonoentrenadorComponent implements OnInit{
             id: this.abonoPa.id,
             id_pago_entrenador: this.formUpdate.value.id_pago_entrenador,
             monto: this.formUpdate.value.monto,
-            fecha: this.formatDate(this.formUpdate.value.fecha),
+       /*      fecha: this.formatDate(this.formUpdate.value.fecha), */
           };
       
           this.abonoentrenadorService.updateAbonoEntrenador(this.abonoPa.id, updatePago).subscribe({
@@ -273,7 +290,7 @@ edit(elasticId: any) {
   this.abonoPa = elasticId;
 
   if (this.abonoPa) {
-    const pagoRelacionado = this.pago.find(p => p.id_pago_entrenador === this.abonoPa.id_pago_entrenador);
+    const pagoRelacionado = this.pagoTodos.find(p => p.id_pago_entrenador === this.abonoPa.id_pago_entrenador);
     // Crea un arreglo con solo ese pago
     this.pagosParaEditar = pagoRelacionado ? [pagoRelacionado] : [];
 
@@ -285,9 +302,6 @@ edit(elasticId: any) {
   }
   this.visibleUpdate = true;
 }
-
-
-
 
       canceUpdate() {
         this.visibleUpdate = false;

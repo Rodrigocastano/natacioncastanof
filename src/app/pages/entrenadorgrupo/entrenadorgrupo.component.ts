@@ -5,7 +5,7 @@ import { HistorialEntrenador } from '../interfaces/historial-entrenador';
 import { GrupoService } from '../service/grupo.service';
 import { MessageService } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-
+import { HorarioService } from '../service/horario.service';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -68,7 +68,7 @@ export class EntrenadorgrupoComponent implements OnInit {
   loading = true;
   filtro = '';
   grupos: any[] = [];
-
+  horario: any[] = [];
   formUpdate!: FormGroup;
 
 
@@ -80,11 +80,12 @@ export class EntrenadorgrupoComponent implements OnInit {
   visibleUpdate: boolean = false;
 
   constructor(
-    private fb: FormBuilder,
-    private entrenadorgrupoService: EntrenadorgrupoService,
-    private grupoService: GrupoService,
-    private entrenadorService: EntrenadorService,
-    private messageService: MessageService
+      private fb: FormBuilder,
+      private entrenadorgrupoService: EntrenadorgrupoService,
+      private grupoService: GrupoService,
+      private entrenadorService: EntrenadorService,
+      private messageService: MessageService,
+      private horarioService:HorarioService,
   ) {
 
     this.formSave = this.fb.group({
@@ -93,7 +94,7 @@ export class EntrenadorgrupoComponent implements OnInit {
       fecha_inicio: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
       fecha_fin: [[]],
       estado_funcional: ['', []],
-      turno: [null, Validators.required] 
+      id_fecha: ['', Validators.required],
     });
 
     this.formUpdate = this.fb.group({
@@ -102,7 +103,7 @@ export class EntrenadorgrupoComponent implements OnInit {
       fecha_inicio: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
       fecha_fin: [[]],
       estado_funcional: ['', []],
-      turno: [null, Validators.required] 
+      id_fecha: ['', Validators.required],
     });
   }
 
@@ -110,6 +111,7 @@ export class EntrenadorgrupoComponent implements OnInit {
     this.getEntrenadorGrupo();
     this.getEntrenador();
     this.loadGrupos();
+    this.loadHorario();
   }
 
   getEntrenadorGrupo(): void {
@@ -134,6 +136,12 @@ export class EntrenadorgrupoComponent implements OnInit {
         this.grupoService.getAllGrupo().subscribe(grupos => {
             this.grupos = grupos;
         });
+    }
+
+    loadHorario() {
+      this.horarioService.getAllHorario().subscribe(horario => {
+          this.horario = horario;
+      });
     }
 
   getEntrenador() {
@@ -166,9 +174,8 @@ export class EntrenadorgrupoComponent implements OnInit {
         id_usuario: this.formSave.value.id_usuario,
         id_grupo: this.formSave.value.id_grupo,
         fecha_inicio: this.formatDate(this.formSave.value.fecha_inicio),
-        /* fecha_fin: this.formatDate(this.formSave.value.fecha_inicio), */
+        id_fecha: this.formSave.value.id_fecha,
         estado_funcional: presenteValue, 
-        turno: this.formSave.value.turno, 
       };
       console.log('Datos enviados al backend:', newPago);
 
@@ -249,10 +256,10 @@ export class EntrenadorgrupoComponent implements OnInit {
           this.formUpdate.patchValue({
               id_usuario: this.pag.id_usuario,
               id_grupo: this.pag.id_grupo,
+              id_fecha: this.pag.id_fecha,
               estado_funcional: this.pag.estado_funcional === 1,
               fecha_inicio: parseLocalDate(this.pag.fecha_inicio),
               fecha_fin: parseLocalDate(this.pag.fecha_fin),
-              turno: this.pag.turno ?? null,
           });
 
       }
@@ -276,9 +283,8 @@ export class EntrenadorgrupoComponent implements OnInit {
         id_grupo: formData.id_grupo,
         fecha_inicio: this.formatDate(formData.fecha_inicio),
         fecha_fin: formData.fecha_fin ? this.formatDate(formData.fecha_fin) : null,
-
+        id_fecha: formData.id_fecha,
         estado_funcional: formData.estado_funcional ? 1 : 0,
-        turno: formData.turno,
     };
 
     console.log('Payload completo:', JSON.stringify(payload, null, 2));

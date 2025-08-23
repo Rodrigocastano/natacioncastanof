@@ -1,11 +1,11 @@
 // archivo: planpago.ts
-export interface PlanPago {
+export interface PlanPagoEntrenador {
   id?: number;
   id_usuario: number;
-  id_tipo_pago: number;
   monto: number;
   fecha_inicio: string;
   fecha_fin: string;
+  anio: string;
   fecha_cobro: {
     frecuencia: string;
     dias: any[];

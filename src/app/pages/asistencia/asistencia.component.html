@@ -61,14 +61,16 @@
       </p-dropdown>
     </div>
 
-    <!-- Selección de turno -->
+    <!-- Selección de Hotrario -->
     <div *ngIf="selectedGrupo" class="mb-4">
-      <label class="block font-semibold mb-2 text-gray-700">Turno</label>
+      <label class="block font-semibold mb-2 text-gray-700">Horario</label>
       <p-dropdown
         class="w-full"
-        [options]="turnos"
-        placeholder="Seleccione un turno"
-        [(ngModel)]="selectedTurno"
+        [options]="horarios"
+        optionLabel="hora"
+        optionValue="id"   
+        placeholder="Seleccione un horario"
+        [(ngModel)]="selectedHorario"
         (onChange)="onTurnoChange()"
         [showClear]="true"
         [disabled]="!selectedGrupo"
@@ -77,14 +79,14 @@
     </div>
 
     <!-- Mensaje cuando no hay usuarios -->
-    <div *ngIf="selectedGrupo && selectedTurno && usuariosParaAsistencia.length === 0" 
+    <div *ngIf="selectedGrupo && selectedHorario && usuariosParaAsistencia.length === 0" 
          class="flex justify-center items-center p-6 rounded-lg bg-yellow-50 text-yellow-700 text-md font-medium border border-yellow-200 mb-6">
       <i class="pi pi-info-circle mr-3 text-xl"></i>
-      <span>No hay usuarios registrados en este grupo y turno</span>
+      <span>No hay usuarios registrados en este grupo y horario</span>
     </div>
 
     <!-- Lista de usuarios -->
-    <div *ngIf="selectedGrupo && selectedTurno && usuariosParaAsistencia.length > 0" class="flex flex-col">
+    <div *ngIf="selectedGrupo && selectedHorario && usuariosParaAsistencia.length > 0" class="flex flex-col">
       <!-- Filtros -->
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
         <p-datepicker

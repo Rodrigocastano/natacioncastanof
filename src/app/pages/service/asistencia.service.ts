@@ -32,17 +32,13 @@ export class AsistenciaService {
     }
 
     createAsistenciasBatch(asistencias: Partial<Asistencia>[]): Observable<any> {
-  return this.http.post(`${this.apisUrl}/storeBatchAsistencia`, { asistencias });
-}
-
-      getUsuariosByGrupo(idGrupo: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apisUrl}/usuarioGrupo/${idGrupo}`);
-  }
-
- 
-    createAsistencia(sistencia: Asistencia): Observable<any> {
-      return this.http.post(`${this.apisUrl}/storeAsistencia`, sistencia);
+      return this.http.post(`${this.apisUrl}/storeBatchAsistencia`, { asistencias });
     }
+
+
+      createAsistencia(sistencia: Asistencia): Observable<any> {
+        return this.http.post(`${this.apisUrl}/storeAsistencia`, sistencia);
+      }
  
     updateAsistencia(id: number, sistencia: Asistencia){
       return this.http.put(`${this.apisUrl}/updateAsistencia/${id}`, sistencia);
@@ -52,13 +48,16 @@ export class AsistenciaService {
       return this.http.delete(`${this.apisUrl}/destroyAsistencia/${id}`);
     }
 
+  getUsuariosByGrupo(idGrupo: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apisUrl}/usuarioGrupo/${idGrupo}`);
+  }
+
   getUsuariosByEntrenados(idGrupo: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apisUrl}/getGruposByEntrenado/${idGrupo}`);
   }
 
-
-  getUsuariosByGrupoYTurno(idGrupo: number, turno: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apisUrl}/getUsuariosByGrupoYTurno/${turno}/${idGrupo}`);
+  getUsuariosByGrupoYHorario(idGrupo: number, idHorario: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apisUrl}/getUsuariosByGrupoYHorario/${idHorario}/${idGrupo}`);
   }
 
 

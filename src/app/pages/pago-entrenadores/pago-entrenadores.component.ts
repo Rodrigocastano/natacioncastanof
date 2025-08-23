@@ -85,11 +85,10 @@ export class PagoEntrenadoresComponent implements OnInit {
         ) {
           this.formSave = this.fb.group({
             id_usuario: ['', [Validators.required]],
-            id_estado_pago: ['', [Validators.required]],
             monto: ['', [Validators.required]],
-            fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
-            monto_abonado: ['', [Validators.required]],
-            fecha_vencimiento: ['', [Validators.required]]
+            fecha: [],
+            monto_abonado: [''],
+            fecha_vencimiento: []
             
           });
           this.formUpdate = fb.group({
@@ -168,38 +167,39 @@ export class PagoEntrenadoresComponent implements OnInit {
           });
         }
   
-        store() {
-        this.submitted = true;
-    
-        if (this.formSave.invalid) {
-          this.errorMessageToast();
-          this.formSave.markAllAsTouched();
-          return;
-        }
-    
-        if (this.formSave.valid) {
-          const newPago: any = {
-            id_estado_pago: this.formSave.value.id_estado_pago,
-            fecha: this.formatDate(this.formSave.value.fecha),
-            monto: this.formSave.value.monto,
-            fecha_vencimiento: this.formatDate(this.formSave.value.fecha_vencimiento),
-            monto_abonado: this.formSave.value.monto_abonado,
-            id_usuario: this.formSave.value.id_usuario,
-          };
-    
-          this.pagoEntrenadorService.createPagoEntrenadore(newPago).subscribe({
-            next: () => {
-              this.saveMessageToast();
-              this.getPago();
-              this.visibleSave = false;
-            },
-            error: (err) => {
-              console.error('Error al guardar registro del pago:', err);
-              
-            }
-          });
-        }
-        }
+store() {
+  this.submitted = true;
+
+  if (this.formSave.invalid) {
+    this.errorMessageToast();
+    this.formSave.markAllAsTouched();
+    return;
+  }
+
+  if (this.formSave.valid) {
+    const newPago: any = {
+      fecha: this.formatDate(this.formSave.value.fecha),
+      monto: this.formSave.value.monto,
+      monto_abonado: this.formSave.value.monto_abonado?? 0,
+      id_usuario: this.formSave.value.id_usuario,
+    };
+
+    // 👇 Mostrar los datos antes de enviarlos al backend
+    console.log("📤 Datos que se enviarán:", newPago);
+
+    this.pagoEntrenadorService.createPagoEntrenadore(newPago).subscribe({
+      next: () => {
+        this.saveMessageToast();
+        this.getPago();
+        this.visibleSave = false;
+      },
+      error: (err) => {
+        console.error('❌ Error al guardar registro del pago:', err);
+      }
+    });
+  }
+}
+
         
         getNombreEstadoPago(id: number): string {
           const estado = this.estadoPago.find(ep => ep.id === id);
@@ -311,6 +311,33 @@ export class PagoEntrenadoresComponent implements OnInit {
           this.idPago = id;
           this.visibleDelete = true
         }
+
+onUsuarioChange(idUsuario: number) {
+  this.pagoEntrenadorService.getPlanPorEntrenador(idUsuario).subscribe({
+    next: (plan) => {
+      const parseDate = (dateString: string | null) => {
+        if (!dateString) return null;
+        const [year, month, day] = dateString.split('-').map(Number);
+        return new Date(year, month - 1, day); // mes 0-indexado
+      };
+
+      this.formSave.patchValue({
+        monto: plan.monto,
+        fecha: parseDate(plan.fecha_inicio) || new Date(),
+        fecha_vencimiento: parseDate(plan.fecha_fin) || null
+      });
+    },
+    error: (err) => {
+      this.formSave.patchValue({
+        monto: null,
+        fecha: new Date(),
+        fecha_vencimiento: null
+      });
+      console.error('El usuario no tiene plan activo', err);
+    }
+  });
+}
+
   
   }
   

@@ -44,6 +44,11 @@ export class PagoEntrenadoresService {
         getAllPagoEntrenadore() {
           return this.http.get<any>(`${this.apisUrl}/indexPagoEntrenadore`);
         }
+
+    getPlanPorEntrenador(idUsuario: number) {
+      return this.http.get<any>(`${this.apisUrl}/planes-entrenador/${idUsuario}`);
+    }
+ 
   
         createPagoEntrenadore(pago: pagoEntrenadores): Observable<any> {
           return this.http.post(`${this.apisUrl}/storePagoEntrenadore`, pago);

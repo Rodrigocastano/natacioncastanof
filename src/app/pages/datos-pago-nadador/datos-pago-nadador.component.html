@@ -1,0 +1,46 @@
+<div class="card p-6 shadow-md rounded-2xl">
+  <h2 class="text-2xl font-extrabold text-center mb-6">
+    Pagos de {{ usuario }}
+  </h2>
+
+  <!-- Cargando -->
+  <div *ngIf="cargando" class="text-center text-sm py-4">
+    Cargando tus pagos...
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="bg-red-100 text-red-800 text-sm p-3 rounded-md mb-4 text-center">
+    {{ error }}
+  </div>
+
+  <!-- Tabla de pagos -->
+  <div *ngIf="!cargando && !error && pagos.length > 0" class="overflow-x-auto">
+    <table class="min-w-full text-center border rounded-md">
+      <thead class="bg-gray-200 dark:bg-gray-800">
+        <tr>
+          <th class="p-2 border">Mes</th>
+          <th class="p-2 border">Cantidad de Pagos</th>
+          <th class="p-2 border">Total Abonado</th>
+          <th class="p-2 border">Pendiente</th>
+          <th class="p-2 border">Monto Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pago of pagos" class="hover:bg-gray-50">
+          <td class="p-2 border">{{ formatDate(pago.mes) }}</td>
+          <td class="p-2 border">{{ pago.cantidad_pagos }}</td>
+          <td class="p-2 border">{{ pago.total_abonado }}</td>
+          <td class="p-2 border">{{ pago.total_pendiente }}</td>
+          <td class="p-2 border">{{ pago.total_monto }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- No hay pagos -->
+  <div *ngIf="!cargando && !error && pagos.length === 0" class="text-center text-neutral-700 mt-4 italic text-base">
+    <i class="pi pi-info-circle mr-2"></i>
+    No tienes registros de pagos.
+  </div>
+</div>
+
