@@ -45,7 +45,7 @@
 
         <ng-template pTemplate="body" let-grupo>
           <tr [class.bg-red-50]="grupo.mostrarTodos" class="hover:bg-red-50 dark:hover:bg-gray-700">
-            <td class="font-medium text-red-700 dark:text-red-300">{{ grupo.tipoPago }}</td>
+            <td class="font-medium text-red-700 dark:text-red-300">{{ grupo.frecuencia }}</td>
             <td class="text-right w-32">
               <p-button icon="pi pi-eye" [text]="true" severity="danger"
                         (click)="grupo.mostrarTodos = !grupo.mostrarTodos"
@@ -136,7 +136,7 @@
 
         <ng-template pTemplate="body" let-grupo>
           <tr [class.bg-green-50]="grupo.mostrarTodos" class="hover:bg-green-50 dark:hover:bg-gray-700">
-            <td class="font-medium text-green-700 dark:text-green-300">{{ grupo.tipoPago }}</td>
+            <td class="font-medium text-green-700 dark:text-green-300">{{ grupo.frecuencia }}</td>
             <td class="text-right w-32">
               <p-button icon="pi pi-eye" [text]="true" severity="success"
                         (click)="grupo.mostrarTodos = !grupo.mostrarTodos"

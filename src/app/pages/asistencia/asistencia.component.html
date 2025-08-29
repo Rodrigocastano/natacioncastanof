@@ -6,11 +6,9 @@
     </ng-template>
   </p-toolbar>
 
-  <!-- Sección para tomar asistencia -->
   <div *ngIf="showAsistenciaSection" 
        class="mb-6 p-6 border-round surface-card bg-white shadow-md rounded-lg max-w-screen-lg mx-auto">
 
-    <!-- Selección de entrenador -->
     <div class="mb-4">
       <label class="block font-semibold mb-2 text-gray-700">Entrenador</label>
       <p-dropdown
@@ -96,6 +94,7 @@
           [showIcon]="true"
           [showButtonBar]="true"
           [maxDate]="maxDate"
+          [(ngModel)]="fechaActual"
           [appendTo]="'body'">
         </p-datepicker>
 
@@ -146,15 +145,12 @@
   </div>
 </div>
 
-<!-- Toast -->
 <p-toast></p-toast>
 
-<!-- Spinner de carga -->
 <div *ngIf="loading" class="flex justify-center items-center h-72">
   <p-progressSpinner [style]="{ width: '50px', height: '50px' }" styleClass="p-text-primary"></p-progressSpinner>
 </div>
 
-<!-- Tabla principal -->
 <div *ngIf="!loading">
   <p-table [value]="asistencia" dataKey="id" [tableStyle]="{ 'min-width': '60rem' }" [expandedRowKeys]="expandedRows"
            (onRowExpand)="abrirExpand($event)" (onRowCollapse)="cerrarCollapse($event)"

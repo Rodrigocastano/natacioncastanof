@@ -12,7 +12,11 @@ export class PlanPagoService {
    private apisUrl = environment.apisUrls;
       
       constructor(private http: HttpClient) {}
-    
+
+      generarPagos(): Observable<any> {
+        return this.http.post(`${this.apisUrl}/generarPagos`, {}); 
+      }
+
       getAllPlanPago(): Observable<PlanPago[]> {
         return this.http.get<PlanPago[]>(`${this.apisUrl}/indexPlanPago`);
       }

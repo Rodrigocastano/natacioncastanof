@@ -12,6 +12,10 @@ export class PlanPagoEntrenadorService {
 private apisUrl = environment.apisUrls;
       
       constructor(private http: HttpClient) {}
+
+      generarPagosEntrenadores(): Observable<any> {
+        return this.http.post(`${this.apisUrl}/generarPagosEntrenador`, {}); 
+      }
     
       getAllPlanPago(): Observable<PlanPagoEntrenador[]> {
         return this.http.get<PlanPagoEntrenador[]>(`${this.apisUrl}/indexPlanPagos`);

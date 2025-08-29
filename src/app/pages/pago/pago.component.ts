@@ -27,6 +27,7 @@ import { TipoPago } from '../interfaces/tipoPagos';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { formatDate } from '@angular/common';
+import { PlanPagoService } from '../service/plan-pago.service';
 
 @Component({
   selector: 'app-pago',
@@ -82,11 +83,15 @@ export class PagoComponent implements OnInit{
       terminoBusqueda: string = '';
       buscarOriginal: Pago[] = [];
 
+      cargando: boolean = false;
+      resultado: string = '';
+
       constructor(
         private fb: FormBuilder,
         private pagoService: PagoService,
         private usuarioService: UsuarioService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private planPagoService: PlanPagoService
       ) {
         this.formSave = this.fb.group({
           id_usuario: ['', [Validators.required]],
@@ -136,6 +141,25 @@ export class PagoComponent implements OnInit{
           }
         );
       }
+
+      ejecutarGenerarPagos() {
+        this.cargando = true;
+
+        this.planPagoService.generarPagos().subscribe({
+          next: (res: any) => {
+            // Mostrar en consola el mensaje de éxito
+            console.log('✅ Comando ejecutado correctamente');
+            console.log('Salida del comando:', res.output || res.message);
+
+            this.cargando = false;
+          },
+          error: (err) => {
+            console.error('❌ Error al ejecutar el comando:', err);
+            this.cargando = false;
+          }
+        });
+      }
+
 
       getTipoPago() {
         this.pagoService.getAllTipoPago().subscribe(

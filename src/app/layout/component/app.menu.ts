@@ -60,7 +60,7 @@ export class AppMenu implements OnInit {
             { label: 'Datos médico', icon: 'pi pi-book', routerLink: ['/pages/datoMedicosUsuario'] },
             { label: 'Datos psicólogo', icon: 'pi pi-book', routerLink: ['/pages/datoPsicologoUsuario'] },
             { label: 'Torneos participados', icon: 'pi pi-trophy', routerLink: ['/pages/datocompetenciaUsuario'] },
-            { label: 'Dato de Pagos', icon: 'pi pi-trophy', routerLink: ['/pages/pagoUsuario'] },
+            { label: 'Dato de Pagos', icon: 'pi pi-dollar', routerLink: ['/pages/pagoUsuario'] },
             
           ]
         }

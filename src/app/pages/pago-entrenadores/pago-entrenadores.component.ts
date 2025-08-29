@@ -22,6 +22,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
 import { Usuario } from '../interfaces/usuario';
 import { EstadoPago } from '../interfaces/estadoPago';
+import { PlanPagoEntrenadorService } from '../service/plan-pago-entrenador.service';
 
 @Component({
   selector: 'app-pago-entrenadores',
@@ -76,12 +77,14 @@ export class PagoEntrenadoresComponent implements OnInit {
       terminoBusqueda: string = '';
       buscarOriginal: pagoEntrenadores[] = [];
 
-
+      cargando: boolean = false;
+      resultado: string = '';
 
   constructor(
           private fb: FormBuilder,
           private pagoEntrenadorService: PagoEntrenadoresService,
-          private messageService: MessageService
+          private messageService: MessageService,
+          private planPagoService: PlanPagoEntrenadorService,
         ) {
           this.formSave = this.fb.group({
             id_usuario: ['', [Validators.required]],
@@ -116,6 +119,24 @@ export class PagoEntrenadoresComponent implements OnInit {
             }
           );
         }
+
+              ejecutarGenerarPagos() {
+        this.cargando = true;
+
+        this.planPagoService.generarPagosEntrenadores().subscribe({
+          next: (res: any) => {
+            // Mostrar en consola el mensaje de éxito
+            console.log('✅ Comando ejecutado correctamente');
+            console.log('Salida del comando:', res.output || res.message);
+
+            this.cargando = false;
+          },
+          error: (err) => {
+            console.error('❌ Error al ejecutar el comando:', err);
+            this.cargando = false;
+          }
+        });
+      }
   
         getUsuarios() {
           this.pagoEntrenadorService.getAllEntrenadore().subscribe(
