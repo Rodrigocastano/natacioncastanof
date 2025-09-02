@@ -8,6 +8,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
 import type { ChartData, ChartOptions } from 'chart.js';
+import { DialogModule } from 'primeng/dialog';
 
 interface HistorialPago {
   fecha: string;
@@ -38,7 +39,8 @@ interface GrupoPagos {
     DropdownModule,
     FormsModule,
     ButtonModule,
-    ChartModule  
+    ChartModule,
+    DialogModule
   ],
   templateUrl: './dashboard.html'
 })
@@ -96,6 +98,42 @@ export class Dashboard implements OnInit {
       complete: () => this.loadingPagosPendientes = false
     });
   }
+
+// Variables para controlar los modales
+mostrarModalUsuariosPendientes: boolean = false;
+mostrarModalHistorial: boolean = false;
+usuariosModal: any[] = [];
+historialModal: any[] = [];
+pagoSeleccionado: any = null;
+tipoModal: string = ''; // 'pendientes' o 'completos'
+
+// Método para abrir el modal de usuarios
+abrirModalUsuarios(usuarios: any[], tipo: string): void {
+  this.usuariosModal = usuarios;
+  this.tipoModal = tipo;
+  this.mostrarModalUsuariosPendientes = true;
+}
+
+// Método para abrir el modal de historial
+abrirHistorialPagos(pago: any): void {
+  this.pagoSeleccionado = pago;
+  this.historialModal = pago.historial;
+  this.mostrarModalHistorial = true;
+}
+
+// Métodos para cerrar modales (opcional, si quieres control adicional)
+cerrarModalUsuarios(): void {
+  this.mostrarModalUsuariosPendientes = false;
+  this.usuariosModal = [];
+}
+
+cerrarModalHistorial(): void {
+  this.mostrarModalHistorial = false;
+  this.historialModal = [];
+  this.pagoSeleccionado = null;
+}
+
+
 
     cargarResumen() {
     this.dashboardService.getAllTotalPendienteUsuario().subscribe({

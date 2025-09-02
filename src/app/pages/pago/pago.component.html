@@ -90,8 +90,6 @@
               <p-table [value]="usuario.registroPagos" dataKey="id" [tableStyle]="{ 'min-width': '100%' }">
                 <ng-template #header>
                   <tr>
-                    <th style="min-width: 10rem;">Nombre</th>
-                    <th style="min-width: 10rem;">Tipo de pago</th>
                     <th style="min-width: 10rem;">Estado pago</th>
                     <th style="min-width: 7rem;">Monto</th>
                     <th style="min-width: 10rem;">Monto abonado</th>
@@ -103,8 +101,6 @@
 
                 <ng-template #body let-elast>
                   <tr>
-                    <td>{{ usuario.nombre }} {{ usuario.apellido }}</td>
-                    <td>{{ getNombreTipoPago(elast.id_tipo_pago) }}</td>
                     <td>{{ getNombreEstadoPago(elast.id_estado_pago) }}</td>
                     <td>{{ elast.monto }}</td>
                     <td>{{ elast.monto_abonado }}</td>

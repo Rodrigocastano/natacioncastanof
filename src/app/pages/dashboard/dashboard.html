@@ -26,7 +26,63 @@
   </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <!-- Modal para usuarios pendientes -->
+  <p-dialog header="Usuarios con pagos pendientes" 
+            [(visible)]="mostrarModalUsuariosPendientes" 
+            [style]="{ width: '75vw' }" 
+            [modal]="true">
+    <p-table [value]="usuariosModal" class="min-w-full p-datatable-sm">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="text-left">Identificación</th>
+          <th class="text-left">Nombres</th>
+          <th class="text-right w-32">Acción</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-pago>
+        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+          <td>{{ pago.cedula }}</td>
+          <td>{{ pago.nombre }} {{ pago.apellido }}</td>
+          <td class="text-right w-32">
+            <p-button icon="pi pi-eye" [text]="true" severity="danger" size="small"
+                      (click)="abrirHistorialPagos(pago)"
+                      label="Historial"
+                      class="text-xs float-right"></p-button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-dialog>
 
+  <!-- Modal para historial de pagos -->
+  <p-dialog [header]="'Historial de pagos - ' + (pagoSeleccionado?.nombre || '')" 
+            [(visible)]="mostrarModalHistorial" 
+            [style]="{ width: '60vw' }" 
+            [modal]="true">
+    <p-table [value]="historialModal" class="min-w-full p-datatable-sm">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="text-left">Fecha</th>
+          <th class="text-right">Monto</th>
+          <th class="text-right">Abonado</th>
+          <th class="text-center">Estado</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-h>
+        <tr class="text-xs hover:bg-gray-50 dark:hover:bg-gray-700">
+          <td>{{ h.fecha | date:'shortDate' }}</td>
+          <td class="text-right">{{ h.monto | currency }}</td>
+          <td class="text-right">{{ h.monto_abonado | currency }}</td>
+          <td class="text-center">
+            <i class="pi pi-times-circle text-red-500" *ngIf="!h.pagado"></i>
+            <i class="pi pi-check-circle text-green-500" *ngIf="h.pagado"></i>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-dialog>
+
+  <!-- Sección de pagos pendientes -->
   <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 flex flex-col h-full">
     <h2 class="text-lg font-bold mb-3 text-red-600 dark:text-red-400">Pagos pendientes</h2>
     
@@ -36,7 +92,7 @@
                [scrollable]="true" 
                scrollHeight="flex">
                
-         <ng-template pTemplate="header">
+        <ng-template pTemplate="header">
           <tr>
             <th class="text-center">Tipo de pago</th>
             <th class="w-24"></th>
@@ -44,73 +100,13 @@
         </ng-template>
 
         <ng-template pTemplate="body" let-grupo>
-          <tr [class.bg-red-50]="grupo.mostrarTodos" class="hover:bg-red-50 dark:hover:bg-gray-700">
+          <tr class="hover:bg-red-50 dark:hover:bg-gray-700">
             <td class="font-medium text-red-700 dark:text-red-300">{{ grupo.frecuencia }}</td>
             <td class="text-right w-32">
               <p-button icon="pi pi-eye" [text]="true" severity="danger"
-                        (click)="grupo.mostrarTodos = !grupo.mostrarTodos"
-                        [label]="grupo.mostrarTodos ? 'Ocultar' : 'Usuarios'"
+                        (click)="abrirModalUsuarios(grupo.pagos, 'pendientes')"
+                        label="Usuarios"
                         class="text-xs float-right"></p-button> 
-            </td>
-          </tr>
-
-          <tr *ngIf="grupo.mostrarTodos">
-            <td colspan="2" class="p-0">
-              <div class="ml-4 pl-2 border-l-2 border-red-200 dark:border-red-800">
-                <p-table [value]="grupo.pagos" class="min-w-full p-datatable-sm">
-                  
-                  <ng-template pTemplate="header">
-                    <tr>
-                      <th class="text-left">Identificación</th>
-                      <th class="text-left">Nombres</th>
-                      <th class="text-right w-32">Acción</th>
-                    </tr>
-                  </ng-template>
-
-                  <ng-template pTemplate="body" let-pago>
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                      <td>{{ pago.cedula }}</td>
-                      <td>{{ pago.nombre }} {{ pago.apellido }}</td>
-                      <td class="text-right w-32">
-                        <p-button icon="pi pi-eye" [text]="true" severity="danger" size="small"
-                                  (click)="pago.mostrarHistorial = !pago.mostrarHistorial"
-                                  [label]="pago.mostrarHistorial ? 'Ocultar' : 'Historial'"
-                                  class="text-xs float-right"></p-button>
-                      </td>
-                    </tr>
-
-                    <tr *ngIf="pago.mostrarHistorial">
-                      <td colspan="3" class="p-0">
-                        <div class="ml-4 pl-2 border-l-2 border-red-100 dark:border-red-900">
-                          <p-table [value]="pago.historial" class="min-w-full p-datatable-sm">
-                            
-                            <ng-template pTemplate="header">
-                              <tr>
-                                <th class="text-left">Fecha</th>
-                                <th class="text-right">Monto</th>
-                                <th class="text-right">Abonado</th>
-                                <th class="text-center">Estado</th>
-                              </tr>
-                            </ng-template>
-
-                            <ng-template pTemplate="body" let-h>
-                              <tr class="text-xs hover:bg-gray-50 dark:hover:bg-gray-700">
-                                <td>{{ h.fecha | date:'shortDate' }}</td>
-                                <td class="text-right">{{ h.monto | currency }}</td>
-                                <td class="text-right">{{ h.monto_abonado | currency }}</td>
-                                <td class="text-center">
-                                  <i class="pi pi-times-circle text-red-500" *ngIf="!h.pagado"></i>
-                                  <i class="pi pi-check-circle text-green-500" *ngIf="h.pagado"></i>
-                                </td>
-                              </tr>
-                            </ng-template>
-                          </p-table>
-                        </div>
-                      </td>
-                    </tr>
-                  </ng-template>
-                </p-table>
-              </div>
             </td>
           </tr>
         </ng-template>
@@ -118,6 +114,7 @@
     </div>
   </div>
 
+  <!-- Sección de pagos completos -->
   <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 flex flex-col h-full">
     <h2 class="text-lg font-bold mb-3 text-green-600 dark:text-green-400">Pagos completos</h2>
     
@@ -135,72 +132,13 @@
         </ng-template>
 
         <ng-template pTemplate="body" let-grupo>
-          <tr [class.bg-green-50]="grupo.mostrarTodos" class="hover:bg-green-50 dark:hover:bg-gray-700">
+          <tr class="hover:bg-green-50 dark:hover:bg-gray-700">
             <td class="font-medium text-green-700 dark:text-green-300">{{ grupo.frecuencia }}</td>
             <td class="text-right w-32">
               <p-button icon="pi pi-eye" [text]="true" severity="success"
-                        (click)="grupo.mostrarTodos = !grupo.mostrarTodos"
-                        [label]="grupo.mostrarTodos ? 'Ocultar' : 'Usuarios'"
+                        (click)="abrirModalUsuarios(grupo.pagos, 'completos')"
+                        label="Usuarios"
                         class="text-xs float-right"></p-button>
-            </td>
-          </tr>
-
-          <tr *ngIf="grupo.mostrarTodos">
-            <td colspan="2" class="p-0">
-              <div class="ml-4 pl-2 border-l-2 border-green-200 dark:border-green-800">
-                <p-table [value]="grupo.pagos" class="min-w-full p-datatable-sm">
-                  
-                  <ng-template pTemplate="header">
-                    <tr>
-                      <th class="text-left">Identificación</th>
-                      <th class="text-left">Nombres</th>
-                      <th class="text-right w-32">Acción</th>
-                    </tr>
-                  </ng-template>
-
-                  <ng-template pTemplate="body" let-pago>
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                      <td>{{ pago.cedula }}</td>
-                      <td>{{ pago.nombre }} {{ pago.apellido }}</td>
-                      <td class="text-right w-32">
-                        <p-button icon="pi pi-eye" [text]="true" severity="success" size="small"
-                                  (click)="pago.mostrarHistorial = !pago.mostrarHistorial"
-                                  [label]="pago.mostrarHistorial ? 'Ocultar' : 'Historial'"
-                                  class="text-xs float-right"></p-button>
-                      </td>
-                    </tr>
-
-                    <tr *ngIf="pago.mostrarHistorial">
-                      <td colspan="3" class="p-0">
-                        <div class="ml-4 pl-2 border-l-2 border-green-100 dark:border-green-900">
-                          <p-table [value]="pago.historial" class="min-w-full p-datatable-sm">
-                            
-                            <ng-template pTemplate="header">
-                              <tr>
-                                <th class="text-left">Fecha</th>
-                                <th class="text-right">Monto</th>
-                                <th class="text-right">Abonado</th>
-                                <th class="text-center">Estado</th>
-                              </tr>
-                            </ng-template>
-
-                            <ng-template pTemplate="body" let-h>
-                              <tr class="text-xs hover:bg-gray-50 dark:hover:bg-gray-700">
-                                <td>{{ h.fecha | date:'shortDate' }}</td>
-                                <td class="text-right">{{ h.monto | currency }}</td>
-                                <td class="text-right">{{ h.monto_abonado | currency }}</td>
-                                <td class="text-center">
-                                  <i class="pi pi-check-circle text-green-500"></i>
-                                </td>
-                              </tr>
-                            </ng-template>
-                          </p-table>
-                        </div>
-                      </td>
-                    </tr>
-                  </ng-template>
-                </p-table>
-              </div>
             </td>
           </tr>
         </ng-template>

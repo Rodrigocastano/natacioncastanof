@@ -125,14 +125,14 @@ export class PagoEntrenadoresComponent implements OnInit {
 
         this.planPagoService.generarPagosEntrenadores().subscribe({
           next: (res: any) => {
-            // Mostrar en consola el mensaje de éxito
-            console.log('✅ Comando ejecutado correctamente');
+            console.log('Comando ejecutado correctamente');
             console.log('Salida del comando:', res.output || res.message);
 
+            this.getPago();
             this.cargando = false;
           },
           error: (err) => {
-            console.error('❌ Error al ejecutar el comando:', err);
+            console.error(' Error al ejecutar el comando:', err);
             this.cargando = false;
           }
         });
