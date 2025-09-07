@@ -99,7 +99,7 @@ planToCancel: any = null;
       ) {
         this.formSave = this.fb.group({
           id_usuario: ['', [Validators.required]],
-          id_tipo_pago: ['', [Validators.required]],
+          /* id_tipo_pago: ['', [Validators.required]], */
           monto: ['', [Validators.required]],
           fecha_inicio: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
           fecha_fin: [[]],
@@ -111,7 +111,7 @@ planToCancel: any = null;
         });
         this.formUpdate = fb.group({
           id_usuario: ['', [Validators.required]],
-          id_tipo_pago: ['', [Validators.required]],
+        /*   id_tipo_pago: ['', [Validators.required]], */
           monto: ['', [Validators.required]],
           fecha_inicio: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
           fecha_fin: [[]],
@@ -313,7 +313,7 @@ planToCancel: any = null;
 
                     const newPago: any = {
                       id_usuario: this.formSave.value.id_usuario,
-                      id_tipo_pago: this.formSave.value.id_tipo_pago,
+                     /*  id_tipo_pago: this.formSave.value.id_tipo_pago, */
                       monto: this.formSave.value.monto,
                       fecha_inicio: this.formatDate(this.formSave.value.fecha_inicio),
                      
@@ -403,7 +403,7 @@ planToCancel: any = null;
                 const payload = {
                     id: this.pag.id,
                     id_usuario: formData.id_usuario,
-                    id_tipo_pago: formData.id_tipo_pago,
+                    /* id_tipo_pago: formData.id_tipo_pago, */
                     monto: Number(formData.monto),
                     fecha_inicio: this.formatDate(formData.fecha_inicio),
                     fecha_fin: formData.fecha_fin ? this.formatDate(formData.fecha_fin) : null,
@@ -469,7 +469,7 @@ planToCancel: any = null;
                     }
                     this.formUpdate.patchValue({
                         id_usuario: this.pag.id_usuario,
-                        id_tipo_pago: this.pag.id_tipo_pago,
+                        /* id_tipo_pago: this.pag.id_tipo_pago, */
                         monto: this.pag.monto,
                         estado_funcional: this.pag.estado_funcional === 1,
                         fecha_inicio: parseLocalDate(this.pag.fecha_inicio),

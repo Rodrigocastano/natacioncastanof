@@ -95,7 +95,7 @@ export class PagoComponent implements OnInit{
       ) {
         this.formSave = this.fb.group({
           id_usuario: ['', [Validators.required]],
-          id_tipo_pago: ['', [Validators.required]],
+          /* id_tipo_pago: ['', [Validators.required]], */
 
           monto: ['', [Validators.required]],
           fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
@@ -105,7 +105,7 @@ export class PagoComponent implements OnInit{
         });
         this.formUpdate = fb.group({
           id_estado_pago: ['', [Validators.required]],
-          id_tipo_pago: ['', [Validators.required]],
+          /* id_tipo_pago: ['', [Validators.required]], */
           fecha: [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
           id_usuario: ['', [Validators.required]],
           monto: ['', [Validators.required]],
@@ -222,7 +222,7 @@ export class PagoComponent implements OnInit{
 
       if (this.formSave.valid) {
         const newPago: any = {
-          id_tipo_pago: this.formSave.value.id_tipo_pago,
+          /* id_tipo_pago: this.formSave.value.id_tipo_pago, */
           fecha: this.formatDate(this.formSave.value.fecha),
           monto: this.formSave.value.monto,
           monto_abonado: this.formSave.value.monto_abonado ?? 0,
@@ -300,7 +300,7 @@ export class PagoComponent implements OnInit{
         if (this.formUpdate.valid) {
           const updatePago: Pago = {
             id: this.pag.id,
-            id_tipo_pago: this.formUpdate.value.id_tipo_pago,
+            /* id_tipo_pago: this.formUpdate.value.id_tipo_pago, */
             id_estado_pago: this.formUpdate.value.id_estado_pago,
             monto: this.formUpdate.value.monto,
             fecha: this.formatDate(this.formUpdate.value.fecha),
@@ -331,7 +331,7 @@ export class PagoComponent implements OnInit{
           const parseLocalDate = (dateString: string) => {
           return dateString ? new Date(dateString + 'T00:00:00') : null;
         };
-          this.formUpdate.controls['id_tipo_pago'].setValue(this.pag?.id_tipo_pago)
+          /* this.formUpdate.controls['id_tipo_pago'].setValue(this.pag?.id_tipo_pago) */
           this.formUpdate.controls['id_estado_pago'].setValue(this.pag?.id_estado_pago)
           this.formUpdate.controls['id_usuario'].setValue(this.pag?.id_usuario) 
           this.formUpdate.controls['monto'].setValue(this.pag?.monto) 
@@ -379,7 +379,7 @@ onUsuarioChange(idUsuario: number) {
       };
 
       this.formSave.patchValue({
-        id_tipo_pago: plan.id_tipo_pago,
+        /* id_tipo_pago: plan.id_tipo_pago, */
         monto: plan.monto,
         fecha: parseDate(plan.fecha_inicio) || new Date(),
         fecha_vencimiento: parseDate(plan.fecha_fin) || null
@@ -387,7 +387,7 @@ onUsuarioChange(idUsuario: number) {
     },
     error: (err) => {
       this.formSave.patchValue({
-        id_tipo_pago: null,
+        /* id_tipo_pago: null, */
         monto: null,
         fecha: new Date(),
         fecha_vencimiento: null
