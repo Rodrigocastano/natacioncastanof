@@ -76,28 +76,38 @@ export class VermedidasComponent implements OnInit {
 
   }
 
-  cargarDatos(id: number): void {
-    this.loading = true;
-    this.datosUsuarioService.obtenerMedidasPorUsuario(id).subscribe({
-      next: (res) => {
-        this.usuario = res.usuario;
-        this.medidaElasticidas = (res.medidaElasticidas || []).slice(0, 8);
-        this.medidaNutricionales = (res.medidaNutricionales || []).slice(0, 8);
-        this.medidaAntropometricas = (res.medidaAntropometricas || []).slice(0, 8);
+cargarDatos(id: number): void {
+  this.loading = true;
+  this.datosUsuarioService.obtenerMedidasPorUsuario(id).subscribe({
+    next: (res) => {
+      this.usuario = res.usuario;
 
-        this.fechasElasticidad = this.medidaElasticidas.map(m => m.fecha);
-        this.fechasNutricionales = this.medidaNutricionales.map(m => m.fecha);
-        this.fechasAntropometricas = this.medidaAntropometricas.map(m => m.fecha);
+      this.medidaElasticidas = (res.medidaElasticidas || [])
+        .sort((a: any, b: any) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime())
+        .slice(0, 8);
 
-        this.loading = false;
-        this.error = false;
-      },
-      error: () => {
-        this.error = true;
-        this.loading = false;
-      }
-    });
-  }
+      this.medidaNutricionales = (res.medidaNutricionales || [])
+        .sort((a: any, b: any) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime())
+        .slice(0, 8);
+
+      this.medidaAntropometricas = (res.medidaAntropometricas || [])
+        .sort((a: any, b: any) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime())
+        .slice(0, 8);
+
+      this.fechasElasticidad = this.medidaElasticidas.map(m => m.fecha);
+      this.fechasNutricionales = this.medidaNutricionales.map(m => m.fecha);
+      this.fechasAntropometricas = this.medidaAntropometricas.map(m => m.fecha);
+
+      this.loading = false;
+      this.error = false;
+    },
+    error: () => {
+      this.error = true;
+      this.loading = false;
+    }
+  });
+}
+
 
   comparar(actual: any, anterior: any): string {
     if (!anterior) return '';

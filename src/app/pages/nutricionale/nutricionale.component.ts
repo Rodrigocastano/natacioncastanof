@@ -210,20 +210,17 @@ obtenerMedidasOrdenadas(measures: any[]): any[] {
 }
 
 compararCaloriasAnterior(medidasOrdenadas: any[], index: number): string {
-  // No mostrar flecha para el primer registro
   if (index === 0) return '';
   
-  const actual = medidasOrdenadas[index].caloria_consumida;
-  const anterior = medidasOrdenadas[index - 1].caloria_consumida;
+  const actual = parseFloat(medidasOrdenadas[index].caloria_consumida);
+  const anterior = parseFloat(medidasOrdenadas[index - 1].caloria_consumida);
 
   if (actual > anterior) return 'increase';
   if (actual < anterior) return 'decrease';
-  return ''; // No mostrar flecha si son iguales
+  return ''; // iguales
 }
 
-// Nueva función para comparar proteína
 compararProteinaAnterior(medidasOrdenadas: any[], index: number): string {
-  // No mostrar flecha para el primer registro
   if (index === 0) return '';
   
   const actual = parseFloat(medidasOrdenadas[index].proteina_consumida);
@@ -231,7 +228,7 @@ compararProteinaAnterior(medidasOrdenadas: any[], index: number): string {
 
   if (actual > anterior) return 'increase';
   if (actual < anterior) return 'decrease';
-  return ''; // No mostrar flecha si son iguales
+  return '';
 }
 
     showSaveDialog() {
