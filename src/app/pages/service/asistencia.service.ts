@@ -56,9 +56,14 @@ export class AsistenciaService {
     return this.http.get<any[]>(`${this.apisUrl}/getGruposByEntrenado/${idGrupo}`);
   }
 
-  getUsuariosByGrupoYHorario(idGrupo: number, idHorario: string): Observable<any[]> {
+/*   getUsuariosByGrupoYHorario(idGrupo: number, idHorario: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apisUrl}/getUsuariosByGrupoYHorario/${idHorario}/${idGrupo}`);
-  }
+  } */
+
+  getUsuariosByGrupoYHorario(idGrupo: number, idHorario: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apisUrl}/getUsuariosByGrupoYHorario/${idGrupo}/${idHorario}`);
+}
+
 
 
 
