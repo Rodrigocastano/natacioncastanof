@@ -214,56 +214,64 @@ toggleSeccion(seccion: string) {
     });
   }
 
-  cargarDatosUsuario(): void {
-    if (!this.idUsuarioSeleccionado) return;
+cargarDatosUsuario(): void {
+  if (!this.idUsuarioSeleccionado) return;
 
-    this.loading = true;
-    this.error = false;
-    this.datosUsuario = null;
+  this.loading = true;
+  this.error = false;
+  this.datosUsuario = null;
 
-    this.datosUsuarioService.obtenerTodosLosDatosUsuarios(this.idUsuarioSeleccionado).subscribe({
-      next: (data: any) => {
-        interface SerieTiempo {
-          tipo_nado_id: number;
-          name: string;
-          data: any[];
-        }
-
-        this.datosUsuario = {
-          ...data,
-          pagos: data.pagos.slice(0, 15),
-          pruebas: data.pruebas.slice(0, 10),
-          tiemposNado: {
-            series: data.tiemposNado.series.map((serie: SerieTiempo) => ({
-              ...serie,
-              data: serie.data.slice(0, 12)
-            }))
-          },
-          medidas: {
-            elasticidad: data.medidas.elasticidad.slice(0, 8),
-            nutricionales: data.medidas.nutricionales.slice(0, 8),
-            antropometricas: data.medidas.antropometricas.slice(0, 8)
-          },
-          controles: {
-            medicos: data.controles.medicos.slice(0, 8),
-            psicologicos: data.controles.psicologicos.slice(0, 8)
-          }
-        };
-        
-        this.prepararDatosGrafica();
-        this.loading = false;
-      },
-      error: (error: any) => {
-        this.error = true;
-        this.loading = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'No se pudieron cargar los datos del usuario'
-        });
+  this.datosUsuarioService.obtenerTodosLosDatosUsuarios(this.idUsuarioSeleccionado).subscribe({
+    next: (data: any) => {
+      interface SerieTiempo {
+        tipo_nado_id: number;
+        name: string;
+        data: any[];
       }
-    });
-  }
+
+      // Función para ordenar arrays de objetos por fecha de menor a mayor
+      const ordenarPorFechaAsc = (arr: any[]) => {
+        if (!arr) return [];
+        return arr.slice().sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+      };
+
+      this.datosUsuario = {
+        ...data,
+        pagos: ordenarPorFechaAsc(data.pagos).slice(0, 15),
+        pruebas: ordenarPorFechaAsc(data.pruebas).slice(0, 10),
+        tiemposNado: {
+          series: data.tiemposNado.series.map((serie: SerieTiempo) => ({
+            ...serie,
+            data: ordenarPorFechaAsc(serie.data).slice(0, 12)
+          }))
+        },
+        medidas: {
+          elasticidad: ordenarPorFechaAsc(data.medidas.elasticidad).slice(0, 8),
+          nutricionales: ordenarPorFechaAsc(data.medidas.nutricionales).slice(0, 8),
+          antropometricas: ordenarPorFechaAsc(data.medidas.antropometricas).slice(0, 8)
+        },
+        controles: {
+          medicos: ordenarPorFechaAsc(data.controles.medicos).slice(0, 8),
+          psicologicos: ordenarPorFechaAsc(data.controles.psicologicos).slice(0, 8)
+        }
+      };
+
+      this.prepararDatosGrafica();
+      this.loading = false;
+    },
+    error: (error: any) => {
+      this.error = true;
+      this.loading = false;
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se pudieron cargar los datos del usuario'
+      });
+    }
+  });
+}
+
+
 
   formatDate(dateStr: string): string {
     if (!dateStr || dateStr === 'TOTAL') return dateStr;
