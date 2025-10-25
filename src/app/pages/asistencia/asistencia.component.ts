@@ -219,34 +219,25 @@ export class AsistenciaComponent implements OnInit {
     }
 
     loadUsuariosForAsistencia() {
-      if (this.selectedGrupo !== null && this.selectedHorario) {
-        this.asistenciaService.getUsuariosByGrupoYHorario(this.selectedGrupo, this.selectedHorario).subscribe({
-          next: (usuarios) => {
-            this.usuariosParaAsistencia = usuarios.map(usuario => ({
-              ...usuario,
-              presente: true
-            }));
-          },
-          error: (err) => {
-            this.asistenciaService.getUsuariosByEntrenados(this.selectedGrupo!).subscribe({
-              next: (usuarios) => {
-                this.usuariosParaAsistencia = usuarios.map(usuario => ({
-                  ...usuario,
-                  presente: true
-                }));
-              },
-              error: () => {
-                this.messageService.add({
-                  severity: 'error',
-                  summary: 'Error',
-                  detail: 'Error al cargar los usuarios del grupo'
-                });
-              }
-            });
-          }
+  if (this.selectedGrupo && this.selectedHorario) {
+    this.asistenciaService.getUsuariosByGrupoYHorario(this.selectedGrupo, this.selectedHorario).subscribe({
+      next: (usuarios) => {
+        this.usuariosParaAsistencia = usuarios.map(u => ({
+          ...u,
+          presente: true
+        }));
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudieron cargar los usuarios del grupo'
         });
       }
-    }
+    });
+  }
+}
+
 
     get usuariosFiltrados() {
       if (!this.filtroBusqueda || this.filtroBusqueda.trim() === '') {

@@ -52,12 +52,13 @@ export class AsistenciaService {
     return this.http.get<any[]>(`${this.apisUrl}/usuarioGrupo/${idGrupo}`);
   }
 
-  getUsuariosByEntrenados(idGrupo: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apisUrl}/getGruposByEntrenado/${idGrupo}`);
-  }
-
-  getUsuariosByGrupoYHorario(idGrupo: number, idHorario: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apisUrl}/getUsuariosByGrupoYHorario/${idGrupo}/${idHorario}`);
+getGruposByEntrenador(idEntrenador: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apisUrl}/getGruposByEntrenado/${idEntrenador}`);
 }
+
+getUsuariosByGrupoYHorario(idGrupo: number, idHorario: string): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apisUrl}/getUsuariosByGrupoYHorario/${idGrupo}/${idHorario}`);
+}
+
 
 }
